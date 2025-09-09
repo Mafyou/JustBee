@@ -4,14 +4,9 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace JustBeeWeb.Pages;
 
-public class MapBeeModel : PageModel
+public class MapBeeModel() : PageModel
 {
-    private readonly DepartementService _departementService;
-
-    public MapBeeModel()
-    {
-        _departementService = new DepartementService();
-    }
+    private readonly DepartementService _departementService = new();
 
     public List<Departement> Departements { get; set; } = [];
     public List<Person> AllPersons { get; set; } = [];
@@ -22,7 +17,7 @@ public class MapBeeModel : PageModel
         Departements = _departementService.GetAllDepartements();
 
         // Ajouter des personnes d'exemple seulement si aucune personne n'existe déjà
-        if (!_departementService.GetAllPersons().Any())
+        if (_departementService.GetAllPersons().Count == 0)
         {
             SeedPersonsInDepartements();
         }

@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace JustBeeWeb.Pages;
 
-public class ApiDemoModel : PageModel
+public class ApiDemoModel() : PageModel
 {
     public void OnGet()
     {

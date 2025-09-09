@@ -5,14 +5,9 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace JustBeeWeb.Pages;
 
-public class PersonManagementModel : PageModel
+public class PersonManagementModel() : PageModel
 {
-    private readonly DepartementService _departementService;
-
-    public PersonManagementModel()
-    {
-        _departementService = new DepartementService();
-    }
+    private readonly DepartementService _departementService = new();
 
     public List<Departement> Departements { get; set; } = [];
     public List<Person> AllPersons { get; set; } = [];
@@ -77,9 +72,9 @@ public class PersonManagementModel : PageModel
     public IActionResult OnPostGenerateRandomPersons(int count = 5)
     {
         var random = new Random();
-        var pseudos = new[] { "Alex", "Marie", "Pierre", "Sophie", "Jean", "Emma", "Lucas", "Camille", "Thomas", "Léa", 
-                             "Antoine", "Clara", "Nicolas", "Manon", "Julien", "Chloé", "Maxime", "Laura", "Hugo", "Jade" };
-        var departementCodes = new[] { "75", "69", "13", "31", "33", "59", "67", "06", "34", "44" };
+        string[] pseudos = ["Alex", "Marie", "Pierre", "Sophie", "Jean", "Emma", "Lucas", "Camille", "Thomas", "Léa", 
+                           "Antoine", "Clara", "Nicolas", "Manon", "Julien", "Chloé", "Maxime", "Laura", "Hugo", "Jade"];
+        string[] departementCodes = ["75", "69", "13", "31", "33", "59", "67", "06", "34", "44"];
 
         for (int i = 0; i < count; i++)
         {

@@ -6,14 +6,9 @@ namespace JustBeeWeb.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class DepartementsController : ControllerBase
+public class DepartementsController() : ControllerBase
 {
-    private readonly DepartementService _departementService;
-
-    public DepartementsController()
-    {
-        _departementService = new DepartementService();
-    }
+    private readonly DepartementService _departementService = new();
 
     [HttpGet]
     public IActionResult GetAllDepartements()
@@ -26,7 +21,7 @@ public class DepartementsController : ControllerBase
     public IActionResult GetDepartementByCode(string code)
     {
         var departement = _departementService.GetDepartementByCode(code);
-        if (departement == null)
+        if (departement is null)
         {
             return NotFound($"Département avec le code {code} non trouvé.");
         }
@@ -37,7 +32,7 @@ public class DepartementsController : ControllerBase
     public IActionResult GetDepartementsWithPersons()
     {
         var departements = _departementService.GetAllDepartements()
-            .Where(d => d.Persons.Any())
+            .Where(d => d.Persons.Count != 0)
             .ToList();
         return Ok(departements);
     }
@@ -51,7 +46,7 @@ public class DepartementsController : ControllerBase
         }
 
         var departement = _departementService.GetDepartementByCode(code);
-        if (departement == null)
+        if (departement is null)
         {
             return NotFound($"Département avec le code {code} non trouvé.");
         }
@@ -88,5 +83,5 @@ public class DepartementsController : ControllerBase
 
 public class CreatePersonRequest
 {
-    public string Pseudo { get; set; } = string.Empty;
+    public required string Pseudo { get; set; }
 }

@@ -58,7 +58,7 @@ public static class DepartementExamples
 
         // Récupérer tous les départements avec des personnes
         var departementsAvecPersonnes = service.GetAllDepartements()
-            .Where(d => d.Persons.Any())
+            .Where(d => d.Persons.Count != 0)
             .ToList();
 
         Console.WriteLine($"\nNombre de départements avec des personnes: {departementsAvecPersonnes.Count}");
