@@ -1,0 +1,274 @@
+﻿@page
+@model PersonManagementModel
+@{
+    ViewData["Title"] = "Gestion des Personnes";
+}
+
+<div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>👥 Gestion des Personnes</h1>
+        <div>
+            <a href="/MapBee" class="btn btn-outline-primary">
+                <i class="fas fa-map"></i> Voir sur la carte
+            </a>
+            @* <a href="/ApiDemo" class="btn btn-outline-secondary">
+                <i class="fas fa-code"></i> API Demo
+            </a> *@
+        </div>
+    </div>
+
+    <!-- Messages de feedback -->
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="fas fa-check-circle"></i> @TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="fas fa-exclamation-circle"></i> @TempData["Error"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    <div class="row">
+        <!-- Formulaire d'ajout -->
+        <div class="col-lg-4">
+            <div class="card">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0"><i class="fas fa-user-plus"></i> Ajouter une Personne</h5>
+                </div>
+                <div class="card-body">
+                    <form method="post" asp-page-handler="AddPerson">
+                        <div class="mb-3">
+                            <label asp-for="NewPersonPseudo" class="form-label">Pseudo</label>
+                            <input asp-for="NewPersonPseudo" class="form-control" placeholder="Ex: JohnDoe" required>
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="NewPersonDepartement" class="form-label">Département</label>
+                            <select asp-for="NewPersonDepartement" class="form-select" required>
+                                <option value="">Choisir un département...</option>
+                                @foreach (var dept in Model.Departements.OrderBy(d => d.Code))
+                                {
+                                    <option value="@dept.Code">@dept.Code - @dept.Nom</option>
+                                }
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-success w-100">
+                            <i class="fas fa-plus"></i> Ajouter
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Actions rapides -->
+            <div class="card mt-3">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-bolt"></i> Actions Rapides</h5>
+                </div>
+                <div class="card-body">
+                    <form method="post" asp-page-handler="GenerateRandomPersons" class="mb-2">
+                        <button type="submit" class="btn btn-outline-info w-100 mb-2">
+                            <i class="fas fa-random"></i> Générer 5 personnes aléatoires
+                        </button>
+                    </form>
+                    <form method="post" asp-page-handler="GenerateRandomPersons" class="mb-2">
+                        <input type="hidden" name="count" value="10">
+                        <button type="submit" class="btn btn-outline-warning w-100">
+                            <i class="fas fa-users"></i> Générer 10 personnes aléatoires
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Statistiques -->
+            <div class="card mt-3">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-chart-bar"></i> Statistiques</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row text-center">
+                        <div class="col-6">
+                            <div class="border rounded p-2">
+                                <h4 class="text-primary mb-0">@Model.AllPersons.Count</h4>
+                                <small class="text-muted">Personnes</small>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="border rounded p-2">
+                                <h4 class="text-success mb-0">@Model.Departements.Count(d => d.Persons.Any())</h4>
+                                <small class="text-muted">Départements actifs</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Liste des personnes -->
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0"><i class="fas fa-list"></i> Liste des Personnes (@Model.AllPersons.Count)</h5>
+                    <div class="btn-group btn-group-sm" role="group">
+                        <input type="text" id="searchPersons" class="form-control form-control-sm" placeholder="Rechercher..." style="width: 200px;">
+                    </div>
+                </div>
+                <div class="card-body p-0">
+                    @if (Model.AllPersons.Any())
+                    {
+                        <div class="table-responsive">
+                            <table class="table table-hover mb-0" id="personsTable">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Pseudo</th>
+                                        <th>Département</th>
+                                        <th>Région</th>
+                                        <th>Coordonnées</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var person in Model.AllPersons.OrderBy(p => p.DepartementCode).ThenBy(p => p.Pseudo))
+                                    {
+                                        var dept = Model.Departements.FirstOrDefault(d => d.Code == person.DepartementCode);
+                                        <tr>
+                                            <td><span class="badge bg-secondary">@person.Id</span></td>
+                                            <td><strong>@person.Pseudo</strong></td>
+                                            <td>
+                                                @if (dept != null)
+                                                {
+                                                    <span class="badge bg-primary">@dept.Code</span> @dept.Nom
+                                                }
+                                            </td>
+                                            <td>
+                                                @if (dept != null)
+                                                {
+                                                    <small class="text-muted">@dept.Region</small>
+                                                }
+                                            </td>
+                                            <td>
+                                                @if (person.Latitude.HasValue && person.Longitude.HasValue)
+                                                {
+                                                    <small class="text-muted">
+                                                        @person.Latitude.Value.ToString("F2"), @person.Longitude.Value.ToString("F2")
+                                                    </small>
+                                                }
+                                            </td>
+                                            <td>
+                                                <form method="post" asp-page-handler="DeletePerson" class="d-inline" 
+                                                      onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer @person.Pseudo ?');">
+                                                    <input type="hidden" name="personId" value="@person.Id">
+                                                    <input type="hidden" name="departementCode" value="@person.DepartementCode">
+                                                    <button type="submit" class="btn btn-sm btn-outline-danger">
+                                                        <i class="fas fa-trash"></i>
+                                                    </button>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="text-center py-5 text-muted">
+                            <i class="fas fa-users fa-3x mb-3"></i>
+                            <p>Aucune personne trouvée. Commencez par en ajouter une!</p>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Départements avec personnes -->
+    @if (Model.Departements.Any(d => d.Persons.Any()))
+    {
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0"><i class="fas fa-map-marked-alt"></i> Répartition par Département</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            @foreach (var dept in Model.Departements.Where(d => d.Persons.Any()).OrderByDescending(d => d.Persons.Count))
+                            {
+                                <div class="col-md-6 col-lg-4 mb-3">
+                                    <div class="card border-left-primary">
+                                        <div class="card-body">
+                                            <div class="d-flex justify-content-between">
+                                                <div>
+                                                    <h6 class="text-primary mb-1">@dept.Code - @dept.Nom</h6>
+                                                    <small class="text-muted">@dept.Region</small>
+                                                </div>
+                                                <div class="text-right">
+                                                    <span class="badge bg-success fs-6">@dept.Persons.Count</span>
+                                                </div>
+                                            </div>
+                                            <div class="mt-2">
+                                                @foreach (var person in dept.Persons.Take(3))
+                                                {
+                                                    <span class="badge bg-light text-dark me-1">@person.Pseudo</span>
+                                                }
+                                                @if (dept.Persons.Count > 3)
+                                                {
+                                                    <span class="text-muted">... et @(dept.Persons.Count - 3) autre(s)</span>
+                                                }
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+<script>
+    // Recherche en temps réel
+    document.getElementById('searchPersons').addEventListener('input', function() {
+        const searchTerm = this.value.toLowerCase();
+        const table = document.getElementById('personsTable');
+        const rows = table.getElementsByTagName('tbody')[0].getElementsByTagName('tr');
+
+        for (let row of rows) {
+            const text = row.textContent.toLowerCase();
+            row.style.display = text.includes(searchTerm) ? '' : 'none';
+        }
+    });
+
+    // Auto-dismiss alerts after 5 seconds
+    setTimeout(function() {
+        const alerts = document.querySelectorAll('.alert');
+        alerts.forEach(alert => {
+            if (alert.querySelector('.btn-close')) {
+                alert.querySelector('.btn-close').click();
+            }
+        });
+    }, 5000);
+</script>
+
+<style>
+    .border-left-primary {
+        border-left: 4px solid #007bff;
+    }
+    
+    .card:hover {
+        transform: translateY(-2px);
+        transition: transform 0.2s;
+    }
+    
+    .table tbody tr:hover {
+        background-color: #f8f9fa;
+    }
+</style>

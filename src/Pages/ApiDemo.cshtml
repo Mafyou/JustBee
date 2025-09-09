@@ -1,0 +1,274 @@
+@page
+@model JustBeeWeb.Pages.ApiDemoModel
+@{
+    ViewData["Title"] = "Démo API Départements";
+}
+
+<div class="container">
+    <h1>Démo API Départements</h1>
+    
+    <div class="row mt-4">
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Endpoints API disponibles</h5>
+                </div>
+                <div class="card-body">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">
+                            <strong>GET</strong> /api/departements
+                            <br><small class="text-muted">Tous les départements</small>
+                        </li>
+                        <li class="list-group-item">
+                            <strong>GET</strong> /api/departements/{code}
+                            <br><small class="text-muted">Département par code</small>
+                        </li>
+                        <li class="list-group-item">
+                            <strong>GET</strong> /api/departements/with-persons
+                            <br><small class="text-muted">Départements avec personnes</small>
+                        </li>
+                        <li class="list-group-item">
+                            <strong>POST</strong> /api/departements/{code}/persons
+                            <br><small class="text-muted">Ajouter une personne</small>
+                        </li>
+                        <li class="list-group-item">
+                            <strong>DELETE</strong> /api/departements/{code}/persons/{id}
+                            <br><small class="text-muted">Supprimer une personne</small>
+                        </li>
+                        <li class="list-group-item">
+                            <strong>GET</strong> /api/departements/persons
+                            <br><small class="text-muted">Toutes les personnes</small>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-8">
+            <!-- Formulaire d'ajout de personne -->
+            <div class="card mb-3">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0">?? Ajouter une Personne</h5>
+                </div>
+                <div class="card-body">
+                    <form id="addPersonForm">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label for="newPersonDept" class="form-label">Département</label>
+                                    <select class="form-select" id="newPersonDept" required>
+                                        <option value="">Choisir un département...</option>
+                                        <option value="01">01 - Ain</option>
+                                        <option value="13">13 - Bouches-du-Rhône</option>
+                                        <option value="33">33 - Gironde</option>
+                                        <option value="59">59 - Nord</option>
+                                        <option value="69">69 - Rhône</option>
+                                        <option value="75">75 - Paris</option>
+                                        <option value="31">31 - Haute-Garonne</option>
+                                        <option value="34">34 - Hérault</option>
+                                        <option value="06">06 - Alpes-Maritimes</option>
+                                        <option value="67">67 - Bas-Rhin</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label for="newPersonPseudo" class="form-label">Pseudo</label>
+                                    <input type="text" class="form-control" id="newPersonPseudo" placeholder="Ex: JohnDoe" required>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label class="form-label">&nbsp;</label>
+                                    <button type="submit" class="btn btn-success d-block w-100">
+                                        <i class="fas fa-plus"></i> Ajouter Personne
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="addPersonResult"></div>
+                </div>
+            </div>
+
+            <!-- Tests API existants -->
+            <div class="card">
+                <div class="card-header">
+                    <h5>Test des APIs</h5>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <button type="button" class="btn btn-primary me-2" onclick="loadAllDepartements()">
+                            Charger tous les départements
+                        </button>
+                        <button type="button" class="btn btn-success me-2" onclick="loadDepartementsWithPersons()">
+                            Départements avec personnes
+                        </button>
+                        <button type="button" class="btn btn-info me-2" onclick="loadAllPersons()">
+                            Toutes les personnes
+                        </button>
+                        <div class="input-group mt-2" style="width: 300px;">
+                            <input type="text" class="form-control" id="deptCode" placeholder="Code département (ex: 75)" maxlength="3">
+                            <button class="btn btn-outline-secondary" type="button" onclick="loadDepartementByCode()">
+                                Chercher
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div id="apiResult" class="mt-3">
+                        <p class="text-muted">Cliquez sur un bouton pour tester l'API...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Gestion du formulaire d'ajout de personne
+    document.getElementById('addPersonForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        const dept = document.getElementById('newPersonDept').value;
+        const pseudo = document.getElementById('newPersonPseudo').value.trim();
+        
+        if (!dept || !pseudo) {
+            showAddPersonResult('Veuillez remplir tous les champs.', 'danger');
+            return;
+        }
+
+        try {
+            showAddPersonResult('Ajout en cours...', 'info');
+            
+            const response = await fetch(`/api/departements/${dept}/persons`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ pseudo: pseudo })
+            });
+
+            if (response.ok) {
+                const person = await response.json();
+                showAddPersonResult(`? Personne "${person.pseudo}" ajoutée avec succès! ID: ${person.id}`, 'success');
+                
+                // Réinitialiser le formulaire
+                document.getElementById('newPersonPseudo').value = '';
+                document.getElementById('newPersonDept').value = '';
+                
+                // Optionnel: recharger les départements avec personnes pour voir la mise à jour
+                setTimeout(() => loadDepartementsWithPersons(), 1000);
+                
+            } else {
+                const error = await response.text();
+                showAddPersonResult(`? Erreur: ${error}`, 'danger');
+            }
+        } catch (error) {
+            showAddPersonResult(`? Erreur de communication: ${error.message}`, 'danger');
+        }
+    });
+
+    function showAddPersonResult(message, type) {
+        document.getElementById('addPersonResult').innerHTML = `
+            <div class="alert alert-${type} mt-2" role="alert">
+                ${message}
+            </div>
+        `;
+    }
+
+    // Fonctions API existantes
+    async function loadAllDepartements() {
+        try {
+            showLoading();
+            const response = await fetch('/api/departements');
+            const data = await response.json();
+            displayResult('Tous les départements', data);
+        } catch (error) {
+            displayError('Erreur lors du chargement des départements: ' + error.message);
+        }
+    }
+
+    async function loadDepartementsWithPersons() {
+        try {
+            showLoading();
+            const response = await fetch('/api/departements/with-persons');
+            const data = await response.json();
+            displayResult('Départements avec personnes', data);
+        } catch (error) {
+            displayError('Erreur lors du chargement: ' + error.message);
+        }
+    }
+
+    async function loadAllPersons() {
+        try {
+            showLoading();
+            const response = await fetch('/api/departements/persons');
+            const data = await response.json();
+            displayResult('Toutes les personnes', data);
+        } catch (error) {
+            displayError('Erreur lors du chargement des personnes: ' + error.message);
+        }
+    }
+
+    async function loadDepartementByCode() {
+        const code = document.getElementById('deptCode').value.trim();
+        if (!code) {
+            displayError('Veuillez saisir un code de département');
+            return;
+        }
+
+        try {
+            showLoading();
+            const response = await fetch(`/api/departements/${code}`);
+            if (response.ok) {
+                const data = await response.json();
+                displayResult(`Département ${code}`, data);
+            } else if (response.status === 404) {
+                displayError(`Département avec le code ${code} non trouvé`);
+            } else {
+                displayError(`Erreur HTTP: ${response.status}`);
+            }
+        } catch (error) {
+            displayError('Erreur lors du chargement: ' + error.message);
+        }
+    }
+
+    function showLoading() {
+        document.getElementById('apiResult').innerHTML = '<div class="text-center"><div class="spinner-border" role="status"><span class="visually-hidden">Chargement...</span></div></div>';
+    }
+
+    function displayResult(title, data) {
+        const resultDiv = document.getElementById('apiResult');
+        const jsonString = JSON.stringify(data, null, 2);
+        
+        // Ajouter des boutons de suppression pour les personnes si c'est une liste de départements avec personnes
+        let actionsHtml = '';
+        if (Array.isArray(data) && data.length > 0 && data[0].persons) {
+            actionsHtml = '<div class="mt-2"><small class="text-muted">?? Vous pouvez maintenant ajouter des personnes avec le formulaire ci-dessus!</small></div>';
+        }
+        
+        resultDiv.innerHTML = `
+            <h6>${title}</h6>
+            <div class="alert alert-success" role="alert">
+                Données chargées avec succès! ${Array.isArray(data) ? data.length + ' élément(s)' : ''}
+            </div>
+            ${actionsHtml}
+            <pre class="bg-light p-3 rounded" style="max-height: 400px; overflow-y: auto;"><code>${jsonString}</code></pre>
+        `;
+    }
+
+    function displayError(message) {
+        document.getElementById('apiResult').innerHTML = `
+            <div class="alert alert-danger" role="alert">
+                ${message}
+            </div>
+        `;
+    }
+
+    // Gérer la touche Entrée dans le champ de recherche
+    document.getElementById('deptCode').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            loadDepartementByCode();
+        }
+    });
+</script>

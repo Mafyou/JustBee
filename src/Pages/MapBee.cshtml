@@ -1,0 +1,212 @@
+﻿@page
+@model MapBeeModel
+@{
+    ViewData["Title"] = "MapBee - Carte des Départements";
+}
+
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>🗺️ Carte des Départements Français</h1>
+        <div>
+            <a href="/PersonManagement" class="btn btn-success">
+                <i class="fas fa-user-plus"></i> Gérer les Personnes
+            </a>
+            <a href="/ApiDemo" class="btn btn-outline-secondary">
+                <i class="fas fa-code"></i> API Demo
+            </a>
+        </div>
+    </div>
+    
+    <div class="row">
+        <!-- Carte Leaflet -->
+        <div class="col-lg-8">
+            <div id="map" style="height: 600px; width: 100%;"></div>
+        </div>
+        
+        <!-- Panneau d'informations -->
+        <div class="col-lg-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5>📊 Informations</h5>
+                </div>
+                <div class="card-body">
+                    <p><strong>Total des personnes :</strong> @Model.AllPersons.Count</p>
+                    <p><strong>Départements avec des personnes :</strong> @Model.Departements.Count(d => d.Persons.Any())</p>
+                    
+                    @if (!Model.AllPersons.Any())
+                    {
+                        <div class="alert alert-info mt-3" role="alert">
+                            <i class="fas fa-info-circle"></i> 
+                            Aucune personne trouvée. 
+                            <a href="/PersonManagement" class="alert-link">Ajoutez des personnes</a> 
+                            pour les voir apparaître sur la carte!
+                        </div>
+                    }
+                </div>
+            </div>
+            
+            <div class="card mt-3">
+                <div class="card-header">
+                    <h5>🏛️ Départements avec des personnes</h5>
+                </div>
+                <div class="card-body" style="max-height: 400px; overflow-y: auto;">
+                    @if (Model.Departements.Any(d => d.Persons.Any()))
+                    {
+                        @foreach (var dept in Model.Departements.Where(d => d.Persons.Any()).OrderByDescending(d => d.Persons.Count))
+                        {
+                            <div class="mb-2 p-2 border rounded">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <div>
+                                        <strong>@dept.Code - @dept.Nom</strong> 
+                                        <span class="badge bg-primary ms-1">@dept.Persons.Count</span>
+                                        <br />
+                                        <small class="text-muted">@dept.Region</small>
+                                    </div>
+                                </div>
+                                <div class="mt-1">
+                                    <small class="text-muted">
+                                        @string.Join(", ", dept.Persons.Select(p => p.Pseudo))
+                                    </small>
+                                </div>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <div class="text-center text-muted py-3">
+                            <i class="fas fa-map-marked-alt fa-2x mb-2"></i>
+                            <p>Aucun département avec des personnes</p>
+                            <a href="/PersonManagement" class="btn btn-sm btn-success">
+                                <i class="fas fa-plus"></i> Ajouter des personnes
+                            </a>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Leaflet CSS -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+      crossorigin=""/>
+
+<!-- Leaflet JavaScript -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+        crossorigin=""></script>
+
+<script>
+    // Initialisation de la carte centrée sur la France
+    var map = L.map('map').setView([46.603354, 1.888334], 6);
+
+    // Ajout de la couche de tuiles OpenStreetMap
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+    }).addTo(map);
+
+    // Données des départements avec personnes
+    var departementsData = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(
+        Model.Departements.Where(d => d.Persons.Any()).Select(d => new {
+            code = d.Code,
+            nom = d.Nom,
+            region = d.Region,
+            latitude = d.Latitude,
+            longitude = d.Longitude,
+            personCount = d.Persons.Count,
+            persons = d.Persons.Select(p => new { id = p.Id, pseudo = p.Pseudo }).ToArray()
+        })
+    ));
+
+    // Vérifier s'il y a des données à afficher
+    if (departementsData && departementsData.length > 0) {
+        // Création des marqueurs pour chaque département avec des personnes
+        departementsData.forEach(function(dept) {
+            // Couleur du marqueur basée sur le nombre de personnes
+            var markerColor = dept.personCount > 2 ? 'red' : dept.personCount > 1 ? 'orange' : 'green';
+            
+            // Création du contenu du popup
+            var popupContent = `
+                <div>
+                    <h6><strong>${dept.code} - ${dept.nom}</strong></h6>
+                    <p><em>${dept.region}</em></p>
+                    <p><strong>${dept.personCount} personne(s) :</strong></p>
+                    <ul>
+                        ${dept.persons.map(person => `<li>${person.pseudo} <small>(ID: ${person.id})</small></li>`).join('')}
+                    </ul>
+                    <div class="mt-2">
+                        <a href="/PersonManagement" class="btn btn-sm btn-success">
+                            <i class="fas fa-plus"></i> Ajouter une personne
+                        </a>
+                    </div>
+                </div>
+            `;
+
+            // Création du marqueur avec une icône personnalisée
+            var marker = L.marker([dept.latitude, dept.longitude], {
+                title: `${dept.nom} (${dept.personCount} personne(s))`
+            }).addTo(map);
+
+            // Ajout du popup au marqueur
+            marker.bindPopup(popupContent);
+        });
+
+        // Ajustement de la vue pour inclure tous les marqueurs
+        if (departementsData.length > 0) {
+            var group = new L.featureGroup(map._layers);
+            if (Object.keys(group._layers).length > 0) {
+                map.fitBounds(group.getBounds().pad(0.1));
+            }
+        }
+    } else {
+        // Afficher un message si aucune donnée
+        var noDataPopup = L.popup()
+            .setLatLng([46.603354, 1.888334])
+            .setContent(`
+                <div class="text-center">
+                    <h6>🗺️ Aucune personne sur la carte</h6>
+                    <p>Commencez par ajouter des personnes!</p>
+                    <a href="/PersonManagement" class="btn btn-sm btn-success">
+                        <i class="fas fa-plus"></i> Ajouter des personnes
+                    </a>
+                </div>
+            `)
+            .openOn(map);
+    }
+
+    // Ajout d'une légende
+    var legend = L.control({position: 'bottomright'});
+    legend.onAdd = function (map) {
+        var div = L.DomUtil.create('div', 'info legend');
+        div.innerHTML += '<h6>Légende</h6>';
+        div.innerHTML += '<i style="background: green; width: 18px; height: 18px; display: inline-block; margin-right: 8px;"></i> 1 personne<br>';
+        div.innerHTML += '<i style="background: orange; width: 18px; height: 18px; display: inline-block; margin-right: 8px;"></i> 2 personnes<br>';
+        div.innerHTML += '<i style="background: red; width: 18px; height: 18px; display: inline-block; margin-right: 8px;"></i> 3+ personnes<br>';
+        return div;
+    };
+    legend.addTo(map);
+</script>
+
+<style>
+    .info {
+        padding: 6px 8px;
+        font: 14px/16px Arial, Helvetica, sans-serif;
+        background: white;
+        background: rgba(255,255,255,0.8);
+        box-shadow: 0 0 15px rgba(0,0,0,0.2);
+        border-radius: 5px;
+    }
+    .legend {
+        line-height: 18px;
+        color: #555;
+    }
+    .legend i {
+        width: 18px;
+        height: 18px;
+        float: left;
+        margin-right: 8px;
+        opacity: 0.7;
+    }
+</style>
