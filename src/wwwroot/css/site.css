@@ -186,13 +186,13 @@ body {
     filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.3));
 }
 
-/* Slogan Styles */
+/* Slogan Styles - Diverses tailles */
 .slogan-container {
     margin: 2rem 0;
 }
 
 .slogan-image {
-    max-width: 400px;
+    max-width: 350px;
     width: 100%;
     height: auto;
     filter: drop-shadow(2px 2px 8px rgba(0,0,0,0.3));
@@ -201,6 +201,56 @@ body {
 
 .slogan-image:hover {
     transform: scale(1.05);
+}
+
+/* Petit slogan sous titre */
+.slogan-small-container {
+    margin: 1rem 0;
+}
+
+.slogan-small-image {
+    max-width: 200px;
+    width: 100%;
+    height: auto;
+    opacity: 0.8;
+    filter: drop-shadow(1px 1px 3px rgba(0,0,0,0.2));
+    transition: transform 0.3s ease;
+}
+
+.slogan-small-image:hover {
+    transform: scale(1.03);
+    opacity: 1;
+}
+
+/* Slogan inline dans le contenu */
+.slogan-inline-small {
+    max-width: 150px;
+    width: 100%;
+    height: auto;
+    opacity: 0.7;
+    filter: drop-shadow(1px 1px 2px rgba(0,0,0,0.2));
+    transition: all 0.3s ease;
+}
+
+.slogan-inline-small:hover {
+    transform: scale(1.1);
+    opacity: 1;
+}
+
+/* Slogan sidebar - encore plus petit */
+.slogan-sidebar-image {
+    max-width: 120px;
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    filter: drop-shadow(1px 1px 3px rgba(0,0,0,0.2));
+    transition: transform 0.3s ease;
+    opacity: 0.9;
+}
+
+.slogan-sidebar-image:hover {
+    transform: scale(1.08);
+    opacity: 1;
 }
 
 .slogan-change-section {
@@ -225,19 +275,6 @@ body {
 
 .slogan-change-image:hover {
     transform: scale(1.03) rotate(1deg);
-}
-
-.slogan-sidebar-image {
-    max-width: 200px;
-    width: 100%;
-    height: auto;
-    border-radius: 10px;
-    filter: drop-shadow(1px 1px 4px rgba(0,0,0,0.2));
-    transition: transform 0.3s ease;
-}
-
-.slogan-sidebar-image:hover {
-    transform: scale(1.1);
 }
 
 /* Honeycomb Cards - PRIMARY BEE THEME */
@@ -630,15 +667,19 @@ body {
     }
 
     .slogan-image {
-        max-width: 300px;
-    }
-
-    .slogan-change-image {
         max-width: 250px;
     }
 
-    .slogan-sidebar-image {
+    .slogan-small-image {
         max-width: 150px;
+    }
+
+    .slogan-inline-small {
+        max-width: 100px;
+    }
+
+    .slogan-sidebar-image {
+        max-width: 80px;
     }
 
     .slogan-change-section {
