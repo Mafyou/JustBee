@@ -74,7 +74,10 @@ public class PersonManagementModel() : PageModel
         var random = new Random();
         string[] pseudos = ["Alex", "Marie", "Pierre", "Sophie", "Jean", "Emma", "Lucas", "Camille", "Thomas", "Léa", 
                            "Antoine", "Clara", "Nicolas", "Manon", "Julien", "Chloé", "Maxime", "Laura", "Hugo", "Jade"];
-        string[] departementCodes = ["75", "69", "13", "31", "33", "59", "67", "06", "34", "44"];
+        
+        // Get all available department codes instead of hardcoded subset
+        var allDepartements = _departementService.GetAllDepartements();
+        var departementCodes = allDepartements.Select(d => d.Code).ToArray();
 
         for (int i = 0; i < count; i++)
         {
@@ -85,7 +88,7 @@ public class PersonManagementModel() : PageModel
             _departementService.AddPersonToDepartement(deptCode, person);
         }
 
-        TempData["Success"] = $"{count} personnes générées aléatoirement!";
+        TempData["Success"] = $"{count} personnes générées aléatoirement dans {departementCodes.Length} départements!";
         return RedirectToPage();
     }
 }
