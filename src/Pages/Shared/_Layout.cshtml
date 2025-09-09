@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - Plan B Démocratie</title>
+    <title>@ViewData["Title"] - Plan B Ruche Démocratique</title>
     <script type="importmap"></script>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
@@ -22,7 +22,7 @@
                 <!-- Brand with bee theme -->
                 <a class="navbar-brand d-flex align-items-center fw-bold" asp-area="" asp-page="/Index">
                     <img src="~/img/bee-hero.svg" alt="Plan B Logo" width="40" height="30" class="me-2">
-                    <span class="brand-text">Plan B Démocratie</span>
+                    <span class="brand-text">Plan B Ruche Démocratique</span>
                 </a>
 
                 <!-- Mobile toggle button -->
@@ -36,29 +36,39 @@
                     <ul class="navbar-nav mx-auto">
                         <li class="nav-item">
                             <a class="nav-link nav-link-custom d-flex align-items-center" asp-area="" asp-page="/Index">
-                                <img src="~/img/frog_big.png" alt="Home" width="20" height="20" class="me-2 nav-frog">
-                                <span>🏠 Accueil</span>
+                                <img src="~/img/beehive.svg" alt="Home Hive" width="20" height="20" class="me-2 nav-frog">
+                                <span>🏠 Ruche Mère</span>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link nav-link-custom d-flex align-items-center" asp-area="" asp-page="/MapBee">
-                                <img src="~/img/frog_wings.png" alt="Map" width="20" height="20" class="me-2 nav-frog">
-                                <span>🗺️ Carte</span>
+                                <img src="~/img/honeycomb.svg" alt="Map Cells" width="20" height="20" class="me-2 nav-frog">
+                                <span>🗺️ Carte Alvéoles</span>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link nav-link-custom d-flex align-items-center" asp-area="" asp-page="/PersonManagement">
-                                <img src="~/img/frog_wings_front.png" alt="Citizens" width="20" height="20" class="me-2 nav-frog">
-                                <span>👥 Citoyens</span>
+                                <img src="~/img/bee-hero.svg" alt="Bees" width="20" height="15" class="me-2 nav-frog">
+                                <span>🐝 Abeilles</span>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link nav-link-custom d-flex align-items-center" asp-area="" asp-page="/Privacy">
-                                <img src="~/img/frog_peace.png" alt="Privacy" width="20" height="20" class="me-2 nav-frog">
+                                <img src="~/img/honeycomb.svg" alt="Privacy" width="20" height="20" class="me-2 nav-frog">
                                 <span>🔒 Confidentialité</span>
                             </a>
                         </li>
                     </ul>
+
+                    <!-- Action buttons -->
+                    <div class="d-flex align-items-center">
+                        <a href="/PersonManagement" class="btn btn-bee btn-sm me-2">
+                            <i class="fas fa-plus"></i> Nouvelle Abeille
+                        </a>
+                        <a href="/MapBee" class="btn btn-outline-warning btn-sm">
+                            <i class="fas fa-map-marked-alt"></i> Voir Ruches
+                        </a>
+                    </div>
                 </div>
             </div>
         </nav>
@@ -75,25 +85,25 @@
             <div class="row py-4">
                 <div class="col-md-6">
                     <div class="d-flex align-items-center mb-3">
-                        <img src="~/img/honeycomb.svg" alt="Plan B" width="30" height="30" class="me-2">
-                        <h5 class="mb-0 text-warning">Plan B Démocratie Participative</h5>
+                        <img src="~/img/beehive.svg" alt="Plan B Hive" width="30" height="30" class="me-2">
+                        <h5 class="mb-0 text-warning">Plan B Ruche Démocratique</h5>
                     </div>
                     <p class="text-light mb-0">
-                        Une innovation démocratique expérimentale pour une réappropriation citoyenne
-                        bottom-up, ancrée dans le cadre constitutionnel français.
+                        Une innovation démocratique expérimentale organisée en ruche collaborative
+                        avec des alvéoles citoyennes pour une réappropriation bottom-up du pouvoir.
                     </p>
                 </div>
                 <div class="col-md-3">
-                    <h6 class="text-warning mb-3">🐸 Navigation</h6>
+                    <h6 class="text-warning mb-3">🍯 Navigation Ruche</h6>
                     <ul class="list-unstyled">
-                        <li><a href="/" class="footer-link">🏠 Accueil</a></li>
-                        <li><a href="/MapBee" class="footer-link">🗺️ Carte Interactive</a></li>
-                        <li><a href="/PersonManagement" class="footer-link">👥 Gestion Citoyens</a></li>
-                        <li><a href="/Privacy" class="footer-link">🔒 Confidentialité</a></li>
+                        <li><a href="/" class="footer-link">🏠 Ruche Mère</a></li>
+                        <li><a href="/MapBee" class="footer-link">🗺️ Carte des Alvéoles</a></li>
+                        <li><a href="/PersonManagement" class="footer-link">🐝 Gestion Abeilles</a></li>
+                        <li><a href="/Privacy" class="footer-link">🔒 Protection Données</a></li>
                     </ul>
                 </div>
                 <div class="col-md-3">
-                    <h6 class="text-warning mb-3">🐝 Contact</h6>
+                    <h6 class="text-warning mb-3">🐝 Contact Ruche</h6>
                     <ul class="list-unstyled">
                         <li class="footer-contact">
                             <i class="fas fa-map-marker-alt"></i> Carcès, Var (83)
@@ -102,7 +112,7 @@
                             <i class="fas fa-envelope"></i> contact@planb-democratie.fr
                         </li>
                         <li class="footer-contact">
-                            <i class="fas fa-calendar"></i> Lancé le 6 juillet 2025
+                            <i class="fas fa-calendar"></i> Essaimage lancé le 6 juillet 2025
                         </li>
                     </ul>
                 </div>
@@ -113,20 +123,22 @@
                 <div class="row align-items-center">
                     <div class="col-md-6">
                         <p class="mb-0 text-light">
-                            &copy; 2025 Plan B Démocratie -
+                            &copy; 2025 Plan B Ruche Démocratique -
                             <a asp-area="" asp-page="/Privacy" class="footer-link">Politique de Confidentialité</a>
                         </p>
                     </div>
                     <div class="col-md-6 text-md-end">
-                        <div class="footer-frogs">
-                            <img src="~/img/frog_big.png" alt="Tradition" width="25" height="25" class="footer-frog-icon"
-                                title="Gardienne des Traditions">
-                            <img src="~/img/frog_peace.png" alt="Peace" width="25" height="25" class="footer-frog-icon"
-                                title="Médiatrice Citoyenne">
-                            <img src="~/img/frog_wings.png" alt="Vision" width="25" height="25" class="footer-frog-icon"
-                                title="Visionnaire du Futur">
-                            <img src="~/img/frog_wings_front.png" alt="Leadership" width="25" height="25"
-                                class="footer-frog-icon" title="Guide du Changement">
+                        <div class="footer-bee-group">
+                            <img src="~/img/bee-hero.svg" alt="Bee Hero" width="25" height="19" class="footer-bee-icon" title="Abeille Héroïque">
+                            <img src="~/img/honeycomb.svg" alt="Honeycomb" width="25" height="25" class="footer-bee-icon" title="Alvéoles Hexagonales">
+                            <img src="~/img/beehive.svg" alt="Beehive" width="25" height="25" class="footer-bee-icon" title="Ruche Démocratique">
+                            <!-- Grenouilles en petite taille pour biodiversité -->
+                            <span class="ms-2 opacity-50">
+                                <img src="~/img/frog_big.png" alt="Guardian" width="15" height="15" class="footer-frog-icon" title="Sentinelle Écologique">
+                                <img src="~/img/frog_peace.png" alt="Peace" width="15" height="15" class="footer-frog-icon" title="Médiatrice">
+                                <img src="~/img/frog_wings.png" alt="Vision" width="15" height="15" class="footer-frog-icon" title="Visionnaire">
+                                <img src="~/img/frog_wings_front.png" alt="Leadership" width="15" height="15" class="footer-frog-icon" title="Guide">
+                            </span>
                         </div>
                     </div>
                 </div>
@@ -171,13 +183,13 @@
             });
         });
 
-        // Add hover effects to footer frogs
-        document.querySelectorAll('.footer-frog-icon').forEach(frog => {
-            frog.addEventListener('mouseenter', function () {
+        // Add hover effects to footer icons
+        document.querySelectorAll('.footer-bee-icon, .footer-frog-icon').forEach(icon => {
+            icon.addEventListener('mouseenter', function () {
                 this.style.transform = 'scale(1.2) rotate(10deg)';
             });
 
-            frog.addEventListener('mouseleave', function () {
+            icon.addEventListener('mouseleave', function () {
                 this.style.transform = 'scale(1) rotate(0deg)';
             });
         });

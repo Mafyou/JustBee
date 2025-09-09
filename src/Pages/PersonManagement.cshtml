@@ -1,7 +1,7 @@
 ﻿@page
 @model PersonManagementModel
 @{
-    ViewData["Title"] = "Gestion des Citoyens";
+    ViewData["Title"] = "Gestion des Abeilles Citoyennes";
 }
 
 <!-- Hero Section for Person Management -->
@@ -9,55 +9,55 @@
     <div class="container hero-content">
         <div class="text-center">
             <img src="/img/honeycomb.svg" alt="Citizens Management" class="bee-icon">
-            <h1 class="display-4 fw-bold mb-3">👥 Gestion des Citoyens</h1>
+            <h1 class="display-4 fw-bold mb-3">👥 Gestion des Abeilles Citoyennes</h1>
             <p class="lead mb-4">
-                Administration des alvéoles citoyennes et gestion des ambassadeurs de la démocratie participative 
-                répartis sur le territoire français.
+                Administration de la ruche démocratique et gestion de l'essaimage des abeilles citoyennes 
+                à travers les alvéoles territoriales françaises.
             </p>
             <div class="d-flex justify-content-center gap-3">
                 <a href="/MapBee" class="btn btn-outline-light">
-                    <i class="fas fa-map"></i> Voir sur la Carte
+                    <i class="fas fa-map"></i> Voir les Ruches
                 </a>
-                <a href="#management-section" class="btn btn-bee btn-lg">Gérer les Citoyens</a>
+                <a href="#management-section" class="btn btn-bee btn-lg">Gérer l'Essaimage</a>
             </div>
         </div>
     </div>
 </div>
 
-<!-- Citizens Statistics Section -->
+<!-- Beehive Statistics Section -->
 <div class="container my-4">
     <div class="row text-center mb-4">
         <div class="col-12">
-            <h2 class="h4 mb-3">🐸 Statistiques des Ambassadeurs Citoyens</h2>
+            <h2 class="h4 mb-3">🍯 Statistiques de la Ruche Démocratique</h2>
         </div>
     </div>
     <div class="row justify-content-center">
         <div class="col-md-3 col-sm-6 mb-3">
             <div class="stat-card">
-                <img src="/img/frog_big.png" alt="Total Citizens" class="stat-icon">
+                <img src="/img/bee-hero.svg" alt="Total Bees" class="stat-icon">
                 <h5 class="stat-number">@Model.AllPersons.Count</h5>
-                <p class="stat-label">Citoyens Enregistrés</p>
+                <p class="stat-label">Abeilles Citoyennes</p>
             </div>
         </div>
         <div class="col-md-3 col-sm-6 mb-3">
             <div class="stat-card">
-                <img src="/img/frog_peace.png" alt="Active Departments" class="stat-icon">
+                <img src="/img/beehive.svg" alt="Active Hives" class="stat-icon">
                 <h5 class="stat-number">@Model.Departements.Count(d => d.Persons.Any())</h5>
-                <p class="stat-label">Départements Actifs</p>
+                <p class="stat-label">Ruches Actives</p>
             </div>
         </div>
         <div class="col-md-3 col-sm-6 mb-3">
             <div class="stat-card">
-                <img src="/img/frog_wings.png" alt="Coverage" class="stat-icon">
+                <img src="/img/honeycomb.svg" alt="Coverage" class="stat-icon">
                 <h5 class="stat-number">@Math.Round((double)Model.Departements.Count(d => d.Persons.Any()) / Model.Departements.Count * 100, 1)%</h5>
-                <p class="stat-label">Couverture Territoriale</p>
+                <p class="stat-label">Taux d'Essaimage</p>
             </div>
         </div>
         <div class="col-md-3 col-sm-6 mb-3">
             <div class="stat-card">
-                <img src="/img/frog_wings_front.png" alt="Average per Department" class="stat-icon">
+                <img src="/img/honeycomb.svg" alt="Average per Hive" class="stat-icon">
                 <h5 class="stat-number">@(Model.Departements.Any(d => d.Persons.Any()) ? Math.Round((double)Model.AllPersons.Count / Model.Departements.Count(d => d.Persons.Any()), 1) : 0)</h5>
-                <p class="stat-label">Moyenne par Département</p>
+                <p class="stat-label">Abeilles par Ruche</p>
             </div>
         </div>
     </div>
@@ -69,7 +69,7 @@
     {
         <div class="alert alert-success alert-dismissible fade show" role="alert">
             <div class="d-flex align-items-center">
-                <img src="/img/frog_peace.png" alt="Success" style="width: 25px; height: 25px; margin-right: 10px;">
+                <img src="/img/bee-hero.svg" alt="Success Bee" style="width: 25px; height: 19px; margin-right: 10px;">
                 <div>
                     <i class="fas fa-check-circle"></i> @TempData["Success"]
                 </div>
@@ -82,7 +82,7 @@
     {
         <div class="alert alert-danger alert-dismissible fade show" role="alert">
             <div class="d-flex align-items-center">
-                <img src="/img/frog_big.png" alt="Error" style="width: 25px; height: 25px; margin-right: 10px;">
+                <img src="/img/beehive.svg" alt="Warning Hive" style="width: 25px; height: 25px; margin-right: 10px;">
                 <div>
                     <i class="fas fa-exclamation-circle"></i> @TempData["Error"]
                 </div>
@@ -96,28 +96,28 @@
         <div class="col-lg-4">
             <div class="section-card">
                 <div class="d-flex align-items-center mb-3">
-                    <img src="/img/frog_wings_front.png" alt="Add Person" style="width: 35px; height: 35px; margin-right: 10px;">
-                    <h5 class="mb-0"><i class="fas fa-user-plus"></i> Ajouter un Citoyen</h5>
+                    <img src="/img/bee-hero.svg" alt="Add Bee" style="width: 35px; height: 25px; margin-right: 10px;">
+                    <h5 class="mb-0"><i class="fas fa-user-plus"></i> Intégrer une Abeille</h5>
                 </div>
                 <form method="post" asp-page-handler="AddPerson">
                     <div class="mb-3">
-                        <label asp-for="NewPersonPseudo" class="form-label">Pseudo du Citoyen</label>
-                        <input asp-for="NewPersonPseudo" class="form-control" placeholder="Ex: JohnDoe" required>
-                        <small class="text-muted">🐝 Identifiant unique dans la ruche</small>
+                        <label asp-for="NewPersonPseudo" class="form-label">Nom de l'Abeille Citoyenne</label>
+                        <input asp-for="NewPersonPseudo" class="form-control" placeholder="Ex: AbeilleDuVar" required>
+                        <small class="text-muted">🐝 Identifiant unique dans la ruche démocratique</small>
                     </div>
                     <div class="mb-3">
-                        <label asp-for="NewPersonDepartement" class="form-label">Alvéole Territoriale</label>
+                        <label asp-for="NewPersonDepartement" class="form-label">Ruche Territoriale</label>
                         <select asp-for="NewPersonDepartement" class="form-select" required>
-                            <option value="">Choisir une alvéole...</option>
+                            <option value="">Choisir une ruche...</option>
                             @foreach (var dept in Model.Departements.OrderBy(d => d.Code))
                             {
-                                <option value="@dept.Code">@dept.Code - @dept.Nom</option>
+                                <option value="@dept.Code">🏠 @dept.Code - @dept.Nom</option>
                             }
                         </select>
-                        <small class="text-muted">🏛️ Département d'appartenance</small>
+                        <small class="text-muted">🍯 Alvéole territoriale d'appartenance</small>
                     </div>
                     <button type="submit" class="btn btn-bee w-100">
-                        <i class="fas fa-plus"></i> Intégrer à la Ruche
+                        <i class="fas fa-plus"></i> Rejoindre la Ruche
                     </button>
                 </form>
             </div>
@@ -125,20 +125,20 @@
             <!-- Actions rapides -->
             <div class="section-card">
                 <div class="d-flex align-items-center mb-3">
-                    <img src="/img/frog_wings.png" alt="Quick Actions" style="width: 35px; height: 35px; margin-right: 10px;">
-                    <h5 class="mb-0"><i class="fas fa-bolt"></i> Actions Rapides</h5>
+                    <img src="/img/honeycomb.svg" alt="Quick Actions" style="width: 35px; height: 35px; margin-right: 10px;">
+                    <h5 class="mb-0"><i class="fas fa-bolt"></i> Essaimage Automatique</h5>
                 </div>
                 <div class="highlight-box">
-                    <p class="small mb-3 text-center">🐸 Génération automatique de citoyens pour tester le système</p>
+                    <p class="small mb-3 text-center">🐝 Génération automatique d'abeilles pour tester l'essaimage</p>
                     <form method="post" asp-page-handler="GenerateRandomPersons" class="mb-2">
                         <button type="submit" class="btn btn-outline-warning w-100 mb-2">
-                            <i class="fas fa-random"></i> Générer 5 citoyens aléatoires
+                            <i class="fas fa-random"></i> Essaimer 5 abeilles
                         </button>
                     </form>
                     <form method="post" asp-page-handler="GenerateRandomPersons" class="mb-2">
                         <input type="hidden" name="count" value="10">
                         <button type="submit" class="btn btn-outline-success w-100">
-                            <i class="fas fa-users"></i> Générer 10 citoyens aléatoires
+                            <i class="fas fa-users"></i> Essaimer 10 abeilles
                         </button>
                     </form>
                 </div>
@@ -150,11 +150,11 @@
             <div class="section-card">
                 <div class="d-flex justify-content-between align-items-center mb-3">
                     <div class="d-flex align-items-center">
-                        <img src="/img/frog_big.png" alt="Citizens List" style="width: 35px; height: 35px; margin-right: 10px;">
-                        <h5 class="mb-0"><i class="fas fa-list"></i> Registre des Citoyens (@Model.AllPersons.Count)</h5>
+                        <img src="/img/beehive.svg" alt="Hive Registry" style="width: 35px; height: 35px; margin-right: 10px;">
+                        <h5 class="mb-0"><i class="fas fa-list"></i> Registre de la Ruche (@Model.AllPersons.Count 🐝)</h5>
                     </div>
                     <div class="d-flex align-items-center">
-                        <input type="text" id="searchPersons" class="form-control form-control-sm" placeholder="🔍 Rechercher un citoyen..." style="width: 250px;">
+                        <input type="text" id="searchPersons" class="form-control form-control-sm" placeholder="🔍 Rechercher une abeille..." style="width: 250px;">
                     </div>
                 </div>
                 
@@ -165,10 +165,10 @@
                             <thead class="table-light">
                                 <tr>
                                     <th>ID</th>
-                                    <th>🐝 Pseudo</th>
-                                    <th>🏛️ Alvéole</th>
+                                    <th>🐝 Abeille</th>
+                                    <th>🏠 Ruche</th>
                                     <th>🌍 Région</th>
-                                    <th>📍 Coordonnées</th>
+                                    <th>📍 Position</th>
                                     <th>⚙️ Actions</th>
                                 </tr>
                             </thead>
@@ -178,11 +178,11 @@
                                     var dept = Model.Departements.FirstOrDefault(d => d.Code == person.DepartementCode);
                                     <tr>
                                         <td><span class="badge bg-secondary">@person.Id</span></td>
-                                        <td><strong>@person.Pseudo</strong></td>
+                                        <td><strong>🐝 @person.Pseudo</strong></td>
                                         <td>
                                             @if (dept != null)
                                             {
-                                                <span class="badge bg-warning text-dark">@dept.Code</span> @dept.Nom
+                                                <span class="badge bg-warning text-dark">🏠 @dept.Code</span> @dept.Nom
                                             }
                                         </td>
                                         <td>
@@ -200,7 +200,7 @@
                                             }
                                             else
                                             {
-                                                <small class="text-muted">Coordonnées non disponibles</small>
+                                                <small class="text-muted">Position non définie</small>
                                             }
                                         </td>
                                         <td>
@@ -222,11 +222,11 @@
                 else
                 {
                     <div class="text-center py-5">
-                        <img src="/img/frog_peace.png" alt="No Citizens" style="width: 80px; height: 80px; margin-bottom: 20px; opacity: 0.6;">
-                        <h5 class="text-muted">Aucun citoyen dans la ruche</h5>
-                        <p class="text-muted">Commencez par ajouter votre premier ambassadeur démocratique!</p>
+                        <img src="/img/beehive.svg" alt="Empty Hive" style="width: 80px; height: 80px; margin-bottom: 20px; opacity: 0.6;">
+                        <h5 class="text-muted">Ruche vide</h5>
+                        <p class="text-muted">Commencez l'essaimage en ajoutant votre première abeille citoyenne!</p>
                         <button class="btn btn-bee" onclick="document.querySelector('input[asp-for=NewPersonPseudo]').focus()">
-                            <i class="fas fa-plus"></i> Ajouter le premier citoyen
+                            <i class="fas fa-plus"></i> Première abeille
                         </button>
                     </div>
                 }
@@ -234,15 +234,15 @@
         </div>
     </div>
 
-    <!-- Départements avec personnes -->
+    <!-- Ruches avec abeilles -->
     @if (Model.Departements.Any(d => d.Persons.Any()))
     {
         <div class="row mt-4">
             <div class="col-12">
                 <div class="section-card">
                     <div class="d-flex align-items-center mb-3">
-                        <img src="/img/frog_wings_front.png" alt="Territorial Distribution" style="width: 35px; height: 35px; margin-right: 10px;">
-                        <h5 class="mb-0"><i class="fas fa-map-marked-alt"></i> Répartition des Alvéoles Territoriales</h5>
+                        <img src="/img/beehive.svg" alt="Territorial Hives" style="width: 35px; height: 35px; margin-right: 10px;">
+                        <h5 class="mb-0"><i class="fas fa-map-marked-alt"></i> Répartition des Ruches Territoriales</h5>
                     </div>
                     <div class="row">
                         @foreach (var dept in Model.Departements.Where(d => d.Persons.Any()).OrderByDescending(d => d.Persons.Count))
@@ -252,7 +252,7 @@
                                     <div class="d-flex justify-content-between align-items-start mb-2">
                                         <div>
                                             <h6 class="text-warning mb-1">
-                                                <i class="fas fa-map-pin"></i> @dept.Code - @dept.Nom
+                                                <i class="fas fa-home"></i> 🏠 @dept.Code - @dept.Nom
                                             </h6>
                                             <small class="text-muted">📍 @dept.Region</small>
                                         </div>
@@ -263,7 +263,7 @@
                                     <div class="mt-2">
                                         @foreach (var person in dept.Persons.Take(3))
                                         {
-                                            <span class="badge bg-light text-dark me-1">@person.Pseudo</span>
+                                            <span class="badge bg-light text-dark me-1">🐝 @person.Pseudo</span>
                                         }
                                         @if (dept.Persons.Count > 3)
                                         {
@@ -285,23 +285,50 @@
             <div class="section-card">
                 <div class="row align-items-center">
                     <div class="col-md-8">
-                        <h3 class="h4 mb-3">🚀 Développer le Réseau Démocratique</h3>
+                        <h3 class="h4 mb-3">🚀 Développer l'Essaimage Démocratique</h3>
                         <p class="mb-0">
-                            Continuez à enrichir la ruche démocratique en ajoutant de nouveaux citoyens 
-                            et en renforçant les alvéoles territoriales pour une meilleure représentation.
+                            Continuez à enrichir la ruche démocratique en ajoutant de nouvelles abeilles citoyennes 
+                            et en renforçant les alvéoles territoriales pour un maillage démocratique optimal.
                         </p>
                     </div>
                     <div class="col-md-4 text-center">
-                        <div class="frog-conclusion-group mb-3">
-                            <img src="/img/frog_big.png" alt="Big Frog" style="width: 30px; height: 30px; margin: 0 2px;">
-                            <img src="/img/frog_peace.png" alt="Peace Frog" style="width: 30px; height: 30px; margin: 0 2px;">
-                            <img src="/img/frog_wings.png" alt="Wings Frog" style="width: 30px; height: 30px; margin: 0 2px;">
-                            <img src="/img/frog_wings_front.png" alt="Front Wings Frog" style="width: 30px; height: 30px; margin: 0 2px;">
+                        <div class="bee-conclusion-group mb-3">
+                            <img src="/img/bee-hero.svg" alt="Bee Hero" style="width: 30px; height: 23px; margin: 0 3px;">
+                            <img src="/img/honeycomb.svg" alt="Honeycomb" style="width: 30px; height: 23px; margin: 0 3px;">
+                            <img src="/img/beehive.svg" alt="Beehive" style="width: 30px; height: 30px; margin: 0 3px;">
                         </div>
                         <div class="d-flex gap-2 justify-content-center">
-                            <a href="/" class="btn btn-outline-warning btn-sm">Retour Accueil</a>
-                            <a href="/MapBee" class="btn btn-bee btn-sm">Voir la Carte</a>
+                            <a href="/" class="btn btn-outline-warning btn-sm">Retour Ruche</a>
+                            <a href="/MapBee" class="btn btn-bee btn-sm">Voir Carte</a>
                         </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Biodiversity Indicators (Frogs as secondary) -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="section-card">
+                <h5 class="h6 mb-3">🌱 Sentinelles Écologiques de la Ruche</h5>
+                <p class="small text-muted mb-3">Les grenouilles surveillent la santé de l'écosystème démocratique :</p>
+                <div class="row text-center">
+                    <div class="col-3">
+                        <img src="/img/frog_big.png" alt="Tradition Guardian" style="width: 30px; height: 30px;">
+                        <small class="d-block mt-1">Gardienne des Traditions</small>
+                    </div>
+                    <div class="col-3">
+                        <img src="/img/frog_peace.png" alt="Peace Mediator" style="width: 30px; height: 30px;">
+                        <small class="d-block mt-1">Médiatrice de Paix</small>
+                    </div>
+                    <div class="col-3">
+                        <img src="/img/frog_wings.png" alt="Future Visionary" style="width: 30px; height: 30px;">
+                        <small class="d-block mt-1">Visionnaire du Futur</small>
+                    </div>
+                    <div class="col-3">
+                        <img src="/img/frog_wings_front.png" alt="Change Leader" style="width: 30px; height: 30px;">
+                        <small class="d-block mt-1">Guide du Changement</small>
                     </div>
                 </div>
             </div>
@@ -401,7 +428,7 @@
         margin-bottom: 20px;
     }
 
-    .frog-conclusion-group img {
+    .bee-conclusion-group img {
         width: 35px;
         height: 35px;
     }
@@ -445,7 +472,7 @@
             padding: 15px;
         }
 
-        .frog-conclusion-group img {
+        .bee-conclusion-group img {
             width: 30px;
             height: 30px;
         }

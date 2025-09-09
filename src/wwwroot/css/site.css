@@ -118,26 +118,38 @@ body {
     margin-right: 8px;
 }
 
-.footer-frogs {
+.footer-bee-group {
     display: flex;
     justify-content: center;
     align-items: center;
     gap: 10px;
 }
 
-.footer-frog-icon {
+.footer-bee-icon {
     transition: transform 0.3s ease;
     cursor: pointer;
     border-radius: 50%;
     padding: 2px;
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(255, 215, 0, 0.1);
+}
+
+.footer-bee-icon:hover {
+    background: rgba(255, 215, 0, 0.3);
+}
+
+.footer-frog-icon {
+    transition: transform 0.3s ease;
+    cursor: pointer;
+    border-radius: 50%;
+    padding: 1px;
+    background: rgba(255, 255, 255, 0.05);
 }
 
 .footer-frog-icon:hover {
-    background: rgba(255, 215, 0, 0.2);
+    background: rgba(255, 215, 0, 0.15);
 }
 
-/* Plan B Specific Styles */
+/* Plan B Specific Styles - BEE FOCUSED */
 .hero-section {
     background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
     padding: 4rem 0;
@@ -171,6 +183,157 @@ body {
     height: 60px;
     margin: 0 auto 1rem;
     display: block;
+    filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.3));
+}
+
+/* Slogan Styles */
+.slogan-container {
+    margin: 2rem 0;
+}
+
+.slogan-image {
+    max-width: 400px;
+    width: 100%;
+    height: auto;
+    filter: drop-shadow(2px 2px 8px rgba(0,0,0,0.3));
+    transition: transform 0.3s ease;
+}
+
+.slogan-image:hover {
+    transform: scale(1.05);
+}
+
+.slogan-change-section {
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 20px;
+    padding: 2rem;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease;
+}
+
+.slogan-change-section:hover {
+    transform: translateY(-5px);
+}
+
+.slogan-change-image {
+    max-width: 350px;
+    width: 100%;
+    height: auto;
+    filter: drop-shadow(1px 1px 4px rgba(0,0,0,0.2));
+    transition: transform 0.3s ease;
+}
+
+.slogan-change-image:hover {
+    transform: scale(1.03) rotate(1deg);
+}
+
+.slogan-sidebar-image {
+    max-width: 200px;
+    width: 100%;
+    height: auto;
+    border-radius: 10px;
+    filter: drop-shadow(1px 1px 4px rgba(0,0,0,0.2));
+    transition: transform 0.3s ease;
+}
+
+.slogan-sidebar-image:hover {
+    transform: scale(1.1);
+}
+
+/* Honeycomb Cards - PRIMARY BEE THEME */
+.honeycomb-card {
+    background: linear-gradient(135deg, #FFF8DC 0%, #F0E68C 100%);
+    border: 3px solid #DAA520;
+    border-radius: 20px;
+    padding: 1.5rem;
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    height: 100%;
+    position: relative;
+}
+
+.honeycomb-card::before {
+    content: '';
+    position: absolute;
+    top: -5px;
+    left: -5px;
+    right: -5px;
+    bottom: -5px;
+    background: linear-gradient(135deg, #FFD700, #FFA500);
+    border-radius: 25px;
+    z-index: -1;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.honeycomb-card:hover::before {
+    opacity: 1;
+}
+
+.honeycomb-card:hover {
+    transform: translateY(-8px) scale(1.03);
+    box-shadow: 0 12px 30px rgba(255, 215, 0, 0.4);
+}
+
+.honeycomb-image {
+    width: 70px;
+    height: 70px;
+    margin-bottom: 1rem;
+    transition: transform 0.3s ease;
+    filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.2));
+}
+
+.honeycomb-card:hover .honeycomb-image {
+    transform: rotate(360deg) scale(1.2);
+}
+
+.honeycomb-card h5 {
+    color: #8B4513;
+    font-weight: bold;
+    margin-bottom: 0.8rem;
+    font-size: 1.1rem;
+}
+
+.honeycomb-card p {
+    color: #5D4037;
+    margin-bottom: 0;
+    font-size: 0.9rem;
+}
+
+/* Living Cell Special Card */
+.living-cell-card {
+    background: linear-gradient(135deg, #E8F5E8 0%, #C8E6C9 100%);
+    border: 3px solid #4CAF50;
+    border-radius: 20px;
+    padding: 2rem;
+    text-align: center;
+    box-shadow: 0 8px 25px rgba(76, 175, 80, 0.3);
+    position: relative;
+}
+
+.living-cell-card::before {
+    content: '🌱';
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 2rem;
+    opacity: 0.3;
+}
+
+.living-cell-icon {
+    width: 50px;
+    height: 50px;
+    filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.2));
+}
+
+.living-cell-card h4 {
+    color: #2E7D32;
+    margin-bottom: 0.5rem;
+}
+
+.living-cell {
+    background: linear-gradient(135deg, #E8F5E8 0%, #C8E6C9 100%);
+    border-left-color: #4CAF50 !important;
 }
 
 .section-card {
@@ -194,6 +357,7 @@ body {
     float: left;
     margin-right: 1rem;
     margin-bottom: 1rem;
+    filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.2));
 }
 
 .highlight-box {
@@ -202,6 +366,16 @@ body {
     border-radius: 10px;
     padding: 1.5rem;
     margin: 1.5rem 0;
+    position: relative;
+}
+
+.highlight-box::before {
+    content: '🍯';
+    position: absolute;
+    top: 10px;
+    left: 15px;
+    font-size: 1.5rem;
+    opacity: 0.4;
 }
 
 .key-points {
@@ -221,6 +395,7 @@ body {
     position: absolute;
     left: 0;
     top: 0.5rem;
+    font-size: 1.2rem;
 }
 
 .timeline {
@@ -234,6 +409,13 @@ body {
     margin: 1rem 0;
     border-left: 3px solid #FFD700;
     border-radius: 0 8px 8px 0;
+    transition: all 0.3s ease;
+}
+
+.timeline-item:hover {
+    background: #FFF8DC;
+    border-left-color: #FFA500;
+    transform: translateX(5px);
 }
 
 .btn-bee {
@@ -244,6 +426,22 @@ body {
     padding: 0.75rem 2rem;
     border-radius: 25px;
     transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-bee::before {
+    content: '🐝';
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.btn-bee:hover::before {
+    opacity: 1;
 }
 
 .btn-bee:hover {
@@ -251,9 +449,37 @@ body {
     color: #fff;
     transform: translateY(-2px);
     box-shadow: 0 4px 15px rgba(255,215,0,0.4);
+    padding-left: 2.5rem;
 }
 
-/* Frog-specific styles */
+/* Bee floating animations */
+.bee-float {
+    animation: beeFloat 4s ease-in-out infinite;
+}
+
+@keyframes beeFloat {
+    0%, 100% { transform: translateY(0px) translateX(0px) rotate(0deg); }
+    25% { transform: translateY(-5px) translateX(2px) rotate(2deg); }
+    50% { transform: translateY(-8px) translateX(0px) rotate(0deg); }
+    75% { transform: translateY(-3px) translateX(-2px) rotate(-2deg); }
+}
+
+.bee-conclusion-group {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.bee-conclusion-group img {
+    transition: transform 0.3s ease;
+    filter: drop-shadow(1px 1px 2px rgba(0,0,0,0.3));
+}
+
+.bee-conclusion-group img:hover {
+    transform: scale(1.3) rotate(15deg);
+}
+
+/* Frog-specific styles - SECONDARY/INDICATORS ONLY */
 .frog-card {
     background: linear-gradient(135deg, #98FB98 0%, #90EE90 100%);
     border-radius: 15px;
@@ -307,18 +533,28 @@ body {
 
 /* Statistics cards */
 .stat-card {
-    background: linear-gradient(135deg, #E8F5E8 0%, #C8E6C9 100%);
-    border: 2px solid #4CAF50;
+    background: linear-gradient(135deg, #FFF8DC 0%, #F0E68C 100%);
+    border: 2px solid #DAA520;
     border-radius: 15px;
     padding: 1.5rem;
     text-align: center;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     height: 100%;
+    position: relative;
+}
+
+.stat-card::before {
+    content: '🍯';
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 1.5rem;
+    opacity: 0.3;
 }
 
 .stat-card:hover {
     transform: translateY(-5px);
-    box-shadow: 0 8px 25px rgba(76, 175, 80, 0.3);
+    box-shadow: 0 8px 25px rgba(218, 165, 32, 0.4);
 }
 
 .stat-icon {
@@ -335,33 +571,14 @@ body {
 .stat-number {
     font-size: 2rem;
     font-weight: bold;
-    color: #2E7D32;
+    color: #8B4513;
     margin-bottom: 0.5rem;
 }
 
 .stat-label {
-    color: #4A4A4A;
+    color: #5D4037;
     font-size: 0.9rem;
     margin-bottom: 0;
-}
-
-/* Floating frog animations */
-@keyframes float {
-    0%, 100% { transform: translateY(0px); }
-    50% { transform: translateY(-10px); }
-}
-
-.highlight-box img,
-.section-card .text-end img {
-    animation: float 3s ease-in-out infinite;
-}
-
-.highlight-box img {
-    animation-delay: 0.5s;
-}
-
-.section-card .text-end img {
-    animation-delay: 1s;
 }
 
 /* Responsive adjustments */
@@ -381,23 +598,18 @@ body {
         padding: 1.5rem;
     }
     
-    .frog-card {
+    .honeycomb-card {
         margin-bottom: 1rem;
     }
     
-    .frog-image {
-        width: 60px;
-        height: 60px;
+    .honeycomb-image {
+        width: 50px;
+        height: 50px;
     }
     
-    .frog-conclusion-group {
+    .bee-conclusion-group {
         justify-content: center;
         margin-top: 1rem;
-    }
-    
-    .frog-conclusion-group img {
-        width: 25px !important;
-        height: 25px !important;
     }
 
     .navbar-brand .brand-text {
@@ -408,7 +620,29 @@ body {
         margin: 0.25rem 0;
     }
 
-    .footer-frogs {
+    .footer-bee-group {
         margin-top: 1rem;
+    }
+
+    .living-cell-icon {
+        width: 40px;
+        height: 40px;
+    }
+
+    .slogan-image {
+        max-width: 300px;
+    }
+
+    .slogan-change-image {
+        max-width: 250px;
+    }
+
+    .slogan-sidebar-image {
+        max-width: 150px;
+    }
+
+    .slogan-change-section {
+        padding: 1.5rem;
+        margin: 1rem 0;
     }
 }
