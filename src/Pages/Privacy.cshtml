@@ -1,8 +1,231 @@
 ﻿@page
 @model PrivacyModel
 @{
-    ViewData["Title"] = "Privacy Policy";
+    ViewData["Title"] = "Politique de Confidentialité";
 }
-<h1>@ViewData["Title"]</h1>
 
-<p>Use this page to detail your site's privacy policy.</p>
+<!-- Hero Section for Privacy -->
+<div class="hero-section">
+    <div class="container hero-content">
+        <div class="text-center">
+            <img src="/img/frog_peace.png" alt="Privacy Guardian" class="bee-icon">
+            <h1 class="display-4 fw-bold mb-3">🔒 Politique de Confidentialité</h1>
+            <p class="lead mb-4">
+                Protection des données et respect de la vie privée dans le cadre du Plan B 
+                pour une démocratie participative transparente et sécurisée.
+            </p>
+            <a href="#privacy-details" class="btn btn-bee btn-lg">Découvrir nos Engagements</a>
+        </div>
+    </div>
+</div>
+
+<!-- Privacy Principles Section -->
+<div class="container my-5">
+    <div class="row text-center mb-4">
+        <div class="col-12">
+            <h2 class="h3 mb-3">🐸 Principes de Protection des Données</h2>
+            <p class="text-muted">Nos ambassadeurs de la confidentialité veillent sur vos informations personnelles</p>
+        </div>
+    </div>
+    <div class="row justify-content-center">
+        <div class="col-md-3 col-sm-6 mb-3">
+            <div class="frog-card">
+                <img src="/img/frog_big.png" alt="Data Protection" class="frog-image">
+                <h5>Gardien des Données</h5>
+                <p class="small">Protection maximale de vos informations personnelles</p>
+            </div>
+        </div>
+        <div class="col-md-3 col-sm-6 mb-3">
+            <div class="frog-card">
+                <img src="/img/frog_peace.png" alt="Transparency" class="frog-image">
+                <h5>Transparence Totale</h5>
+                <p class="small">Utilisation claire et transparente de vos données</p>
+            </div>
+        </div>
+        <div class="col-md-3 col-sm-6 mb-3">
+            <div class="frog-card">
+                <img src="/img/frog_wings.png" alt="User Control" class="frog-image">
+                <h5>Contrôle Citoyen</h5>
+                <p class="small">Vous gardez le contrôle total sur vos informations</p>
+            </div>
+        </div>
+        <div class="col-md-3 col-sm-6 mb-3">
+            <div class="frog-card">
+                <img src="/img/frog_wings_front.png" alt="GDPR Compliance" class="frog-image">
+                <h5>Conformité RGPD</h5>
+                <p class="small">Respect scrupuleux de la réglementation européenne</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container" id="privacy-details">
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="section-card">
+                <img src="/img/honeycomb.svg" alt="Data Collection" class="section-icon">
+                <h2 class="h3 mb-3">📊 Collecte des Données</h2>
+                <p>
+                    Dans le cadre du <strong>Plan B pour la démocratie participative</strong>, nous collectons 
+                    uniquement les informations nécessaires au fonctionnement des alvéoles citoyennes et 
+                    à la représentation démocratique.
+                </p>
+                <div class="highlight-box">
+                    <strong>🔍 Données collectées :</strong>
+                    <ul class="key-points mt-2">
+                        <li><strong>Informations d'identification :</strong> Pseudo, département de résidence</li>
+                        <li><strong>Participation citoyenne :</strong> Alvéole d'appartenance, contributions</li>
+                        <li><strong>Données techniques :</strong> Adresse IP, cookies de session</li>
+                        <li><strong>Communications :</strong> Messages dans le cadre des délibérations</li>
+                    </ul>
+                    <img src="/img/frog_big.png" alt="Data Guardian" class="float-end" style="width: 40px; height: 40px; margin-left: 10px;">
+                </div>
+            </div>
+
+            <div class="section-card">
+                <img src="/img/beehive.svg" alt="Data Usage" class="section-icon">
+                <h2 class="h3 mb-3">⚡ Utilisation des Données</h2>
+                <div class="row">
+                    <div class="col-md-6">
+                        <ul class="key-points">
+                            <li><strong>Fonctionnement des alvéoles :</strong> Organisation des groupes de travail</li>
+                            <li><strong>Cartographie territoriale :</strong> Visualisation de la répartition géographique</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-6">
+                        <ul class="key-points">
+                            <li><strong>Communication interne :</strong> Facilitation des échanges entre citoyens</li>
+                            <li><strong>Amélioration continue :</strong> Optimisation de la plateforme</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="text-end mt-3">
+                    <img src="/img/frog_wings.png" alt="Usage Frog" style="width: 60px; height: 60px; opacity: 0.7;">
+                </div>
+            </div>
+
+            <div class="section-card">
+                <h2 class="h3 mb-3">🛡️ Sécurité et Protection</h2>
+                <p>
+                    Conformément aux principes du <strong>RGPD</strong> et aux valeurs démocratiques du Plan B, 
+                    nous mettons en place des mesures de sécurité robustes pour protéger vos données personnelles.
+                </p>
+                <div class="highlight-box">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <ul class="key-points">
+                                <li><strong>Chiffrement :</strong> Données chiffrées en transit et au repos</li>
+                                <li><strong>Accès restreint :</strong> Principe du moindre privilège</li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <ul class="key-points">
+                                <li><strong>Audit régulier :</strong> Contrôles de sécurité périodiques</li>
+                                <li><strong>Sauvegarde :</strong> Protection contre la perte de données</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="section-card">
+                <div class="d-flex align-items-center mb-3">
+                    <h3 class="h4 mb-0 me-2">👤 Vos Droits</h3>
+                    <img src="/img/frog_peace.png" alt="Rights Frog" style="width: 35px; height: 35px;">
+                </div>
+                <p class="small mb-3">En tant que citoyen de la ruche démocratique, vous bénéficiez de droits fondamentaux :</p>
+                
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <strong>Droit d'accès</strong><br>
+                        <small>Consulter vos données personnelles à tout moment</small>
+                    </div>
+                    <div class="timeline-item">
+                        <strong>Droit de rectification</strong><br>
+                        <small>Corriger ou mettre à jour vos informations</small>
+                    </div>
+                    <div class="timeline-item">
+                        <strong>Droit à l'effacement</strong><br>
+                        <small>Demander la suppression de vos données</small>
+                    </div>
+                    <div class="timeline-item">
+                        <strong>Droit à la portabilité</strong><br>
+                        <small>Récupérer vos données dans un format lisible</small>
+                    </div>
+                    <div class="timeline-item">
+                        <strong>Droit d'opposition</strong><br>
+                        <small>Vous opposer au traitement de vos données</small>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section-card">
+                <div class="d-flex align-items-center mb-3">
+                    <h3 class="h4 mb-0 me-2">📞 Contact</h3>
+                    <img src="/img/frog_wings_front.png" alt="Contact Frog" style="width: 35px; height: 35px;">
+                </div>
+                <div class="highlight-box text-center">
+                    <p class="mb-2">
+                        <strong>Délégué à la Protection des Données</strong><br>
+                        <small class="text-muted">Plan B - Démocratie Participative</small>
+                    </p>
+                    <div class="mb-3">
+                        <i class="fas fa-envelope text-warning"></i>
+                        <strong> dpo@planb-democratie.fr</strong>
+                    </div>
+                    <div class="mb-3">
+                        <i class="fas fa-map-marker-alt text-warning"></i>
+                        <strong> Carcès, Var (83)</strong>
+                    </div>
+                    <small class="text-muted">
+                        Réponse garantie sous 72h conformément au RGPD
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="section-card">
+                <div class="d-flex align-items-center justify-content-between mb-3">
+                    <h2 class="h3 mb-0">🌱 Évolution de la Politique</h2>
+                    <div class="frog-conclusion-group">
+                        <img src="/img/frog_big.png" alt="Big Frog" style="width: 30px; height: 30px; margin: 0 2px;">
+                        <img src="/img/frog_peace.png" alt="Peace Frog" style="width: 30px; height: 30px; margin: 0 2px;">
+                        <img src="/img/frog_wings.png" alt="Wings Frog" style="width: 30px; height: 30px; margin: 0 2px;">
+                        <img src="/img/frog_wings_front.png" alt="Front Wings Frog" style="width: 30px; height: 30px; margin: 0 2px;">
+                    </div>
+                </div>
+                <p>
+                    Cette politique de confidentialité évolue avec les besoins de la communauté et les 
+                    évolutions réglementaires. Comme les grenouilles qui s'adaptent à leur environnement, 
+                    nous nous adaptons aux nouvelles exigences de protection des données tout en préservant 
+                    les principes démocratiques du Plan B.
+                </p>
+                <div class="highlight-box">
+                    <div class="row text-center">
+                        <div class="col-md-4">
+                            <strong>Dernière mise à jour :</strong><br>
+                            <small class="text-muted">9 septembre 2025</small>
+                        </div>
+                        <div class="col-md-4">
+                            <strong>Version :</strong><br>
+                            <small class="text-muted">Plan B v1.0</small>
+                        </div>
+                        <div class="col-md-4">
+                            <strong>Statut :</strong><br>
+                            <small class="text-success">✅ Conforme RGPD</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="text-center mt-4">
+                    <a href="/" class="btn btn-bee me-3">Retour à l'Accueil</a>
+                    <a href="/MapBee" class="btn btn-outline-warning">Voir la Carte</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

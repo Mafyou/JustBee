@@ -1,55 +1,187 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - JustBeeWeb</title>
+    <title>@ViewData["Title"] - Plan B Démocratie</title>
     <script type="importmap"></script>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/JustBeeWeb.styles.css" asp-append-version="true" />
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+    <!-- Custom favicon -->
+    <link rel="icon" type="image/svg+xml" href="~/img/bee-hero.svg">
 </head>
+
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <nav class="navbar navbar-expand-lg navbar-light bg-gradient border-bottom-0 shadow-sm">
             <div class="container">
-                <a class="navbar-brand" asp-area="" asp-page="/Index">JustBeeWeb</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
+                <!-- Brand with bee theme -->
+                <a class="navbar-brand d-flex align-items-center fw-bold" asp-area="" asp-page="/Index">
+                    <img src="~/img/bee-hero.svg" alt="Plan B Logo" width="40" height="30" class="me-2">
+                    <span class="brand-text">Plan B Démocratie</span>
+                </a>
+
+                <!-- Mobile toggle button -->
+                <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
+
+                <!-- Navigation menu -->
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav mx-auto">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Index">Home</a>
+                            <a class="nav-link nav-link-custom d-flex align-items-center" asp-area="" asp-page="/Index">
+                                <img src="~/img/frog_big.png" alt="Home" width="20" height="20" class="me-2 nav-frog">
+                                <span>🏠 Accueil</span>
+                            </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/MapBee">Map</a>
+                            <a class="nav-link nav-link-custom d-flex align-items-center" asp-area="" asp-page="/MapBee">
+                                <img src="~/img/frog_wings.png" alt="Map" width="20" height="20" class="me-2 nav-frog">
+                                <span>🗺️ Carte</span>
+                            </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Privacy">Privacy</a>
+                            <a class="nav-link nav-link-custom d-flex align-items-center" asp-area="" asp-page="/PersonManagement">
+                                <img src="~/img/frog_wings_front.png" alt="Citizens" width="20" height="20" class="me-2 nav-frog">
+                                <span>👥 Citoyens</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link nav-link-custom d-flex align-items-center" asp-area="" asp-page="/Privacy">
+                                <img src="~/img/frog_peace.png" alt="Privacy" width="20" height="20" class="me-2 nav-frog">
+                                <span>🔒 Confidentialité</span>
+                            </a>
                         </li>
                     </ul>
                 </div>
             </div>
         </nav>
     </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
 
-    <footer class="border-top footer text-muted">
+    <!-- Main content area -->
+    <main role="main">
+        @RenderBody()
+    </main>
+
+    <!-- Enhanced footer -->
+    <footer class="footer-enhanced">
         <div class="container">
-            &copy; 2025 - JustBeeWeb - <a asp-area="" asp-page="/Privacy">Privacy</a>
+            <div class="row py-4">
+                <div class="col-md-6">
+                    <div class="d-flex align-items-center mb-3">
+                        <img src="~/img/honeycomb.svg" alt="Plan B" width="30" height="30" class="me-2">
+                        <h5 class="mb-0 text-warning">Plan B Démocratie Participative</h5>
+                    </div>
+                    <p class="text-light mb-0">
+                        Une innovation démocratique expérimentale pour une réappropriation citoyenne
+                        bottom-up, ancrée dans le cadre constitutionnel français.
+                    </p>
+                </div>
+                <div class="col-md-3">
+                    <h6 class="text-warning mb-3">🐸 Navigation</h6>
+                    <ul class="list-unstyled">
+                        <li><a href="/" class="footer-link">🏠 Accueil</a></li>
+                        <li><a href="/MapBee" class="footer-link">🗺️ Carte Interactive</a></li>
+                        <li><a href="/PersonManagement" class="footer-link">👥 Gestion Citoyens</a></li>
+                        <li><a href="/Privacy" class="footer-link">🔒 Confidentialité</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-3">
+                    <h6 class="text-warning mb-3">🐝 Contact</h6>
+                    <ul class="list-unstyled">
+                        <li class="footer-contact">
+                            <i class="fas fa-map-marker-alt"></i> Carcès, Var (83)
+                        </li>
+                        <li class="footer-contact">
+                            <i class="fas fa-envelope"></i> contact@planb-democratie.fr
+                        </li>
+                        <li class="footer-contact">
+                            <i class="fas fa-calendar"></i> Lancé le 6 juillet 2025
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Footer bottom -->
+            <div class="border-top border-secondary pt-3">
+                <div class="row align-items-center">
+                    <div class="col-md-6">
+                        <p class="mb-0 text-light">
+                            &copy; 2025 Plan B Démocratie -
+                            <a asp-area="" asp-page="/Privacy" class="footer-link">Politique de Confidentialité</a>
+                        </p>
+                    </div>
+                    <div class="col-md-6 text-md-end">
+                        <div class="footer-frogs">
+                            <img src="~/img/frog_big.png" alt="Tradition" width="25" height="25" class="footer-frog-icon"
+                                title="Gardienne des Traditions">
+                            <img src="~/img/frog_peace.png" alt="Peace" width="25" height="25" class="footer-frog-icon"
+                                title="Médiatrice Citoyenne">
+                            <img src="~/img/frog_wings.png" alt="Vision" width="25" height="25" class="footer-frog-icon"
+                                title="Visionnaire du Futur">
+                            <img src="~/img/frog_wings_front.png" alt="Leadership" width="25" height="25"
+                                class="footer-frog-icon" title="Guide du Changement">
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </footer>
 
+    <!-- Scripts -->
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
 
     @await RenderSectionAsync("Scripts", required: false)
+
+    <!-- Custom script for enhanced UX -->
+    <script>
+        // Add active class to current navigation item
+        document.addEventListener('DOMContentLoaded', function () {
+            const currentPath = window.location.pathname.toLowerCase();
+            const navLinks = document.querySelectorAll('.nav-link-custom');
+
+            navLinks.forEach(link => {
+                const href = link.getAttribute('href')?.toLowerCase();
+                if (href === currentPath || (currentPath === '/' && href === '/index')) {
+                    link.classList.add('active');
+                    link.querySelector('.nav-frog')?.classList.add('active');
+                }
+            });
+        });
+
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Add hover effects to footer frogs
+        document.querySelectorAll('.footer-frog-icon').forEach(frog => {
+            frog.addEventListener('mouseenter', function () {
+                this.style.transform = 'scale(1.2) rotate(10deg)';
+            });
+
+            frog.addEventListener('mouseleave', function () {
+                this.style.transform = 'scale(1) rotate(0deg)';
+            });
+        });
+    </script>
 </body>
+
 </html>

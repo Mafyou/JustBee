@@ -1,27 +1,79 @@
 ﻿@page
 @model PersonManagementModel
 @{
-    ViewData["Title"] = "Gestion des Personnes";
+    ViewData["Title"] = "Gestion des Citoyens";
 }
 
-<div class="container">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1>👥 Gestion des Personnes</h1>
-        <div>
-            <a href="/MapBee" class="btn btn-outline-primary">
-                <i class="fas fa-map"></i> Voir sur la carte
-            </a>
-            @* <a href="/ApiDemo" class="btn btn-outline-secondary">
-                <i class="fas fa-code"></i> API Demo
-            </a> *@
+<!-- Hero Section for Person Management -->
+<div class="hero-section">
+    <div class="container hero-content">
+        <div class="text-center">
+            <img src="/img/honeycomb.svg" alt="Citizens Management" class="bee-icon">
+            <h1 class="display-4 fw-bold mb-3">👥 Gestion des Citoyens</h1>
+            <p class="lead mb-4">
+                Administration des alvéoles citoyennes et gestion des ambassadeurs de la démocratie participative 
+                répartis sur le territoire français.
+            </p>
+            <div class="d-flex justify-content-center gap-3">
+                <a href="/MapBee" class="btn btn-outline-light">
+                    <i class="fas fa-map"></i> Voir sur la Carte
+                </a>
+                <a href="#management-section" class="btn btn-bee btn-lg">Gérer les Citoyens</a>
+            </div>
         </div>
     </div>
+</div>
 
+<!-- Citizens Statistics Section -->
+<div class="container my-4">
+    <div class="row text-center mb-4">
+        <div class="col-12">
+            <h2 class="h4 mb-3">🐸 Statistiques des Ambassadeurs Citoyens</h2>
+        </div>
+    </div>
+    <div class="row justify-content-center">
+        <div class="col-md-3 col-sm-6 mb-3">
+            <div class="stat-card">
+                <img src="/img/frog_big.png" alt="Total Citizens" class="stat-icon">
+                <h5 class="stat-number">@Model.AllPersons.Count</h5>
+                <p class="stat-label">Citoyens Enregistrés</p>
+            </div>
+        </div>
+        <div class="col-md-3 col-sm-6 mb-3">
+            <div class="stat-card">
+                <img src="/img/frog_peace.png" alt="Active Departments" class="stat-icon">
+                <h5 class="stat-number">@Model.Departements.Count(d => d.Persons.Any())</h5>
+                <p class="stat-label">Départements Actifs</p>
+            </div>
+        </div>
+        <div class="col-md-3 col-sm-6 mb-3">
+            <div class="stat-card">
+                <img src="/img/frog_wings.png" alt="Coverage" class="stat-icon">
+                <h5 class="stat-number">@Math.Round((double)Model.Departements.Count(d => d.Persons.Any()) / Model.Departements.Count * 100, 1)%</h5>
+                <p class="stat-label">Couverture Territoriale</p>
+            </div>
+        </div>
+        <div class="col-md-3 col-sm-6 mb-3">
+            <div class="stat-card">
+                <img src="/img/frog_wings_front.png" alt="Average per Department" class="stat-icon">
+                <h5 class="stat-number">@(Model.Departements.Any(d => d.Persons.Any()) ? Math.Round((double)Model.AllPersons.Count / Model.Departements.Count(d => d.Persons.Any()), 1) : 0)</h5>
+                <p class="stat-label">Moyenne par Département</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container" id="management-section">
     <!-- Messages de feedback -->
     @if (TempData["Success"] != null)
     {
         <div class="alert alert-success alert-dismissible fade show" role="alert">
-            <i class="fas fa-check-circle"></i> @TempData["Success"]
+            <div class="d-flex align-items-center">
+                <img src="/img/frog_peace.png" alt="Success" style="width: 25px; height: 25px; margin-right: 10px;">
+                <div>
+                    <i class="fas fa-check-circle"></i> @TempData["Success"]
+                </div>
+            </div>
             <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         </div>
     }
@@ -29,7 +81,12 @@
     @if (TempData["Error"] != null)
     {
         <div class="alert alert-danger alert-dismissible fade show" role="alert">
-            <i class="fas fa-exclamation-circle"></i> @TempData["Error"]
+            <div class="d-flex align-items-center">
+                <img src="/img/frog_big.png" alt="Error" style="width: 25px; height: 25px; margin-right: 10px;">
+                <div>
+                    <i class="fas fa-exclamation-circle"></i> @TempData["Error"]
+                </div>
+            </div>
             <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         </div>
     }
@@ -37,152 +94,142 @@
     <div class="row">
         <!-- Formulaire d'ajout -->
         <div class="col-lg-4">
-            <div class="card">
-                <div class="card-header bg-success text-white">
-                    <h5 class="mb-0"><i class="fas fa-user-plus"></i> Ajouter une Personne</h5>
+            <div class="section-card">
+                <div class="d-flex align-items-center mb-3">
+                    <img src="/img/frog_wings_front.png" alt="Add Person" style="width: 35px; height: 35px; margin-right: 10px;">
+                    <h5 class="mb-0"><i class="fas fa-user-plus"></i> Ajouter un Citoyen</h5>
                 </div>
-                <div class="card-body">
-                    <form method="post" asp-page-handler="AddPerson">
-                        <div class="mb-3">
-                            <label asp-for="NewPersonPseudo" class="form-label">Pseudo</label>
-                            <input asp-for="NewPersonPseudo" class="form-control" placeholder="Ex: JohnDoe" required>
-                        </div>
-                        <div class="mb-3">
-                            <label asp-for="NewPersonDepartement" class="form-label">Département</label>
-                            <select asp-for="NewPersonDepartement" class="form-select" required>
-                                <option value="">Choisir un département...</option>
-                                @foreach (var dept in Model.Departements.OrderBy(d => d.Code))
-                                {
-                                    <option value="@dept.Code">@dept.Code - @dept.Nom</option>
-                                }
-                            </select>
-                        </div>
-                        <button type="submit" class="btn btn-success w-100">
-                            <i class="fas fa-plus"></i> Ajouter
-                        </button>
-                    </form>
-                </div>
+                <form method="post" asp-page-handler="AddPerson">
+                    <div class="mb-3">
+                        <label asp-for="NewPersonPseudo" class="form-label">Pseudo du Citoyen</label>
+                        <input asp-for="NewPersonPseudo" class="form-control" placeholder="Ex: JohnDoe" required>
+                        <small class="text-muted">🐝 Identifiant unique dans la ruche</small>
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="NewPersonDepartement" class="form-label">Alvéole Territoriale</label>
+                        <select asp-for="NewPersonDepartement" class="form-select" required>
+                            <option value="">Choisir une alvéole...</option>
+                            @foreach (var dept in Model.Departements.OrderBy(d => d.Code))
+                            {
+                                <option value="@dept.Code">@dept.Code - @dept.Nom</option>
+                            }
+                        </select>
+                        <small class="text-muted">🏛️ Département d'appartenance</small>
+                    </div>
+                    <button type="submit" class="btn btn-bee w-100">
+                        <i class="fas fa-plus"></i> Intégrer à la Ruche
+                    </button>
+                </form>
             </div>
 
             <!-- Actions rapides -->
-            <div class="card mt-3">
-                <div class="card-header">
+            <div class="section-card">
+                <div class="d-flex align-items-center mb-3">
+                    <img src="/img/frog_wings.png" alt="Quick Actions" style="width: 35px; height: 35px; margin-right: 10px;">
                     <h5 class="mb-0"><i class="fas fa-bolt"></i> Actions Rapides</h5>
                 </div>
-                <div class="card-body">
+                <div class="highlight-box">
+                    <p class="small mb-3 text-center">🐸 Génération automatique de citoyens pour tester le système</p>
                     <form method="post" asp-page-handler="GenerateRandomPersons" class="mb-2">
-                        <button type="submit" class="btn btn-outline-info w-100 mb-2">
-                            <i class="fas fa-random"></i> Générer 5 personnes aléatoires
+                        <button type="submit" class="btn btn-outline-warning w-100 mb-2">
+                            <i class="fas fa-random"></i> Générer 5 citoyens aléatoires
                         </button>
                     </form>
                     <form method="post" asp-page-handler="GenerateRandomPersons" class="mb-2">
                         <input type="hidden" name="count" value="10">
-                        <button type="submit" class="btn btn-outline-warning w-100">
-                            <i class="fas fa-users"></i> Générer 10 personnes aléatoires
+                        <button type="submit" class="btn btn-outline-success w-100">
+                            <i class="fas fa-users"></i> Générer 10 citoyens aléatoires
                         </button>
                     </form>
-                </div>
-            </div>
-
-            <!-- Statistiques -->
-            <div class="card mt-3">
-                <div class="card-header">
-                    <h5 class="mb-0"><i class="fas fa-chart-bar"></i> Statistiques</h5>
-                </div>
-                <div class="card-body">
-                    <div class="row text-center">
-                        <div class="col-6">
-                            <div class="border rounded p-2">
-                                <h4 class="text-primary mb-0">@Model.AllPersons.Count</h4>
-                                <small class="text-muted">Personnes</small>
-                            </div>
-                        </div>
-                        <div class="col-6">
-                            <div class="border rounded p-2">
-                                <h4 class="text-success mb-0">@Model.Departements.Count(d => d.Persons.Any())</h4>
-                                <small class="text-muted">Départements actifs</small>
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
 
         <!-- Liste des personnes -->
         <div class="col-lg-8">
-            <div class="card">
-                <div class="card-header d-flex justify-content-between align-items-center">
-                    <h5 class="mb-0"><i class="fas fa-list"></i> Liste des Personnes (@Model.AllPersons.Count)</h5>
-                    <div class="btn-group btn-group-sm" role="group">
-                        <input type="text" id="searchPersons" class="form-control form-control-sm" placeholder="Rechercher..." style="width: 200px;">
+            <div class="section-card">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <div class="d-flex align-items-center">
+                        <img src="/img/frog_big.png" alt="Citizens List" style="width: 35px; height: 35px; margin-right: 10px;">
+                        <h5 class="mb-0"><i class="fas fa-list"></i> Registre des Citoyens (@Model.AllPersons.Count)</h5>
+                    </div>
+                    <div class="d-flex align-items-center">
+                        <input type="text" id="searchPersons" class="form-control form-control-sm" placeholder="🔍 Rechercher un citoyen..." style="width: 250px;">
                     </div>
                 </div>
-                <div class="card-body p-0">
-                    @if (Model.AllPersons.Any())
-                    {
-                        <div class="table-responsive">
-                            <table class="table table-hover mb-0" id="personsTable">
-                                <thead class="table-light">
+                
+                @if (Model.AllPersons.Any())
+                {
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0" id="personsTable">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>ID</th>
+                                    <th>🐝 Pseudo</th>
+                                    <th>🏛️ Alvéole</th>
+                                    <th>🌍 Région</th>
+                                    <th>📍 Coordonnées</th>
+                                    <th>⚙️ Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var person in Model.AllPersons.OrderBy(p => p.DepartementCode).ThenBy(p => p.Pseudo))
+                                {
+                                    var dept = Model.Departements.FirstOrDefault(d => d.Code == person.DepartementCode);
                                     <tr>
-                                        <th>ID</th>
-                                        <th>Pseudo</th>
-                                        <th>Département</th>
-                                        <th>Région</th>
-                                        <th>Coordonnées</th>
-                                        <th>Actions</th>
+                                        <td><span class="badge bg-secondary">@person.Id</span></td>
+                                        <td><strong>@person.Pseudo</strong></td>
+                                        <td>
+                                            @if (dept != null)
+                                            {
+                                                <span class="badge bg-warning text-dark">@dept.Code</span> @dept.Nom
+                                            }
+                                        </td>
+                                        <td>
+                                            @if (dept != null)
+                                            {
+                                                <small class="text-muted">@dept.Region</small>
+                                            }
+                                        </td>
+                                        <td>
+                                            @if (person.Latitude.HasValue && person.Longitude.HasValue)
+                                            {
+                                                <small class="text-muted">
+                                                    @person.Latitude.Value.ToString("F2"), @person.Longitude.Value.ToString("F2")
+                                                </small>
+                                            }
+                                            else
+                                            {
+                                                <small class="text-muted">Coordonnées non disponibles</small>
+                                            }
+                                        </td>
+                                        <td>
+                                            <form method="post" asp-page-handler="DeletePerson" class="d-inline" 
+                                                  onsubmit="return confirm('Êtes-vous sûr de vouloir retirer @person.Pseudo de la ruche ?');">
+                                                <input type="hidden" name="personId" value="@person.Id">
+                                                <input type="hidden" name="departementCode" value="@person.DepartementCode">
+                                                <button type="submit" class="btn btn-sm btn-outline-danger" title="Retirer de la ruche">
+                                                    <i class="fas fa-user-minus"></i>
+                                                </button>
+                                            </form>
+                                        </td>
                                     </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach (var person in Model.AllPersons.OrderBy(p => p.DepartementCode).ThenBy(p => p.Pseudo))
-                                    {
-                                        var dept = Model.Departements.FirstOrDefault(d => d.Code == person.DepartementCode);
-                                        <tr>
-                                            <td><span class="badge bg-secondary">@person.Id</span></td>
-                                            <td><strong>@person.Pseudo</strong></td>
-                                            <td>
-                                                @if (dept != null)
-                                                {
-                                                    <span class="badge bg-primary">@dept.Code</span> @dept.Nom
-                                                }
-                                            </td>
-                                            <td>
-                                                @if (dept != null)
-                                                {
-                                                    <small class="text-muted">@dept.Region</small>
-                                                }
-                                            </td>
-                                            <td>
-                                                @if (person.Latitude.HasValue && person.Longitude.HasValue)
-                                                {
-                                                    <small class="text-muted">
-                                                        @person.Latitude.Value.ToString("F2"), @person.Longitude.Value.ToString("F2")
-                                                    </small>
-                                                }
-                                            </td>
-                                            <td>
-                                                <form method="post" asp-page-handler="DeletePerson" class="d-inline" 
-                                                      onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer @person.Pseudo ?');">
-                                                    <input type="hidden" name="personId" value="@person.Id">
-                                                    <input type="hidden" name="departementCode" value="@person.DepartementCode">
-                                                    <button type="submit" class="btn btn-sm btn-outline-danger">
-                                                        <i class="fas fa-trash"></i>
-                                                    </button>
-                                                </form>
-                                            </td>
-                                        </tr>
-                                    }
-                                </tbody>
-                            </table>
-                        </div>
-                    }
-                    else
-                    {
-                        <div class="text-center py-5 text-muted">
-                            <i class="fas fa-users fa-3x mb-3"></i>
-                            <p>Aucune personne trouvée. Commencez par en ajouter une!</p>
-                        </div>
-                    }
-                </div>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+                else
+                {
+                    <div class="text-center py-5">
+                        <img src="/img/frog_peace.png" alt="No Citizens" style="width: 80px; height: 80px; margin-bottom: 20px; opacity: 0.6;">
+                        <h5 class="text-muted">Aucun citoyen dans la ruche</h5>
+                        <p class="text-muted">Commencez par ajouter votre premier ambassadeur démocratique!</p>
+                        <button class="btn btn-bee" onclick="document.querySelector('input[asp-for=NewPersonPseudo]').focus()">
+                            <i class="fas fa-plus"></i> Ajouter le premier citoyen
+                        </button>
+                    </div>
+                }
             </div>
         </div>
     </div>
@@ -192,46 +239,74 @@
     {
         <div class="row mt-4">
             <div class="col-12">
-                <div class="card">
-                    <div class="card-header">
-                        <h5 class="mb-0"><i class="fas fa-map-marked-alt"></i> Répartition par Département</h5>
+                <div class="section-card">
+                    <div class="d-flex align-items-center mb-3">
+                        <img src="/img/frog_wings_front.png" alt="Territorial Distribution" style="width: 35px; height: 35px; margin-right: 10px;">
+                        <h5 class="mb-0"><i class="fas fa-map-marked-alt"></i> Répartition des Alvéoles Territoriales</h5>
                     </div>
-                    <div class="card-body">
-                        <div class="row">
-                            @foreach (var dept in Model.Departements.Where(d => d.Persons.Any()).OrderByDescending(d => d.Persons.Count))
-                            {
-                                <div class="col-md-6 col-lg-4 mb-3">
-                                    <div class="card border-left-primary">
-                                        <div class="card-body">
-                                            <div class="d-flex justify-content-between">
-                                                <div>
-                                                    <h6 class="text-primary mb-1">@dept.Code - @dept.Nom</h6>
-                                                    <small class="text-muted">@dept.Region</small>
-                                                </div>
-                                                <div class="text-right">
-                                                    <span class="badge bg-success fs-6">@dept.Persons.Count</span>
-                                                </div>
-                                            </div>
-                                            <div class="mt-2">
-                                                @foreach (var person in dept.Persons.Take(3))
-                                                {
-                                                    <span class="badge bg-light text-dark me-1">@person.Pseudo</span>
-                                                }
-                                                @if (dept.Persons.Count > 3)
-                                                {
-                                                    <span class="text-muted">... et @(dept.Persons.Count - 3) autre(s)</span>
-                                                }
-                                            </div>
+                    <div class="row">
+                        @foreach (var dept in Model.Departements.Where(d => d.Persons.Any()).OrderByDescending(d => d.Persons.Count))
+                        {
+                            <div class="col-md-6 col-lg-4 mb-3">
+                                <div class="timeline-item">
+                                    <div class="d-flex justify-content-between align-items-start mb-2">
+                                        <div>
+                                            <h6 class="text-warning mb-1">
+                                                <i class="fas fa-map-pin"></i> @dept.Code - @dept.Nom
+                                            </h6>
+                                            <small class="text-muted">📍 @dept.Region</small>
+                                        </div>
+                                        <div class="text-right">
+                                            <span class="badge bg-success fs-6">@dept.Persons.Count 🐝</span>
                                         </div>
                                     </div>
+                                    <div class="mt-2">
+                                        @foreach (var person in dept.Persons.Take(3))
+                                        {
+                                            <span class="badge bg-light text-dark me-1">@person.Pseudo</span>
+                                        }
+                                        @if (dept.Persons.Count > 3)
+                                        {
+                                            <span class="text-muted">... et @(dept.Persons.Count - 3) autre(s)</span>
+                                        }
+                                    </div>
                                 </div>
-                            }
-                        </div>
+                            </div>
+                        }
                     </div>
                 </div>
             </div>
         </div>
     }
+
+    <!-- Navigation Section -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="section-card">
+                <div class="row align-items-center">
+                    <div class="col-md-8">
+                        <h3 class="h4 mb-3">🚀 Développer le Réseau Démocratique</h3>
+                        <p class="mb-0">
+                            Continuez à enrichir la ruche démocratique en ajoutant de nouveaux citoyens 
+                            et en renforçant les alvéoles territoriales pour une meilleure représentation.
+                        </p>
+                    </div>
+                    <div class="col-md-4 text-center">
+                        <div class="frog-conclusion-group mb-3">
+                            <img src="/img/frog_big.png" alt="Big Frog" style="width: 30px; height: 30px; margin: 0 2px;">
+                            <img src="/img/frog_peace.png" alt="Peace Frog" style="width: 30px; height: 30px; margin: 0 2px;">
+                            <img src="/img/frog_wings.png" alt="Wings Frog" style="width: 30px; height: 30px; margin: 0 2px;">
+                            <img src="/img/frog_wings_front.png" alt="Front Wings Frog" style="width: 30px; height: 30px; margin: 0 2px;">
+                        </div>
+                        <div class="d-flex gap-2 justify-content-center">
+                            <a href="/" class="btn btn-outline-warning btn-sm">Retour Accueil</a>
+                            <a href="/MapBee" class="btn btn-bee btn-sm">Voir la Carte</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <script>
@@ -239,11 +314,13 @@
     document.getElementById('searchPersons').addEventListener('input', function() {
         const searchTerm = this.value.toLowerCase();
         const table = document.getElementById('personsTable');
-        const rows = table.getElementsByTagName('tbody')[0].getElementsByTagName('tr');
+        if (table) {
+            const rows = table.getElementsByTagName('tbody')[0].getElementsByTagName('tr');
 
-        for (let row of rows) {
-            const text = row.textContent.toLowerCase();
-            row.style.display = text.includes(searchTerm) ? '' : 'none';
+            for (let row of rows) {
+                const text = row.textContent.toLowerCase();
+                row.style.display = text.includes(searchTerm) ? '' : 'none';
+            }
         }
     });
 
@@ -256,19 +333,121 @@
             }
         });
     }, 5000);
+
+    // Smooth scroll for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                target.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }
+        });
+    });
 </script>
 
 <style>
-    .border-left-primary {
-        border-left: 4px solid #007bff;
+    .hero-section {
+        background-color: #f0f8ff;
+        padding: 40px 0;
+        border-bottom: 1px solid #e1e4e8;
     }
-    
-    .card:hover {
-        transform: translateY(-2px);
+
+    .hero-content {
+        max-width: 800px;
+        margin: 0 auto;
+    }
+
+    .bee-icon {
+        width: 60px;
+        height: 60px;
+        margin-bottom: 20px;
+    }
+
+    .stat-card {
+        background-color: #ffffff;
+        border-radius: 10px;
+        padding: 20px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         transition: transform 0.2s;
     }
-    
-    .table tbody tr:hover {
+
+    .stat-card:hover {
+        transform: translateY(-2px);
+    }
+
+    .stat-icon {
+        width: 40px;
+        height: 40px;
+        margin-bottom: 10px;
+    }
+
+    .section-card {
+        background-color: #ffffff;
+        border-radius: 10px;
+        padding: 20px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        margin-bottom: 20px;
+    }
+
+    .highlight-box {
+        background-color: #fff3cd;
+        border-left: 4px solid #ffeeba;
+        padding: 10px 15px;
+        border-radius: 5px;
+        margin-bottom: 20px;
+    }
+
+    .frog-conclusion-group img {
+        width: 35px;
+        height: 35px;
+    }
+
+    /* Custom styles for tables */
+    .table {
+        border-collapse: collapse;
+        width: 100%;
+        margin-bottom: 1rem;
+    }
+
+    .table th,
+    .table td {
+        padding: 12px;
+        vertical-align: middle;
+        border-top: 1px solid #dee2e6;
+    }
+
+    .table thead th {
         background-color: #f8f9fa;
+        position: sticky;
+        top: 0;
+        z-index: 10;
+    }
+
+    .table-responsive {
+        overflow-x: auto;
+    }
+
+    /* Media queries for responsiveness */
+    @@media (max-width: 767.98px) {
+        .hero-section {
+            padding: 20px 0;
+        }
+
+        .stat-card {
+            margin-bottom: 10px;
+        }
+
+        .section-card {
+            padding: 15px;
+        }
+
+        .frog-conclusion-group img {
+            width: 30px;
+            height: 30px;
+        }
     }
 </style>

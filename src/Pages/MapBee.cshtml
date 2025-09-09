@@ -4,68 +4,138 @@
     ViewData["Title"] = "MapBee - Carte des Départements";
 }
 
-<div class="container-fluid">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1>🗺️ Carte des Départements Français</h1>
-        <div>
-            <a href="/PersonManagement" class="btn btn-success">
-                <i class="fas fa-user-plus"></i> Gérer les Personnes
-            </a>
-            @* <a href="/ApiDemo" class="btn btn-outline-secondary">
-                <i class="fas fa-code"></i> API Demo
-            </a> *@
+<!-- Hero Section for MapBee -->
+<div class="hero-section">
+    <div class="container hero-content">
+        <div class="text-center">
+            <img src="/img/beehive.svg" alt="Beehive Map" class="bee-icon">
+            <h1 class="display-4 fw-bold mb-3">🗺️ MapBee - Réseau Territorial</h1>
+            <p class="lead mb-4">
+                Cartographie interactive des alvéoles citoyennes et des ambassadeurs de la démocratie participative
+                répartis sur le territoire français.
+            </p>
+            <div class="d-flex justify-content-center gap-3">
+                <a href="/PersonManagement" class="btn btn-bee">
+                    <i class="fas fa-user-plus"></i> Gérer les Citoyens
+                </a>
+                <a href="#map-section" class="btn btn-outline-light">
+                    <i class="fas fa-map-marked-alt"></i> Voir la Carte
+                </a>
+            </div>
         </div>
     </div>
-    
+</div>
+
+<!-- Frog Indicators Section -->
+<div class="container my-4">
+    <div class="row text-center mb-4">
+        <div class="col-12">
+            <h2 class="h4 mb-3">🐸 Indicateurs de Biodiversité Démocratique</h2>
+        </div>
+    </div>
+    <div class="row justify-content-center">
+        <div class="col-md-3 col-sm-6 mb-3">
+            <div class="stat-card">
+                <img src="/img/frog_big.png" alt="Total Citizens" class="stat-icon">
+                <h5 class="stat-number">@Model.AllPersons.Count</h5>
+                <p class="stat-label">Citoyens Enregistrés</p>
+            </div>
+        </div>
+        <div class="col-md-3 col-sm-6 mb-3">
+            <div class="stat-card">
+                <img src="/img/frog_peace.png" alt="Active Departments" class="stat-icon">
+                <h5 class="stat-number">@Model.Departements.Count(d => d.Persons.Any())</h5>
+                <p class="stat-label">Départements Actifs</p>
+            </div>
+        </div>
+        <div class="col-md-3 col-sm-6 mb-3">
+            <div class="stat-card">
+                <img src="/img/frog_wings.png" alt="Coverage" class="stat-icon">
+                <h5 class="stat-number">@Math.Round((double)Model.Departements.Count(d => d.Persons.Any()) / Model.Departements.Count * 100, 1)%</h5>
+                <p class="stat-label">Couverture Territoriale</p>
+            </div>
+        </div>
+        <div class="col-md-3 col-sm-6 mb-3">
+            <div class="stat-card">
+                <img src="/img/frog_wings_front.png" alt="Average per Department" class="stat-icon">
+                <h5 class="stat-number">@(Model.Departements.Any(d => d.Persons.Any()) ? Math.Round((double)Model.AllPersons.Count / Model.Departements.Count(d => d.Persons.Any()), 1) : 0)</h5>
+                <p class="stat-label">Moyenne par Département</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid" id="map-section">
     <div class="row">
         <!-- Carte Leaflet -->
         <div class="col-lg-8">
-            <div id="map" style="height: 600px; width: 100%;"></div>
+            <div class="section-card">
+                <div class="d-flex align-items-center justify-content-between mb-3">
+                    <h3 class="h4 mb-0">🗺️ Carte Interactive</h3>
+                    <img src="/img/frog_wings.png" alt="Map Frog" style="width: 35px; height: 35px;">
+                </div>
+                <div id="map" style="height: 600px; width: 100%; border-radius: 10px;"></div>
+            </div>
         </div>
         
         <!-- Panneau d'informations -->
         <div class="col-lg-4">
-            <div class="card">
-                <div class="card-header">
-                    <h5>📊 Informations</h5>
+            <div class="section-card">
+                <div class="d-flex align-items-center mb-3">
+                    <img src="/img/frog_big.png" alt="Info Frog" style="width: 35px; height: 35px; margin-right: 10px;">
+                    <h5 class="mb-0">📊 Tableau de Bord</h5>
                 </div>
-                <div class="card-body">
-                    <p><strong>Total des personnes :</strong> @Model.AllPersons.Count</p>
-                    <p><strong>Départements avec des personnes :</strong> @Model.Departements.Count(d => d.Persons.Any())</p>
-                    
-                    @if (!Model.AllPersons.Any())
-                    {
-                        <div class="alert alert-info mt-3" role="alert">
-                            <i class="fas fa-info-circle"></i> 
-                            Aucune personne trouvée. 
-                            <a href="/PersonManagement" class="alert-link">Ajoutez des personnes</a> 
-                            pour les voir apparaître sur la carte!
+                <div class="highlight-box">
+                    <div class="row text-center">
+                        <div class="col-6">
+                            <strong class="text-warning">@Model.AllPersons.Count</strong>
+                            <br><small>Citoyens</small>
                         </div>
-                    }
+                        <div class="col-6">
+                            <strong class="text-success">@Model.Departements.Count(d => d.Persons.Any())</strong>
+                            <br><small>Départements</small>
+                        </div>
+                    </div>
                 </div>
+                
+                @if (!Model.AllPersons.Any())
+                {
+                    <div class="alert alert-info mt-3" role="alert">
+                        <div class="d-flex align-items-center">
+                            <img src="/img/frog_peace.png" alt="Peace Frog" style="width: 30px; height: 30px; margin-right: 10px;">
+                            <div>
+                                <i class="fas fa-info-circle"></i> 
+                                Aucune personne trouvée. 
+                                <a href="/PersonManagement" class="alert-link">Ajoutez des personnes</a> 
+                                pour les voir apparaître sur la carte!
+                            </div>
+                        </div>
+                    </div>
+                }
             </div>
             
-            <div class="card mt-3">
-                <div class="card-header">
-                    <h5>🏛️ Départements avec des personnes</h5>
+            <div class="section-card">
+                <div class="d-flex align-items-center mb-3">
+                    <img src="/img/frog_wings_front.png" alt="Departments Frog" style="width: 35px; height: 35px; margin-right: 10px;">
+                    <h5 class="mb-0">🏛️ Alvéoles Territoriales</h5>
                 </div>
-                <div class="card-body" style="max-height: 400px; overflow-y: auto;">
+                <div style="max-height: 400px; overflow-y: auto;">
                     @if (Model.Departements.Any(d => d.Persons.Any()))
                     {
                         @foreach (var dept in Model.Departements.Where(d => d.Persons.Any()).OrderByDescending(d => d.Persons.Count))
                         {
-                            <div class="mb-2 p-2 border rounded">
+                            <div class="timeline-item mb-2">
                                 <div class="d-flex justify-content-between align-items-start">
                                     <div>
                                         <strong>@dept.Code - @dept.Nom</strong> 
-                                        <span class="badge bg-primary ms-1">@dept.Persons.Count</span>
+                                        <span class="badge bg-warning text-dark ms-1">@dept.Persons.Count</span>
                                         <br />
                                         <small class="text-muted">@dept.Region</small>
                                     </div>
                                 </div>
                                 <div class="mt-1">
-                                    <small class="text-muted">
-                                        @string.Join(", ", dept.Persons.Select(p => p.Pseudo))
+                                    <small class="text-success">
+                                        🐝 @string.Join(", ", dept.Persons.Select(p => p.Pseudo))
                                     </small>
                                 </div>
                             </div>
@@ -74,13 +144,40 @@
                     else
                     {
                         <div class="text-center text-muted py-3">
-                            <i class="fas fa-map-marked-alt fa-2x mb-2"></i>
-                            <p>Aucun département avec des personnes</p>
-                            <a href="/PersonManagement" class="btn btn-sm btn-success">
-                                <i class="fas fa-plus"></i> Ajouter des personnes
+                            <img src="/img/frog_peace.png" alt="Empty State" style="width: 60px; height: 60px; margin-bottom: 10px; opacity: 0.6;">
+                            <p>Aucun département avec des citoyens</p>
+                            <a href="/PersonManagement" class="btn btn-bee btn-sm">
+                                <i class="fas fa-plus"></i> Ajouter des citoyens
                             </a>
                         </div>
                     }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Navigation Section -->
+<div class="container my-5">
+    <div class="section-card">
+        <div class="row align-items-center">
+            <div class="col-md-8">
+                <h3 class="h4 mb-3">🚀 Étendre le Réseau</h3>
+                <p class="mb-0">
+                    Participez à l'expansion du réseau démocratique participatif en ajoutant de nouveaux citoyens 
+                    et en créant des alvéoles dans votre département.
+                </p>
+            </div>
+            <div class="col-md-4 text-center">
+                <div class="frog-conclusion-group mb-3">
+                    <img src="/img/frog_big.png" alt="Big Frog" style="width: 30px; height: 30px; margin: 0 2px;">
+                    <img src="/img/frog_peace.png" alt="Peace Frog" style="width: 30px; height: 30px; margin: 0 2px;">
+                    <img src="/img/frog_wings.png" alt="Wings Frog" style="width: 30px; height: 30px; margin: 0 2px;">
+                    <img src="/img/frog_wings_front.png" alt="Front Wings Frog" style="width: 30px; height: 30px; margin: 0 2px;">
+                </div>
+                <div class="d-flex gap-2 justify-content-center">
+                    <a href="/" class="btn btn-outline-warning btn-sm">Retour Accueil</a>
+                    <a href="/PersonManagement" class="btn btn-bee btn-sm">Gérer Citoyens</a>
                 </div>
             </div>
         </div>
@@ -129,16 +226,21 @@
             
             // Création du contenu du popup
             var popupContent = `
-                <div>
-                    <h6><strong>${dept.code} - ${dept.nom}</strong></h6>
-                    <p><em>${dept.region}</em></p>
-                    <p><strong>${dept.personCount} personne(s) :</strong></p>
-                    <ul>
-                        ${dept.persons.map(person => `<li>${person.pseudo} <small>(ID: ${person.id})</small></li>`).join('')}
-                    </ul>
-                    <div class="mt-2">
-                        <a href="/PersonManagement" class="btn btn-sm btn-success">
-                            <i class="fas fa-plus"></i> Ajouter une personne
+                <div class="popup-content">
+                    <div class="d-flex align-items-center mb-2">
+                        <img src="/img/frog_big.png" style="width: 25px; height: 25px; margin-right: 8px;">
+                        <h6 class="mb-0"><strong>${dept.code} - ${dept.nom}</strong></h6>
+                    </div>
+                    <p class="text-muted mb-2"><em>${dept.region}</em></p>
+                    <div class="mb-2">
+                        <strong>${dept.personCount} citoyen(s) :</strong>
+                        <ul class="list-unstyled mt-1">
+                            ${dept.persons.map(person => `<li>🐝 ${person.pseudo} <small class="text-muted">(ID: ${person.id})</small></li>`).join('')}
+                        </ul>
+                    </div>
+                    <div class="text-center">
+                        <a href="/PersonManagement" class="btn btn-bee btn-sm">
+                            <i class="fas fa-plus"></i> Ajouter un citoyen
                         </a>
                     </div>
                 </div>
@@ -146,7 +248,7 @@
 
             // Création du marqueur avec une icône personnalisée
             var marker = L.marker([dept.latitude, dept.longitude], {
-                title: `${dept.nom} (${dept.personCount} personne(s))`
+                title: `${dept.nom} (${dept.personCount} citoyen(s))`
             }).addTo(map);
 
             // Ajout du popup au marqueur
@@ -165,11 +267,12 @@
         var noDataPopup = L.popup()
             .setLatLng([46.603354, 1.888334])
             .setContent(`
-                <div class="text-center">
-                    <h6>🗺️ Aucune personne sur la carte</h6>
-                    <p>Commencez par ajouter des personnes!</p>
-                    <a href="/PersonManagement" class="btn btn-sm btn-success">
-                        <i class="fas fa-plus"></i> Ajouter des personnes
+                <div class="text-center popup-content">
+                    <img src="/img/frog_peace.png" style="width: 40px; height: 40px; margin-bottom: 10px;">
+                    <h6>🗺️ Aucun citoyen sur la carte</h6>
+                    <p>Commencez par ajouter des citoyens!</p>
+                    <a href="/PersonManagement" class="btn btn-bee btn-sm">
+                        <i class="fas fa-plus"></i> Ajouter des citoyens
                     </a>
                 </div>
             `)
@@ -180,33 +283,65 @@
     var legend = L.control({position: 'bottomright'});
     legend.onAdd = function (map) {
         var div = L.DomUtil.create('div', 'info legend');
-        div.innerHTML += '<h6>Légende</h6>';
-        div.innerHTML += '<i style="background: green; width: 18px; height: 18px; display: inline-block; margin-right: 8px;"></i> 1 personne<br>';
-        div.innerHTML += '<i style="background: orange; width: 18px; height: 18px; display: inline-block; margin-right: 8px;"></i> 2 personnes<br>';
-        div.innerHTML += '<i style="background: red; width: 18px; height: 18px; display: inline-block; margin-right: 8px;"></i> 3+ personnes<br>';
+        div.innerHTML += '<h6>🐸 Légende des Alvéoles</h6>';
+        div.innerHTML += '<i style="background: green; width: 18px; height: 18px; display: inline-block; margin-right: 8px; border-radius: 50%;"></i> 1 citoyen<br>';
+        div.innerHTML += '<i style="background: orange; width: 18px; height: 18px; display: inline-block; margin-right: 8px; border-radius: 50%;"></i> 2 citoyens<br>';
+        div.innerHTML += '<i style="background: red; width: 18px; height: 18px; display: inline-block; margin-right: 8px; border-radius: 50%;"></i> 3+ citoyens<br>';
         return div;
     };
     legend.addTo(map);
 </script>
 
 <style>
-    .info {
-        padding: 6px 8px;
-        font: 14px/16px Arial, Helvetica, sans-serif;
-        background: white;
-        background: rgba(255,255,255,0.8);
-        box-shadow: 0 0 15px rgba(0,0,0,0.2);
-        border-radius: 5px;
+    .popup-content {
+        min-width: 200px;
     }
-    .legend {
-        line-height: 18px;
-        color: #555;
+    
+    .popup-content h6 {
+        color: #2E7D32;
     }
-    .legend i {
-        width: 18px;
-        height: 18px;
-        float: left;
-        margin-right: 8px;
-        opacity: 0.7;
+    
+    .popup-content .btn-bee {
+        font-size: 0.8rem;
+        padding: 0.4rem 0.8rem;
+    }
+    
+    .stat-card {
+        background: linear-gradient(135deg, #E8F5E8 0%, #C8E6C9 100%);
+        border: 2px solid #4CAF50;
+        border-radius: 15px;
+        padding: 1.5rem;
+        text-align: center;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        height: 100%;
+    }
+    
+    .stat-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 25px rgba(76, 175, 80, 0.3);
+    }
+    
+    .stat-icon {
+        width: 50px;
+        height: 50px;
+        margin-bottom: 1rem;
+        transition: transform 0.3s ease;
+    }
+    
+    .stat-card:hover .stat-icon {
+        transform: scale(1.1) rotate(5deg);
+    }
+    
+    .stat-number {
+        font-size: 2rem;
+        font-weight: bold;
+        color: #2E7D32;
+        margin-bottom: 0.5rem;
+    }
+    
+    .stat-label {
+        color: #4A4A4A;
+        font-size: 0.9rem;
+        margin-bottom: 0;
     }
 </style>

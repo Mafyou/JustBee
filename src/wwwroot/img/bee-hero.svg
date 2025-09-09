@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" width="400" height="300">
+  <defs>
+    <linearGradient id="beeGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#FFD700;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#FFA500;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="wingGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#E0E0E0;stop-opacity:0.8" />
+      <stop offset="100%" style="stop-color:#C0C0C0;stop-opacity:0.6" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="400" height="300" fill="#87CEEB"/>
+  
+  <!-- Flowers -->
+  <circle cx="50" cy="250" r="15" fill="#FF69B4"/>
+  <circle cx="350" cy="280" r="12" fill="#FF1493"/>
+  <circle cx="100" cy="280" r="10" fill="#FFB6C1"/>
+  
+  <!-- Bee Body -->
+  <ellipse cx="200" cy="150" rx="60" ry="25" fill="url(#beeGradient)"/>
+  
+  <!-- Bee Stripes -->
+  <rect x="170" y="130" width="8" height="40" fill="#333"/>
+  <rect x="190" y="130" width="8" height="40" fill="#333"/>
+  <rect x="210" y="130" width="8" height="40" fill="#333"/>
+  <rect x="230" y="130" width="8" height="40" fill="#333"/>
+  
+  <!-- Bee Head -->
+  <circle cx="140" cy="150" r="20" fill="url(#beeGradient)"/>
+  
+  <!-- Eyes -->
+  <circle cx="135" cy="145" r="3" fill="#000"/>
+  <circle cx="145" cy="145" r="3" fill="#000"/>
+  
+  <!-- Antennae -->
+  <line x1="130" y1="135" x2="125" y2="125" stroke="#333" stroke-width="2"/>
+  <line x1="150" y1="135" x2="155" y2="125" stroke="#333" stroke-width="2"/>
+  <circle cx="125" cy="125" r="2" fill="#333"/>
+  <circle cx="155" cy="125" r="2" fill="#333"/>
+  
+  <!-- Wings -->
+  <ellipse cx="180" cy="120" rx="25" ry="15" fill="url(#wingGradient)" transform="rotate(-20 180 120)"/>
+  <ellipse cx="220" cy="120" rx="25" ry="15" fill="url(#wingGradient)" transform="rotate(20 220 120)"/>
+  <ellipse cx="170" cy="180" rx="20" ry="12" fill="url(#wingGradient)" transform="rotate(-30 170 180)"/>
+  <ellipse cx="230" cy="180" rx="20" ry="12" fill="url(#wingGradient)" transform="rotate(30 230 180)"/>
+  
+  <!-- Stinger -->
+  <polygon points="260,150 275,145 275,155" fill="#333"/>
+</svg>

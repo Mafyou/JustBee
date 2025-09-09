@@ -1,10 +1,200 @@
 ﻿@page
 @model IndexModel
 @{
-    ViewData["Title"] = "Home page";
+    ViewData["Title"] = "Plan B - Démocratie Participative";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="hero-section">
+    <div class="container hero-content">
+        <div class="text-center">
+            <img src="/img/bee-hero.svg" alt="Bee Hero" class="bee-icon">
+            <h1 class="display-4 fw-bold mb-3">Plan B - Démocratie Participative</h1>
+            <p class="lead mb-4">
+                Une proposition théorique et insurrectionnelle pour une réappropriation citoyenne bottom-up,
+                non violente et inscrite dans le cadre constitutionnel français.
+            </p>
+            <a href="#details" class="btn btn-bee btn-lg">Découvrir le Plan B</a>
+        </div>
+    </div>
+</div>
+
+<!-- Frog Ambassadors Section -->
+<div class="container my-5">
+    <div class="row text-center mb-4">
+        <div class="col-12">
+            <h2 class="h3 mb-3">🐸 Les Ambassadeurs de la Biodiversité</h2>
+            <p class="text-muted">Les grenouilles, indicateurs naturels de la santé environnementale, symbolisent l'importance de la préservation écologique dans notre démarche démocratique.</p>
+        </div>
+    </div>
+    <div class="row justify-content-center">
+        <div class="col-md-3 col-sm-6 mb-3">
+            <div class="frog-card">
+                <img src="/img/frog_big.png" alt="Grande Grenouille" class="frog-image">
+                <h5>Gardienne des Traditions</h5>
+                <p class="small">Représente la sagesse ancestrale et les pratiques durables</p>
+            </div>
+        </div>
+        <div class="col-md-3 col-sm-6 mb-3">
+            <div class="frog-card">
+                <img src="/img/frog_peace.png" alt="Grenouille de la Paix" class="frog-image">
+                <h5>Médiatrice Citoyenne</h5>
+                <p class="small">Symbole de dialogue et de résolution pacifique des conflits</p>
+            </div>
+        </div>
+        <div class="col-md-3 col-sm-6 mb-3">
+            <div class="frog-card">
+                <img src="/img/frog_wings.png" alt="Grenouille Ailée" class="frog-image">
+                <h5>Visionnaire du Futur</h5>
+                <p class="small">Incarne l'innovation et la transformation démocratique</p>
+            </div>
+        </div>
+        <div class="col-md-3 col-sm-6 mb-3">
+            <div class="frog-card">
+                <img src="/img/frog_wings_front.png" alt="Grenouille Leader" class="frog-image">
+                <h5>Guide du Changement</h5>
+                <p class="small">Mène la transition vers une démocratie participative</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="section-card" id="details">
+                <img src="/img/honeycomb.svg" alt="Honeycomb" class="section-icon">
+                <h2 class="h3 mb-3">🏛️ Contexte et Justification</h2>
+                <p>
+                    La lettre du <strong>6 juillet 2025</strong>, envoyée au Président et au Maire de Carcès, 
+                    proposait un organe consultatif représentatif des composantes socioprofessionnelles, 
+                    avec un symbole écologique (un pot de miel illustrant le lien vivant entre terre et communauté).
+                </p>
+                <div class="highlight-box">
+                    <strong>📅 État actuel :</strong> L'absence de réponse depuis cette date (plus de 60 jours au 9 septembre) 
+                    justifie le Plan B comme réponse pragmatique à une crise de défiance institutionnelle.
+                    <img src="/img/frog_peace.png" alt="Peace Frog" class="float-end" style="width: 40px; height: 40px; margin-left: 10px;">
+                </div>
+            </div>
+
+            <div class="section-card">
+                <img src="/img/beehive.svg" alt="Beehive" class="section-icon">
+                <h2 class="h3 mb-3">🎯 Finalités du Plan B</h2>
+                <ul class="key-points">
+                    <li><strong>Représentation équitable :</strong> Inclure professionnels, sociaux et générationnels de la population</li>
+                    <li><strong>Renforcement des liens directs :</strong> Connecter citoyens, professionnels du vivant et élus</li>
+                    <li><strong>Résilience territoriale :</strong> Rôle structurant pour l'agriculture, viticulture et apiculture</li>
+                    <li><strong>Veto symbolique :</strong> Protection de l'environnement avec pouvoir décisionnel</li>
+                </ul>
+                <div class="text-end mt-3">
+                    <img src="/img/frog_big.png" alt="Big Frog" style="width: 60px; height: 60px; opacity: 0.7;">
+                </div>
+            </div>
+
+            <div class="section-card">
+                <h2 class="h3 mb-3">⚖️ Fondements Juridiques</h2>
+                <div class="row">
+                    <div class="col-md-6">
+                        <ul class="key-points">
+                            <li>Articles L2143-1 à L2143-4 du CGCT : Conseils consultatifs</li>
+                            <li>Article L1112-17 du CGCT : Participation des habitants</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-6">
+                        <ul class="key-points">
+                            <li>Chartes de démocratie participative (Région Sud)</li>
+                            <li>Loi 1901 : Organisation associative</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="highlight-box">
+                    <strong>✅ Légalité :</strong> Aucune illégalité ; c'est une extension consultative des outils existants.
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="section-card">
+                <div class="d-flex align-items-center mb-3">
+                    <h3 class="h4 mb-0 me-2">🏗️ Structure de la Ruche</h3>
+                    <img src="/img/frog_wings.png" alt="Wings Frog" style="width: 35px; height: 35px;">
+                </div>
+                <p class="small mb-3">La ruche (mairie réimaginée) compte 20-30 membres, répartis en alvéoles :</p>
+                
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <strong>Alvéole Professionnels</strong><br>
+                        <small>Agriculteurs, apiculteurs, viticulteurs, artisans, santé, enseignants</small>
+                    </div>
+                    <div class="timeline-item">
+                        <strong>Alvéole Agents Publics</strong><br>
+                        <small>Services municipaux</small>
+                    </div>
+                    <div class="timeline-item">
+                        <strong>Alvéole Générationnelle</strong><br>
+                        <small>Jeunes (16-25) et seniors (60+)</small>
+                    </div>
+                    <div class="timeline-item">
+                        <strong>Alvéole Citoyens</strong><br>
+                        <small>Tirage au sort et associatifs</small>
+                    </div>
+                    <div class="timeline-item">
+                        <strong>Alvéole du Vivant</strong><br>
+                        <small>3 experts avec veto écologique</small>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section-card">
+                <div class="d-flex align-items-center mb-3">
+                    <h3 class="h4 mb-0 me-2">🚀 Mise en Place</h3>
+                    <img src="/img/frog_wings_front.png" alt="Front Wings Frog" style="width: 35px; height: 35px;">
+                </div>
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <strong>Immédiate</strong><br>
+                        <small>Assemblée citoyenne à Carcès</small>
+                    </div>
+                    <div class="timeline-item">
+                        <strong>Semaine 1-2</strong><br>
+                        <small>Installation de la Ruche et constitution des alvéoles</small>
+                    </div>
+                    <div class="timeline-item">
+                        <strong>Mois 1</strong><br>
+                        <small>Réunions mensuelles et avis publics</small>
+                    </div>
+                    <div class="timeline-item">
+                        <strong>Mois 3+</strong><br>
+                        <small>Évaluation et extension via <a href="https://aurores.org" target="_blank" class="text-decoration-none">Aurore</a></small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="section-card">
+                <div class="d-flex align-items-center justify-content-between mb-3">
+                    <h2 class="h3 mb-0">🎯 Conclusion</h2>
+                    <div class="frog-conclusion-group">
+                        <img src="/img/frog_big.png" alt="Big Frog" style="width: 30px; height: 30px; margin: 0 2px;">
+                        <img src="/img/frog_peace.png" alt="Peace Frog" style="width: 30px; height: 30px; margin: 0 2px;">
+                        <img src="/img/frog_wings.png" alt="Wings Frog" style="width: 30px; height: 30px; margin: 0 2px;">
+                        <img src="/img/frog_wings_front.png" alt="Front Wings Frog" style="width: 30px; height: 30px; margin: 0 2px;">
+                    </div>
+                </div>
+                <p>
+                    Le Plan B, activé en réponse à l'envoi sans suite du 6 juillet, est une 
+                    <strong>innovation démocratique expérimentale</strong>, ancrée dans le terroir. 
+                    Au 9 septembre 2025, il n'est pas encore effectif publiquement, mais prêt à l'être 
+                    via initiative citoyenne. Comme les grenouilles qui annoncent les changements de saison, 
+                    nous sommes les sentinelles d'une nouvelle ère démocratique.
+                </p>
+                <div class="text-center mt-4">
+                    <a href="/MapBee" class="btn btn-bee me-3">Voir la Carte</a>
+                    <a href="/PersonManagement" class="btn btn-outline-warning">Gestion Citoyens</a>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

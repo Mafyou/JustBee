@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 200" width="300" height="200">
+  <defs>
+    <linearGradient id="honeycombGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#FFD700;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#DAA520;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="300" height="200" fill="#FFF8DC"/>
+  
+  <!-- Honeycomb Pattern -->
+  <g fill="url(#honeycombGrad)" stroke="#B8860B" stroke-width="2">
+    <!-- Row 1 -->
+    <polygon points="50,30 70,20 90,30 90,50 70,60 50,50"/>
+    <polygon points="90,30 110,20 130,30 130,50 110,60 90,50"/>
+    <polygon points="130,30 150,20 170,30 170,50 150,60 130,50"/>
+    <polygon points="170,30 190,20 210,30 210,50 190,60 170,50"/>
+    <polygon points="210,30 230,20 250,30 250,50 230,60 210,50"/>
+    
+    <!-- Row 2 -->
+    <polygon points="70,60 90,50 110,60 110,80 90,90 70,80"/>
+    <polygon points="110,60 130,50 150,60 150,80 130,90 110,80"/>
+    <polygon points="150,60 170,50 190,60 190,80 170,90 150,80"/>
+    <polygon points="190,60 210,50 230,60 230,80 210,90 190,80"/>
+    
+    <!-- Row 3 -->
+    <polygon points="50,90 70,80 90,90 90,110 70,120 50,110"/>
+    <polygon points="90,90 110,80 130,90 130,110 110,120 90,110"/>
+    <polygon points="130,90 150,80 170,90 170,110 150,120 130,110"/>
+    <polygon points="170,90 190,80 210,90 210,110 190,120 170,110"/>
+    <polygon points="210,90 230,80 250,90 250,110 230,120 210,110"/>
+    
+    <!-- Row 4 -->
+    <polygon points="70,120 90,110 110,120 110,140 90,150 70,140"/>
+    <polygon points="110,120 130,110 150,120 150,140 130,150 110,140"/>
+    <polygon points="150,120 170,110 190,120 190,140 170,150 150,140"/>
+    <polygon points="190,120 210,110 230,120 230,140 210,150 190,140"/>
+  </g>
+  
+  <!-- Honey drops -->
+  <circle cx="80" cy="40" r="3" fill="#FFA500"/>
+  <circle cx="160" cy="70" r="3" fill="#FFA500"/>
+  <circle cx="120" cy="100" r="3" fill="#FFA500"/>
+  <circle cx="200" cy="130" r="3" fill="#FFA500"/>
+</svg>

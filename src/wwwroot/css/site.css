@@ -1,4 +1,4 @@
-html {
+﻿html {
   font-size: 14px;
 }
 
@@ -18,7 +18,7 @@ html {
 }
 
 body {
-  margin-bottom: 60px;
+  margin-bottom: 0;
 }
 
 .form-floating > .form-control-plaintext::placeholder, .form-floating > .form-control::placeholder {
@@ -28,4 +28,387 @@ body {
 
 .form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
   text-align: start;
+}
+
+/* Enhanced Navigation Styles */
+.navbar.bg-gradient {
+    background: linear-gradient(135deg, #FFF8DC 0%, #F0E68C 50%, #FFD700 100%) !important;
+    border-bottom: 3px solid #DAA520;
+}
+
+.navbar-brand .brand-text {
+    color: #2E7D32;
+    font-size: 1.5rem;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+}
+
+.navbar-brand:hover .brand-text {
+    color: #1B5E20;
+}
+
+.nav-link-custom {
+    color: #2E7D32 !important;
+    font-weight: 500;
+    padding: 0.75rem 1rem !important;
+    border-radius: 8px;
+    margin: 0 0.25rem;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.nav-link-custom:hover {
+    background: linear-gradient(135deg, #E8F5E8 0%, #C8E6C9 100%);
+    color: #1B5E20 !important;
+    transform: translateY(-2px);
+}
+
+.nav-link-custom.active {
+    background: linear-gradient(135deg, #4CAF50 0%, #2E7D32 100%);
+    color: white !important;
+    box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+}
+
+.nav-frog {
+    transition: transform 0.3s ease;
+    filter: drop-shadow(1px 1px 2px rgba(0,0,0,0.2));
+}
+
+.nav-link-custom:hover .nav-frog {
+    transform: scale(1.1) rotate(5deg);
+}
+
+.nav-frog.active {
+    animation: bounce 1s ease-in-out;
+}
+
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+    40% { transform: translateY(-5px); }
+    60% { transform: translateY(-3px); }
+}
+
+/* Enhanced Footer Styles */
+.footer-enhanced {
+    background: linear-gradient(135deg, #2E7D32 0%, #1B5E20 50%, #0D3F13 100%);
+    color: #E8F5E8;
+    margin-top: auto;
+    box-shadow: 0 -4px 15px rgba(0,0,0,0.2);
+}
+
+.footer-link {
+    color: #C8E6C9;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    display: inline-block;
+}
+
+.footer-link:hover {
+    color: #FFD700;
+    transform: translateX(5px);
+}
+
+.footer-contact {
+    color: #A5D6A7;
+    margin-bottom: 0.5rem;
+}
+
+.footer-contact i {
+    color: #FFD700;
+    width: 20px;
+    margin-right: 8px;
+}
+
+.footer-frogs {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+.footer-frog-icon {
+    transition: transform 0.3s ease;
+    cursor: pointer;
+    border-radius: 50%;
+    padding: 2px;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.footer-frog-icon:hover {
+    background: rgba(255, 215, 0, 0.2);
+}
+
+/* Plan B Specific Styles */
+.hero-section {
+    background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+    padding: 4rem 0;
+    margin: 0 -15px 3rem -15px;
+    border-radius: 0 0 50px 50px;
+    color: #333;
+    position: relative;
+    overflow: hidden;
+}
+
+.hero-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('/img/honeycomb.svg') no-repeat center center;
+    background-size: cover;
+    opacity: 0.1;
+    z-index: 1;
+}
+
+.hero-content {
+    position: relative;
+    z-index: 2;
+}
+
+.bee-icon {
+    width: 80px;
+    height: 60px;
+    margin: 0 auto 1rem;
+    display: block;
+}
+
+.section-card {
+    background: #fff;
+    border-radius: 15px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border-left: 4px solid #FFD700;
+}
+
+.section-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+}
+
+.section-icon {
+    width: 60px;
+    height: 45px;
+    float: left;
+    margin-right: 1rem;
+    margin-bottom: 1rem;
+}
+
+.highlight-box {
+    background: linear-gradient(135deg, #FFF8DC 0%, #F0E68C 100%);
+    border: 2px solid #DAA520;
+    border-radius: 10px;
+    padding: 1.5rem;
+    margin: 1.5rem 0;
+}
+
+.key-points {
+    list-style: none;
+    padding: 0;
+}
+
+.key-points li {
+    padding: 0.5rem 0;
+    border-bottom: 1px solid #eee;
+    position: relative;
+    padding-left: 2rem;
+}
+
+.key-points li:before {
+    content: "🐝";
+    position: absolute;
+    left: 0;
+    top: 0.5rem;
+}
+
+.timeline {
+    position: relative;
+    margin: 2rem 0;
+}
+
+.timeline-item {
+    background: #f8f9fa;
+    padding: 1rem;
+    margin: 1rem 0;
+    border-left: 3px solid #FFD700;
+    border-radius: 0 8px 8px 0;
+}
+
+.btn-bee {
+    background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+    border: none;
+    color: #333;
+    font-weight: bold;
+    padding: 0.75rem 2rem;
+    border-radius: 25px;
+    transition: all 0.3s ease;
+}
+
+.btn-bee:hover {
+    background: linear-gradient(135deg, #FFA500 0%, #FF8C00 100%);
+    color: #fff;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(255,215,0,0.4);
+}
+
+/* Frog-specific styles */
+.frog-card {
+    background: linear-gradient(135deg, #98FB98 0%, #90EE90 100%);
+    border-radius: 15px;
+    padding: 1.5rem;
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: 2px solid #32CD32;
+    height: 100%;
+}
+
+.frog-card:hover {
+    transform: translateY(-5px) scale(1.02);
+    box-shadow: 0 8px 25px rgba(50, 205, 50, 0.3);
+}
+
+.frog-image {
+    width: 80px;
+    height: 80px;
+    margin-bottom: 1rem;
+    transition: transform 0.3s ease;
+}
+
+.frog-card:hover .frog-image {
+    transform: rotate(5deg) scale(1.1);
+}
+
+.frog-card h5 {
+    color: #2E7D32;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+}
+
+.frog-card p {
+    color: #4A4A4A;
+    margin-bottom: 0;
+}
+
+.frog-conclusion-group {
+    display: flex;
+    align-items: center;
+}
+
+.frog-conclusion-group img {
+    transition: transform 0.3s ease;
+    border-radius: 50%;
+}
+
+.frog-conclusion-group img:hover {
+    transform: scale(1.2) rotate(10deg);
+}
+
+/* Statistics cards */
+.stat-card {
+    background: linear-gradient(135deg, #E8F5E8 0%, #C8E6C9 100%);
+    border: 2px solid #4CAF50;
+    border-radius: 15px;
+    padding: 1.5rem;
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    height: 100%;
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(76, 175, 80, 0.3);
+}
+
+.stat-icon {
+    width: 50px;
+    height: 50px;
+    margin-bottom: 1rem;
+    transition: transform 0.3s ease;
+}
+
+.stat-card:hover .stat-icon {
+    transform: scale(1.1) rotate(5deg);
+}
+
+.stat-number {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #2E7D32;
+    margin-bottom: 0.5rem;
+}
+
+.stat-label {
+    color: #4A4A4A;
+    font-size: 0.9rem;
+    margin-bottom: 0;
+}
+
+/* Floating frog animations */
+@keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+}
+
+.highlight-box img,
+.section-card .text-end img {
+    animation: float 3s ease-in-out infinite;
+}
+
+.highlight-box img {
+    animation-delay: 0.5s;
+}
+
+.section-card .text-end img {
+    animation-delay: 1s;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .hero-section {
+        padding: 2rem 0;
+        margin: 0 -15px 2rem -15px;
+    }
+    
+    .section-icon {
+        float: none;
+        display: block;
+        margin: 0 auto 1rem;
+    }
+    
+    .section-card {
+        padding: 1.5rem;
+    }
+    
+    .frog-card {
+        margin-bottom: 1rem;
+    }
+    
+    .frog-image {
+        width: 60px;
+        height: 60px;
+    }
+    
+    .frog-conclusion-group {
+        justify-content: center;
+        margin-top: 1rem;
+    }
+    
+    .frog-conclusion-group img {
+        width: 25px !important;
+        height: 25px !important;
+    }
+
+    .navbar-brand .brand-text {
+        font-size: 1.2rem;
+    }
+
+    .nav-link-custom {
+        margin: 0.25rem 0;
+    }
+
+    .footer-frogs {
+        margin-top: 1rem;
+    }
 }
