@@ -1,7 +1,7 @@
 ﻿@page
 @model MapBeeModel
 @{
-    ViewData["Title"] = "Carte des Villes";
+    ViewData["Title"] = "Carte des Alvéoles";
 }
 
 <!-- Hero Section for MapBee -->
@@ -9,16 +9,16 @@
     <div class="container hero-content">
         <div class="text-center">
             <img src="/img/beehive.svg" alt="Beehive Map" class="bee-icon">
-            <h1 class="display-4 fw-bold mb-3">🗺️ Réseau des Villes</h1>
+            <h1 class="display-4 fw-bold mb-3">🗺️ Réseau des Alvéoles</h1>
             <p class="lead mb-4">
-                Cartographie interactive des villes françaises et visualisation de l'essaimage démocratique.
+                Cartographie interactive des alvéoles françaises et visualisation de l'essaimage démocratique.
             </p>
             <div class="d-flex justify-content-center gap-3">
                 <a href="/CreerAlveole" class="btn btn-bee">
                     <i class="fas fa-plus"></i> Créer une Alvéole
                 </a>
                 <a href="#map-section" class="btn btn-outline-light">
-                    <i class="fas fa-map-marked-alt"></i> Explorer les Villes
+                    <i class="fas fa-map-marked-alt"></i> Explorer les Avéoles
                 </a>
             </div>
         </div>
@@ -31,7 +31,7 @@
         <div class="col-lg-8">
             <div class="section-card">
                 <div class="d-flex align-items-center justify-content-between mb-3">
-                    <h3 class="h4 mb-0">🗺️ Carte des Villes Françaises</h3>
+                    <h3 class="h4 mb-0">🗺️ Carte des Alvéoles Françaises</h3>
                     <img src="/img/bee-hero.svg" alt="Map Bee" style="width: 35px; height: 25px;">
                 </div>
                 <div id="map" style="height: 600px; width: 100%; border-radius: 10px;"></div>
@@ -66,7 +66,7 @@
             <div class="section-card">
                 <div class="d-flex align-items-center mb-3">
                     <img src="/img/beehive.svg" alt="Cities" style="width: 35px; height: 35px; margin-right: 10px;">
-                    <h5 class="mb-0">🏙️ Villes Actives</h5>
+                    <h5 class="mb-0">🏙️ Alvéoles Actives</h5>
                 </div>
                 <div style="max-height: 400px; overflow-y: auto;">
                     @{
