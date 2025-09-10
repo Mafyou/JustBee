@@ -77,7 +77,7 @@ namespace JustBeeInfrastructure.Migrations
 
                     b.HasIndex("VilleCode");
 
-                    b.ToTable("Alveoles");
+                    b.ToTable("Alveoles", (string)null);
                 });
 
             modelBuilder.Entity("JustBeeInfrastructure.Models.Departement", b =>
@@ -104,7 +104,7 @@ namespace JustBeeInfrastructure.Migrations
 
                     b.HasKey("Code");
 
-                    b.ToTable("Departements");
+                    b.ToTable("Departements", (string)null);
                 });
 
             modelBuilder.Entity("JustBeeInfrastructure.Models.Person", b =>
@@ -155,7 +155,7 @@ namespace JustBeeInfrastructure.Migrations
 
                     b.HasIndex("VilleCode");
 
-                    b.ToTable("Persons");
+                    b.ToTable("Persons", (string)null);
                 });
 
             modelBuilder.Entity("JustBeeInfrastructure.Models.Ville", b =>
@@ -187,7 +187,7 @@ namespace JustBeeInfrastructure.Migrations
 
                     b.HasKey("Code");
 
-                    b.ToTable("Villes");
+                    b.ToTable("Villes", (string)null);
                 });
 
             modelBuilder.Entity("JustBeeInfrastructure.Models.Alveole", b =>
