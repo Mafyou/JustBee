@@ -108,7 +108,7 @@ public class EmailService
     public async Task<bool> EnvoyerEmailVerificationAlveoleAsync(string email, string nomAlveole, string ville, string token, string baseUrl)
     {
         try
-        s{
+        {
             var lienVerification = $"{baseUrl}/VerifierAlveole?token={token}";
 
             var emailData = new
