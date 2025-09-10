@@ -1,4 +1,3 @@
-using JustBeeWeb.Models;
 using System.Text.Json;
 
 namespace JustBeeWeb.Services;
@@ -22,10 +21,10 @@ public class VilleDataService(HttpClient httpClient, ILogger<VilleDataService> l
                 return _villesCache;
 
             _logger.LogInformation("Chargement des données des villes françaises...");
-            
+
             // Charger depuis l'API officielle française
             var villes = await LoadVillesFromApiAsync();
-            
+
             // Fallback : charger les villes de base si l'API échoue
             if (villes.Count == 0)
             {
@@ -35,7 +34,7 @@ public class VilleDataService(HttpClient httpClient, ILogger<VilleDataService> l
 
             _villesCache = villes.OrderBy(v => v.Nom).ToList();
             _logger.LogInformation($"Chargement terminé : {_villesCache.Count} villes disponibles");
-            
+
             return _villesCache;
         }
         finally
@@ -47,14 +46,14 @@ public class VilleDataService(HttpClient httpClient, ILogger<VilleDataService> l
     public async Task<List<Ville>> SearchVillesAsync(string searchTerm)
     {
         var toutes = await GetAllVillesFranceAsync();
-        
+
         if (string.IsNullOrWhiteSpace(searchTerm))
             return toutes.Take(50).ToList(); // Limiter pour les performances
 
         var terme = searchTerm.ToLowerInvariant();
-        
+
         return toutes
-            .Where(v => 
+            .Where(v =>
                 v.Nom.ToLowerInvariant().Contains(terme) ||
                 v.Code.ToLowerInvariant().Contains(terme) ||
                 v.Departement.ToLowerInvariant().Contains(terme) ||
@@ -69,7 +68,7 @@ public class VilleDataService(HttpClient httpClient, ILogger<VilleDataService> l
         {
             // Utiliser l'API officielle geo.api.gouv.fr
             var response = await _httpClient.GetAsync("https://geo.api.gouv.fr/communes?fields=nom,code,codeDepartement,departement,codeRegion,region,centre&format=json");
-            
+
             if (!response.IsSuccessStatusCode)
             {
                 _logger.LogWarning($"Échec de l'appel API : {response.StatusCode}");
@@ -77,9 +76,9 @@ public class VilleDataService(HttpClient httpClient, ILogger<VilleDataService> l
             }
 
             var json = await response.Content.ReadAsStringAsync();
-            var communesApi = JsonSerializer.Deserialize<CommuneApiResponse[]>(json, new JsonSerializerOptions 
-            { 
-                PropertyNameCaseInsensitive = true 
+            var communesApi = JsonSerializer.Deserialize<CommuneApiResponse[]>(json, new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
             });
 
             if (communesApi == null || communesApi.Length == 0)

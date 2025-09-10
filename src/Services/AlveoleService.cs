@@ -1,65 +1,57 @@
-using JustBeeWeb.Models;
+using JustBeeInfrastructure.Repositories;
+using JustBeeInfrastructure.Models;
 
 namespace JustBeeWeb.Services;
 
-public class AlveoleService
+public class AlveoleService(IAlveoleRepository alveoleRepository)
 {
-    private static readonly List<Alveole> _alveoles = new();
-    private static int _nextAlveoleId = 1;
+    private readonly IAlveoleRepository _alveoleRepository = alveoleRepository;
 
-    public List<Alveole> GetAllAlveoles() => _alveoles;
+    public async Task<List<Alveole>> GetAllAlveolesAsync() => 
+        (await _alveoleRepository.GetAllAsync()).ToList();
 
-    public List<Alveole> GetAlveolesVerifiees() => 
-        _alveoles.Where(a => a.EmailVerifie).ToList();
+    public async Task<List<Alveole>> GetAlveolesVerifieesAsync() =>
+        (await _alveoleRepository.GetVerifiedAsync()).ToList();
 
-    public List<Alveole> GetAlveolesByVille(string villeCode) => 
-        _alveoles.Where(a => a.VilleCode == villeCode && a.EmailVerifie).ToList();
+    public async Task<List<Alveole>> GetAlveolesByVilleAsync(string villeCode) =>
+        (await _alveoleRepository.GetByVilleCodeAsync(villeCode)).ToList();
 
-    public Alveole? GetAlveoleById(int id) => 
-        _alveoles.FirstOrDefault(a => a.Id == id);
+    public async Task<Alveole?> GetAlveoleByIdAsync(int id) =>
+        await _alveoleRepository.GetByIdAsync(id);
 
-    public Alveole? GetAlveoleByToken(string token) => 
-        _alveoles.FirstOrDefault(a => a.TokenVerification == token);
+    public async Task<Alveole?> GetAlveoleByTokenAsync(string token) =>
+        await _alveoleRepository.GetByTokenAsync(token);
 
-    public void AjouterAlveole(Alveole alveole)
+    public async Task<bool> AjouterAlveoleAsync(Alveole alveole)
     {
-        alveole.Id = _nextAlveoleId++;
-        alveole.TokenVerification = Guid.NewGuid().ToString();
-        alveole.DateCreation = DateTime.UtcNow;
-        _alveoles.Add(alveole);
-    }
-
-    public bool VerifierAlveole(string token)
-    {
-        var alveole = GetAlveoleByToken(token);
-        if (alveole != null && !alveole.EmailVerifie)
+        try
         {
-            alveole.EmailVerifie = true;
-            alveole.DateVerification = DateTime.UtcNow;
-            alveole.TokenVerification = null; // Supprimer le token après vérification
+            await _alveoleRepository.AddAsync(alveole);
             return true;
         }
-        return false;
-    }
-
-    public bool SupprimerAlveole(int id)
-    {
-        var alveole = GetAlveoleById(id);
-        if (alveole != null)
+        catch
         {
-            _alveoles.Remove(alveole);
-            return true;
+            return false;
         }
-        return false;
     }
 
-    public Dictionary<string, int> GetStatistiquesAlveoles()
-    {
-        var alveolesVerifiees = GetAlveolesVerifiees();
-        return new Dictionary<string, int>
-        {
-            ["Total"] = alveolesVerifiees.Count,
-            ["Par ville"] = alveolesVerifiees.GroupBy(a => a.VilleCode).Count()
-        };
-    }
+    public async Task<bool> VerifierAlveoleAsync(string token) =>
+        await _alveoleRepository.VerifyEmailAsync(token);
+
+    public async Task<bool> SupprimerAlveoleAsync(int id) =>
+        await _alveoleRepository.DeleteAsync(id);
+
+    public async Task<Dictionary<string, int>> GetStatistiquesAlveolesAsync() =>
+        await _alveoleRepository.GetStatisticsAsync();
+
+    // Synchronous methods for backward compatibility (will be removed later)
+    public List<Alveole> GetAllAlveoles() => GetAllAlveolesAsync().Result;
+    public List<Alveole> GetAlveolesVerifiees() => GetAlveolesVerifieesAsync().Result;
+    public List<Alveole> GetAlveolesByVille(string villeCode) => GetAlveolesByVilleAsync(villeCode).Result;
+    public Alveole? GetAlveoleById(int id) => GetAlveoleByIdAsync(id).Result;
+    public Alveole? GetAlveoleByToken(string token) => GetAlveoleByTokenAsync(token).Result;
+    public void AjouterAlveole(Alveole alveole) => AjouterAlveoleAsync(alveole).Wait();
+    public bool VerifierAlveole(string token) => VerifierAlveoleAsync(token).Result;
+    public bool SupprimerAlveole(int id) => SupprimerAlveoleAsync(id).Result;
+    public Dictionary<string, int> GetStatistiquesAlveoles() => GetStatistiquesAlveolesAsync().Result;
 }

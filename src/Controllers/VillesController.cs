@@ -1,4 +1,3 @@
-using JustBeeWeb.Models;
 using JustBeeWeb.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -6,22 +5,28 @@ namespace JustBeeWeb.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class VillesController(VilleDataService villeDataService) : ControllerBase
+public class VillesController : ControllerBase
 {
-    private readonly VilleService _villeService = new();
-    private readonly VilleDataService _villeDataService = villeDataService;
+    private readonly VilleService _villeService;
+    private readonly VilleDataService _villeDataService;
+
+    public VillesController(VilleService villeService, VilleDataService villeDataService)
+    {
+        _villeService = villeService;
+        _villeDataService = villeDataService;
+    }
 
     [HttpGet]
-    public IActionResult GetAllVilles()
+    public async Task<IActionResult> GetAllVillesAsync()
     {
-        var villes = _villeService.GetAllVilles();
+        var villes = await _villeService.GetAllVillesAsync();
         return Ok(villes);
     }
 
     [HttpGet("{code}")]
-    public IActionResult GetVilleByCode(string code)
+    public async Task<IActionResult> GetVilleByCodeAsync(string code)
     {
-        var ville = _villeService.GetVilleByCode(code);
+        var ville = await _villeService.GetVilleByCodeAsync(code);
         if (ville is null)
         {
             return NotFound($"Ville avec le code {code} non trouvée.");
@@ -30,25 +35,48 @@ public class VillesController(VilleDataService villeDataService) : ControllerBas
     }
 
     [HttpGet("with-persons")]
-    public IActionResult GetVillesWithPersons()
+    public async Task<IActionResult> GetVillesWithPersonsAsync()
     {
-        var villes = _villeService.GetAllVilles()
-            .Where(v => v.Persons.Any(p => p.EmailVerifie))
+        var allPersons = await _villeService.GetPersonsVerifieesAsync();
+        var villesWithPersons = allPersons
+            .Where(p => !string.IsNullOrEmpty(p.VilleCode))
+            .GroupBy(p => p.VilleCode)
+            .Select(g => g.Key)
             .ToList();
+
+        var villes = new List<Ville>();
+        foreach (var villeCode in villesWithPersons)
+        {
+            var ville = await _villeService.GetVilleByCodeAsync(villeCode!);
+            if (ville != null)
+                villes.Add(ville);
+        }
+
         return Ok(villes);
     }
 
     [HttpGet("with-alveoles")]
-    public IActionResult GetVillesWithAlveoles()
+    public async Task<IActionResult> GetVillesWithAlveolesAsync()
     {
-        var villes = _villeService.GetAllVilles()
-            .Where(v => v.Alveoles.Any(a => a.EmailVerifie))
+        var alveoles = await _villeService.GetAlveolesVerifieesAsync();
+        var villesWithAlveoles = alveoles
+            .GroupBy(a => a.VilleCode)
+            .Select(g => g.Key)
             .ToList();
+
+        var villes = new List<Ville>();
+        foreach (var villeCode in villesWithAlveoles)
+        {
+            var ville = await _villeService.GetVilleByCodeAsync(villeCode);
+            if (ville != null)
+                villes.Add(ville);
+        }
+
         return Ok(villes);
     }
 
     [HttpPost("{code}/persons")]
-    public IActionResult AddPersonToVille(string code, [FromBody] CreatePersonRequest request)
+    public async Task<IActionResult> AddPersonToVilleAsync(string code, [FromBody] CreatePersonRequest request)
     {
         if (string.IsNullOrWhiteSpace(request.Pseudo))
         {
@@ -60,7 +88,7 @@ public class VillesController(VilleDataService villeDataService) : ControllerBas
             return BadRequest("L'email est requis.");
         }
 
-        var ville = _villeService.GetVilleByCode(code);
+        var ville = await _villeService.GetVilleByCodeAsync(code);
         if (ville is null)
         {
             return NotFound($"Ville avec le code {code} non trouvée.");
@@ -72,13 +100,17 @@ public class VillesController(VilleDataService villeDataService) : ControllerBas
             Email = request.Email.Trim().ToLower()
         };
 
-        _villeService.AddPersonToVille(code, person);
+        var success = await _villeService.AddPersonToVilleAsync(code, person);
+        if (!success)
+        {
+            return BadRequest("Erreur lors de l'ajout de la personne.");
+        }
 
-        return CreatedAtAction(nameof(GetVilleByCode), new { code }, person);
+        return CreatedAtAction(nameof(GetVilleByCodeAsync), new { code }, person);
     }
 
     [HttpPost("{code}/alveoles")]
-    public IActionResult AddAlveoleToVille(string code, [FromBody] CreateAlveoleRequest request)
+    public async Task<IActionResult> AddAlveoleToVilleAsync(string code, [FromBody] CreateAlveoleRequest request)
     {
         if (string.IsNullOrWhiteSpace(request.Nom))
         {
@@ -90,7 +122,7 @@ public class VillesController(VilleDataService villeDataService) : ControllerBas
             return BadRequest("L'email est requis.");
         }
 
-        var ville = _villeService.GetVilleByCode(code);
+        var ville = await _villeService.GetVilleByCodeAsync(code);
         if (ville is null)
         {
             return NotFound($"Ville avec le code {code} non trouvée.");
@@ -104,15 +136,19 @@ public class VillesController(VilleDataService villeDataService) : ControllerBas
             VilleCode = code
         };
 
-        _villeService.AddAlveoleToVille(code, alveole);
+        var success = await _villeService.AddAlveoleToVilleAsync(code, alveole);
+        if (!success)
+        {
+            return BadRequest("Erreur lors de l'ajout de l'alvéole.");
+        }
 
-        return CreatedAtAction(nameof(GetVilleByCode), new { code }, alveole);
+        return CreatedAtAction(nameof(GetVilleByCodeAsync), new { code }, alveole);
     }
 
     [HttpDelete("{code}/persons/{personId}")]
-    public IActionResult RemovePersonFromVille(string code, int personId)
+    public async Task<IActionResult> RemovePersonFromVilleAsync(string code, int personId)
     {
-        var removed = _villeService.RemovePersonFromVille(code, personId);
+        var removed = await _villeService.RemovePersonFromVilleAsync(code, personId);
         if (!removed)
         {
             return NotFound($"Personne avec l'ID {personId} non trouvée dans la ville {code}.");
@@ -122,9 +158,9 @@ public class VillesController(VilleDataService villeDataService) : ControllerBas
     }
 
     [HttpDelete("{code}/alveoles/{alveoleId}")]
-    public IActionResult RemoveAlveoleFromVille(string code, int alveoleId)
+    public async Task<IActionResult> RemoveAlveoleFromVilleAsync(string code, int alveoleId)
     {
-        var removed = _villeService.RemoveAlveoleFromVille(code, alveoleId);
+        var removed = await _villeService.RemoveAlveoleFromVilleAsync(code, alveoleId);
         if (!removed)
         {
             return NotFound($"Alvéole avec l'ID {alveoleId} non trouvée dans la ville {code}.");
@@ -134,35 +170,35 @@ public class VillesController(VilleDataService villeDataService) : ControllerBas
     }
 
     [HttpGet("persons")]
-    public IActionResult GetAllPersons()
+    public async Task<IActionResult> GetAllPersonsAsync()
     {
-        var persons = _villeService.GetAllPersons();
+        var persons = await _villeService.GetAllPersonsAsync();
         return Ok(persons);
     }
 
     [HttpGet("persons/verified")]
-    public IActionResult GetVerifiedPersons()
+    public async Task<IActionResult> GetVerifiedPersonsAsync()
     {
-        var persons = _villeService.GetPersonsVerifiees();
+        var persons = await _villeService.GetPersonsVerifieesAsync();
         return Ok(persons);
     }
 
     [HttpGet("alveoles")]
-    public IActionResult GetAllAlveoles()
+    public async Task<IActionResult> GetAllAlveolesAsync()
     {
-        var alveoles = _villeService.GetAllAlveoles();
+        var alveoles = await _villeService.GetAllAlveolesAsync();
         return Ok(alveoles);
     }
 
     [HttpGet("alveoles/verified")]
-    public IActionResult GetVerifiedAlveoles()
+    public async Task<IActionResult> GetVerifiedAlveolesAsync()
     {
-        var alveoles = _villeService.GetAlveolesVerifiees();
+        var alveoles = await _villeService.GetAlveolesVerifieesAsync();
         return Ok(alveoles);
     }
 
     [HttpGet("search")]
-    public async Task<IActionResult> Search([FromQuery] string? q)
+    public async Task<IActionResult> SearchAsync([FromQuery] string? q)
     {
         try
         {
@@ -186,7 +222,7 @@ public class VillesController(VilleDataService villeDataService) : ControllerBas
     }
 
     [HttpGet("all-france")]
-    public async Task<IActionResult> GetAllFrance()
+    public async Task<IActionResult> GetAllFranceAsync()
     {
         try
         {

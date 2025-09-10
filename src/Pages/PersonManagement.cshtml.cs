@@ -1,16 +1,21 @@
-using JustBeeWeb.Models;
 using JustBeeWeb.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace JustBeeWeb.Pages;
 
-public class PersonManagementModel() : PageModel
+public class PersonManagementModel : PageModel
 {
-    private readonly DepartementService _departementService = new();
+    private readonly DepartementService _departementService;
+
+    public PersonManagementModel(DepartementService departementService)
+    {
+        _departementService = departementService;
+    }
 
     public List<Departement> Departements { get; set; } = [];
     public List<Person> AllPersons { get; set; } = [];
+    public Dictionary<string, List<Person>> PersonsByDepartement { get; set; } = [];
     public string? SelectedDepartementCode { get; set; }
 
     [BindProperty]
@@ -19,14 +24,22 @@ public class PersonManagementModel() : PageModel
     [BindProperty]
     public string NewPersonDepartement { get; set; } = string.Empty;
 
-    public void OnGet(string? dept = null)
+    public async Task OnGetAsync(string? dept = null)
     {
-        Departements = _departementService.GetAllDepartements();
-        AllPersons = _departementService.GetAllPersons();
+        Departements = await _departementService.GetAllDepartementsAsync();
+        AllPersons = await _departementService.GetAllPersonsAsync();
         SelectedDepartementCode = dept;
+
+        // Build the persons by departement dictionary
+        PersonsByDepartement = new Dictionary<string, List<Person>>();
+        foreach (var departement in Departements)
+        {
+            var personsInDept = await _departementService.GetPersonsInDepartementAsync(departement.Code);
+            PersonsByDepartement[departement.Code] = personsInDept;
+        }
     }
 
-    public IActionResult OnPostAddPerson()
+    public async Task<IActionResult> OnPostAddPersonAsync()
     {
         if (string.IsNullOrWhiteSpace(NewPersonPseudo) || string.IsNullOrWhiteSpace(NewPersonDepartement))
         {
@@ -34,7 +47,7 @@ public class PersonManagementModel() : PageModel
             return RedirectToPage();
         }
 
-        var departement = _departementService.GetDepartementByCode(NewPersonDepartement);
+        var departement = await _departementService.GetDepartementByCodeAsync(NewPersonDepartement);
         if (departement == null)
         {
             TempData["Error"] = $"Département {NewPersonDepartement} non trouvé.";
@@ -47,17 +60,24 @@ public class PersonManagementModel() : PageModel
             Email = $"{NewPersonPseudo.Trim().ToLower()}@demo.fr"
         };
 
-        _departementService.AddPersonToDepartement(NewPersonDepartement, person);
-        
-        TempData["Success"] = $"Personne '{person.Pseudo}' ajoutée avec succès au département {departement.Nom}!";
-        
+        var success = await _departementService.AddPersonToDepartementAsync(NewPersonDepartement, person);
+
+        if (success)
+        {
+            TempData["Success"] = $"Personne '{person.Pseudo}' ajoutée avec succès au département {departement.Nom}!";
+        }
+        else
+        {
+            TempData["Error"] = "Erreur lors de l'ajout de la personne.";
+        }
+
         return RedirectToPage();
     }
 
-    public IActionResult OnPostDeletePerson(int personId, string departementCode)
+    public async Task<IActionResult> OnPostDeletePersonAsync(int personId, string departementCode)
     {
-        var removed = _departementService.RemovePersonFromDepartement(departementCode, personId);
-        
+        var removed = await _departementService.RemovePersonFromDepartementAsync(departementCode, personId);
+
         if (removed)
         {
             TempData["Success"] = "Personne supprimée avec succès!";
@@ -67,32 +87,6 @@ public class PersonManagementModel() : PageModel
             TempData["Error"] = "Impossible de supprimer la personne.";
         }
 
-        return RedirectToPage();
-    }
-
-    public IActionResult OnPostGenerateRandomPersons(int count = 5)
-    {
-        var random = new Random();
-        string[] pseudos = ["Alex", "Marie", "Pierre", "Sophie", "Jean", "Emma", "Lucas", "Camille", "Thomas", "Léa", 
-                           "Antoine", "Clara", "Nicolas", "Manon", "Julien", "Chloé", "Maxime", "Laura", "Hugo", "Jade"];
-        
-        // Get all available department codes instead of hardcoded subset
-        var allDepartements = _departementService.GetAllDepartements();
-        var departementCodes = allDepartements.Select(d => d.Code).ToArray();
-
-        for (int i = 0; i < count; i++)
-        {
-            var pseudo = pseudos[random.Next(pseudos.Length)] + "_" + random.Next(1000, 9999);
-            var deptCode = departementCodes[random.Next(departementCodes.Length)];
-
-            var person = new Person { 
-                Pseudo = pseudo,
-                Email = $"{pseudo.ToLower()}@demo.fr"
-            };
-            _departementService.AddPersonToDepartement(deptCode, person);
-        }
-
-        TempData["Success"] = $"{count} personnes générées aléatoirement dans {departementCodes.Length} départements!";
         return RedirectToPage();
     }
 }

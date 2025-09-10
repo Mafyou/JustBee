@@ -42,21 +42,21 @@
         <div class="col-md-3 col-sm-6 mb-3">
             <div class="stat-card">
                 <img src="/img/beehive.svg" alt="Active Hives" class="stat-icon">
-                <h5 class="stat-number">@Model.Departements.Count(d => d.Persons.Any())</h5>
+                <h5 class="stat-number">@Model.PersonsByDepartement.Count(kvp => kvp.Value.Any())</h5>
                 <p class="stat-label">Ruches Actives</p>
             </div>
         </div>
         <div class="col-md-3 col-sm-6 mb-3">
             <div class="stat-card">
                 <img src="/img/honeycomb.svg" alt="Coverage" class="stat-icon">
-                <h5 class="stat-number">@Math.Round((double)Model.Departements.Count(d => d.Persons.Any()) / Model.Departements.Count * 100, 1)%</h5>
+                <h5 class="stat-number">@Math.Round((double)Model.PersonsByDepartement.Count(kvp => kvp.Value.Any()) / Model.Departements.Count * 100, 1)%</h5>
                 <p class="stat-label">Taux d'Essaimage</p>
             </div>
         </div>
         <div class="col-md-3 col-sm-6 mb-3">
             <div class="stat-card">
                 <img src="/img/honeycomb.svg" alt="Average per Hive" class="stat-icon">
-                <h5 class="stat-number">@(Model.Departements.Any(d => d.Persons.Any()) ? Math.Round((double)Model.AllPersons.Count / Model.Departements.Count(d => d.Persons.Any()), 1) : 0)</h5>
+                <h5 class="stat-number">@(Model.PersonsByDepartement.Any(kvp => kvp.Value.Any()) ? Math.Round((double)Model.AllPersons.Count / Model.PersonsByDepartement.Count(kvp => kvp.Value.Any()), 1) : 0)</h5>
                 <p class="stat-label">Abeilles par Ruche</p>
             </div>
         </div>
@@ -122,25 +122,20 @@
                 </form>
             </div>
 
-            <!-- Actions rapides -->
+            <!-- Information importante pour les utilisateurs réels -->
             <div class="section-card">
                 <div class="d-flex align-items-center mb-3">
-                    <img src="/img/honeycomb.svg" alt="Quick Actions" style="width: 35px; height: 35px; margin-right: 10px;">
-                    <h5 class="mb-0"><i class="fas fa-bolt"></i> Essaimage Automatique</h5>
+                    <img src="/img/honeycomb.svg" alt="Real Users" style="width: 35px; height: 35px; margin-right: 10px;">
+                    <h5 class="mb-0"><i class="fas fa-info-circle"></i> Participation Réelle</h5>
                 </div>
                 <div class="highlight-box">
-                    <p class="small mb-3 text-center">🐝 Génération automatique d'abeilles pour tester l'essaimage</p>
-                    <form method="post" asp-page-handler="GenerateRandomPersons" class="mb-2">
-                        <button type="submit" class="btn btn-outline-warning w-100 mb-2">
-                            <i class="fas fa-random"></i> Essaimer 5 abeilles
-                        </button>
-                    </form>
-                    <form method="post" asp-page-handler="GenerateRandomPersons" class="mb-2">
-                        <input type="hidden" name="count" value="10">
-                        <button type="submit" class="btn btn-outline-success w-100">
-                            <i class="fas fa-users"></i> Essaimer 10 abeilles
-                        </button>
-                    </form>
+                    <p class="small mb-3 text-center">🐝 Cette plateforme est destinée aux vrais citoyens</p>
+                    <div class="alert alert-info" role="alert">
+                        <strong>Mode Production :</strong><br>
+                        Les alvéoles doivent être créées manuellement par de vraies personnes. 
+                        Chaque inscription est vérifiée par email pour garantir l'authenticité 
+                        de la participation démocratique.
+                    </div>
                 </div>
             </div>
         </div>
@@ -235,7 +230,7 @@
     </div>
 
     <!-- Ruches avec abeilles -->
-    @if (Model.Departements.Any(d => d.Persons.Any()))
+    @if (Model.PersonsByDepartement.Any(kvp => kvp.Value.Any()))
     {
         <div class="row mt-4">
             <div class="col-12">
@@ -245,33 +240,39 @@
                         <h5 class="mb-0"><i class="fas fa-map-marked-alt"></i> Répartition des Ruches Territoriales</h5>
                     </div>
                     <div class="row">
-                        @foreach (var dept in Model.Departements.Where(d => d.Persons.Any()).OrderByDescending(d => d.Persons.Count))
+                        @foreach (var deptKvp in Model.PersonsByDepartement.Where(kvp => kvp.Value.Any()).OrderByDescending(kvp => kvp.Value.Count))
                         {
-                            <div class="col-md-6 col-lg-4 mb-3">
-                                <div class="timeline-item">
-                                    <div class="d-flex justify-content-between align-items-start mb-2">
-                                        <div>
-                                            <h6 class="text-warning mb-1">
-                                                <i class="fas fa-home"></i> 🏠 @dept.Code - @dept.Nom
-                                            </h6>
-                                            <small class="text-muted">📍 @dept.Region</small>
+                            var dept = Model.Departements.FirstOrDefault(d => d.Code == deptKvp.Key);
+                            var persons = deptKvp.Value;
+                            
+                            @if (dept != null)
+                            {
+                                <div class="col-md-6 col-lg-4 mb-3">
+                                    <div class="timeline-item">
+                                        <div class="d-flex justify-content-between align-items-start mb-2">
+                                            <div>
+                                                <h6 class="text-warning mb-1">
+                                                    <i class="fas fa-home"></i> 🏠 @dept.Code - @dept.Nom
+                                                </h6>
+                                                <small class="text-muted">📍 @dept.Region</small>
+                                            </div>
+                                            <div class="text-right">
+                                                <span class="badge bg-success fs-6">@persons.Count 🐝</span>
+                                            </div>
                                         </div>
-                                        <div class="text-right">
-                                            <span class="badge bg-success fs-6">@dept.Persons.Count 🐝</span>
+                                        <div class="mt-2">
+                                            @foreach (var person in persons.Take(3))
+                                            {
+                                                <span class="badge bg-light text-dark me-1">🐝 @person.Pseudo</span>
+                                            }
+                                            @if (persons.Count > 3)
+                                            {
+                                                <span class="text-muted">... et @(persons.Count - 3) autre(s)</span>
+                                            }
                                         </div>
-                                    </div>
-                                    <div class="mt-2">
-                                        @foreach (var person in dept.Persons.Take(3))
-                                        {
-                                            <span class="badge bg-light text-dark me-1">🐝 @person.Pseudo</span>
-                                        }
-                                        @if (dept.Persons.Count > 3)
-                                        {
-                                            <span class="text-muted">... et @(dept.Persons.Count - 3) autre(s)</span>
-                                        }
                                     </div>
                                 </div>
-                            </div>
+                            }
                         }
                     </div>
                 </div>

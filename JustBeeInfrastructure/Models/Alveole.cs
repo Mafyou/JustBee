@@ -1,4 +1,4 @@
-namespace JustBeeWeb.Models;
+namespace JustBeeInfrastructure.Models;
 
 public class Alveole
 {

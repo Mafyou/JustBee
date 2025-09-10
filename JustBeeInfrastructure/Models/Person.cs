@@ -1,4 +1,4 @@
-﻿namespace JustBeeWeb.Models;
+﻿namespace JustBeeInfrastructure.Models;
 
 public class Person
 {
@@ -8,11 +8,14 @@ public class Person
     public bool EmailVerifie { get; set; } = false; // Statut de vérification
     public string? TokenVerification { get; set; } // Token pour vérification
     public DateTime? DateVerification { get; set; } // Date de vérification
-    public string? VilleCode { get; set; } // Changé de DepartementCode vers VilleCode
+    public string? VilleCode { get; set; } // Foreign key to Ville
     public double? Latitude { get; set; }
     public double? Longitude { get; set; }
     public DateTime DateCreation { get; set; } = DateTime.UtcNow;
-    
+
+    // Navigation property
+    public Ville? Ville { get; set; }
+
     // Propriété de compatibilité pour éviter les erreurs dans l'existant
     public string? DepartementCode
     {

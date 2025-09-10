@@ -18,7 +18,7 @@
                     <i class="fas fa-plus"></i> Créer une Alvéole
                 </a>
                 <a href="#map-section" class="btn btn-outline-light">
-                    <i class="fas fa-map-marked-alt"></i> Explorer les Avéoles
+                    <i class="fas fa-map-marked-alt"></i> Explorer les Alvéoles
                 </a>
             </div>
         </div>
@@ -56,7 +56,7 @@
                             <br><small>🏠 Alvéoles</small>
                         </div>
                         <div class="col-4">
-                            <strong class="text-info">@Model.Villes.Count(v => v.Persons.Any(p => p.EmailVerifie) || v.Alveoles.Any(a => a.EmailVerifie))</strong>
+                            <strong class="text-info">@Model.Villes.Count(v => Model.AllPersons.Any(p => p.VilleCode == v.Code) || Model.AllAlveoles.Any(a => a.VilleCode == v.Code))</strong>
                             <br><small>🏙️ Villes</small>
                         </div>
                     </div>
@@ -71,16 +71,19 @@
                 <div style="max-height: 400px; overflow-y: auto;">
                     @{
                         var villesActives = Model.Villes.Where(v => 
-                            v.Persons.Any(p => p.EmailVerifie) || 
-                            v.Alveoles.Any(a => a.EmailVerifie)
-                        ).OrderByDescending(v => v.Persons.Count(p => p.EmailVerifie) + v.Alveoles.Count(a => a.EmailVerifie));
+                            Model.AllPersons.Any(p => p.VilleCode == v.Code) || 
+                            Model.AllAlveoles.Any(a => a.VilleCode == v.Code)
+                        ).OrderByDescending(v => 
+                            Model.AllPersons.Count(p => p.VilleCode == v.Code) + 
+                            Model.AllAlveoles.Count(a => a.VilleCode == v.Code)
+                        );
                     }
                     @if (villesActives.Any())
                     {
                         @foreach (var ville in villesActives)
                         {
-                            var personnesVerifiees = ville.Persons.Where(p => p.EmailVerifie).ToList();
-                            var alveolesVerifiees = ville.Alveoles.Where(a => a.EmailVerifie).ToList();
+                            var personnesVerifiees = Model.AllPersons.Where(p => p.VilleCode == ville.Code).ToList();
+                            var alveolesVerifiees = Model.AllAlveoles.Where(a => a.VilleCode == ville.Code).ToList();
                             var totalElements = personnesVerifiees.Count + alveolesVerifiees.Count;
                             
                             <div class="timeline-item mb-2">
@@ -176,8 +179,8 @@
     // Données des villes avec éléments vérifiés (personnes et alvéoles)
     var villesData = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(
         Model.Villes.Where(v => 
-            v.Persons.Any(p => p.EmailVerifie) || 
-            v.Alveoles.Any(a => a.EmailVerifie)
+            Model.AllPersons.Any(p => p.VilleCode == v.Code) || 
+            Model.AllAlveoles.Any(a => a.VilleCode == v.Code)
         ).Select(v => new {
             code = v.Code,
             nom = v.Nom,
@@ -185,11 +188,11 @@
             departement = v.Departement,
             latitude = v.Latitude,
             longitude = v.Longitude,
-            personCount = v.Persons.Count(p => p.EmailVerifie),
-            alveoleCount = v.Alveoles.Count(a => a.EmailVerifie),
-            totalCount = v.Persons.Count(p => p.EmailVerifie) + v.Alveoles.Count(a => a.EmailVerifie),
-            persons = v.Persons.Where(p => p.EmailVerifie).Select(p => new { id = p.Id, pseudo = p.Pseudo }).ToArray(),
-            alveoles = v.Alveoles.Where(a => a.EmailVerifie).Select(a => new { id = a.Id, nom = a.Nom }).ToArray()
+            personCount = Model.AllPersons.Count(p => p.VilleCode == v.Code),
+            alveoleCount = Model.AllAlveoles.Count(a => a.VilleCode == v.Code),
+            totalCount = Model.AllPersons.Count(p => p.VilleCode == v.Code) + Model.AllAlveoles.Count(a => a.VilleCode == v.Code),
+            persons = Model.AllPersons.Where(p => p.VilleCode == v.Code).Select(p => new { id = p.Id, pseudo = p.Pseudo }).ToArray(),
+            alveoles = Model.AllAlveoles.Where(a => a.VilleCode == v.Code).Select(a => new { id = a.Id, nom = a.Nom }).ToArray()
         })
     ));
 

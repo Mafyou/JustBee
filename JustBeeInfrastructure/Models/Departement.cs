@@ -1,4 +1,4 @@
-namespace JustBeeWeb.Models;
+namespace JustBeeInfrastructure.Models;
 
 public class Departement
 {
@@ -7,5 +7,4 @@ public class Departement
     public required string Region { get; set; }
     public double Latitude { get; set; }
     public double Longitude { get; set; }
-    public List<Person> Persons { get; set; } = [];
 }

@@ -1,4 +1,3 @@
-using JustBeeWeb.Models;
 using JustBeeWeb.Options;
 using JustBeeWeb.Services;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -6,112 +5,43 @@ using Microsoft.Extensions.Options;
 
 namespace JustBeeWeb.Pages;
 
-public class MapBeeModel(IOptions<BrevoOptions> brevo) : PageModel
+public class MapBeeModel : PageModel
 {
-    private readonly VilleService _villeService = new();
-    private readonly IOptions<BrevoOptions> _brevo = brevo;
+    private readonly VilleService _villeService;
+    private readonly DepartementService _departementService;
+    private readonly IOptions<BrevoOptions> _brevo;
+
+    public MapBeeModel(VilleService villeService, DepartementService departementService, IOptions<BrevoOptions> brevo)
+    {
+        _villeService = villeService;
+        _departementService = departementService;
+        _brevo = brevo;
+    }
 
     public List<Ville> Villes { get; set; } = [];
     public List<Person> AllPersons { get; set; } = [];
     public List<Alveole> AllAlveoles { get; set; } = [];
+    public List<Departement> Departements { get; set; } = [];
+    public Dictionary<string, List<Person>> PersonsByDepartement { get; set; } = [];
 
-    // Propriétés de compatibilité pour les anciennes références
-    public List<Departement> Departements =>
-        Villes.Select(v => new Departement
-        {
-            Code = v.Code,
-            Nom = v.Nom,
-            Region = v.Region,
-            Latitude = v.Latitude,
-            Longitude = v.Longitude,
-            Persons = v.Persons.Where(p => p.EmailVerifie).ToList() // Seulement les personnes vérifiées
-        }).ToList();
-
-    public void OnGet()
+    public async Task OnGetAsync()
     {
         // Récupérer toutes les villes
-        Villes = _villeService.GetAllVilles();
-
-        // Ajouter des personnes d'exemple seulement si aucune personne n'existe déjà
-        if (_villeService.GetAllPersons().Count == 0)
-        {
-            SeedPersonsInVilles();
-        }
+        Villes = await _villeService.GetAllVillesAsync();
+        
+        // Récupérer les départements
+        Departements = await _departementService.GetAllDepartementsAsync();
 
         // Collecter seulement les personnes et alvéoles vérifiées pour la carte
-        AllPersons = _villeService.GetPersonsVerifiees();
-        AllAlveoles = _villeService.GetAlveolesVerifiees();
-    }
+        AllPersons = await _villeService.GetPersonsVerifieesAsync();
+        AllAlveoles = await _villeService.GetAlveolesVerifieesAsync();
 
-    private void SeedPersonsInVilles()
-    {
-        // Ajouter des personnes dans Paris (avec email vérifié pour la démo)
-        _villeService.AddPersonToVille("PARIS", new Person { Id = 1, Pseudo = "ParisUser1", Email = "paris1@demo.fr", EmailVerifie = true });
-        _villeService.AddPersonToVille("PARIS", new Person { Id = 2, Pseudo = "ParisUser2", Email = "paris2@demo.fr", EmailVerifie = true });
-
-        // Ajouter des personnes dans Lille
-        _villeService.AddPersonToVille("LILLE", new Person { Id = 3, Pseudo = "LilleUser1", Email = "lille1@demo.fr", EmailVerifie = true });
-
-        // Ajouter des personnes dans Marseille
-        _villeService.AddPersonToVille("MARSEILLE", new Person { Id = 4, Pseudo = "MarseilleUser1", Email = "marseille1@demo.fr", EmailVerifie = true });
-        _villeService.AddPersonToVille("MARSEILLE", new Person { Id = 5, Pseudo = "MarseilleUser2", Email = "marseille2@demo.fr", EmailVerifie = true });
-
-        // Ajouter des personnes dans Bordeaux
-        _villeService.AddPersonToVille("BORDEAUX", new Person { Id = 6, Pseudo = "BordeauxUser1", Email = "bordeaux1@demo.fr", EmailVerifie = true });
-
-        // Ajouter des personnes dans Lyon
-        _villeService.AddPersonToVille("LYON", new Person { Id = 7, Pseudo = "LyonUser1", Email = "lyon1@demo.fr", EmailVerifie = true });
-        _villeService.AddPersonToVille("LYON", new Person { Id = 8, Pseudo = "LyonUser2", Email = "lyon2@demo.fr", EmailVerifie = true });
-        _villeService.AddPersonToVille("LYON", new Person { Id = 9, Pseudo = "LyonUser3", Email = "lyon3@demo.fr", EmailVerifie = true });
-
-        // Ajouter des personnes dans Toulouse
-        _villeService.AddPersonToVille("TOULOUSE", new Person { Id = 10, Pseudo = "ToulouseUser1", Email = "toulouse1@demo.fr", EmailVerifie = true });
-
-        // Ajouter des personnes dans Montpellier
-        _villeService.AddPersonToVille("MONTPELLIER", new Person { Id = 11, Pseudo = "MontpellierUser1", Email = "montpellier1@demo.fr", EmailVerifie = true });
-
-        // Ajouter des personnes dans Nice
-        _villeService.AddPersonToVille("NICE", new Person { Id = 12, Pseudo = "NiceUser1", Email = "nice1@demo.fr", EmailVerifie = true });
-
-        // Ajouter des personnes dans Nantes
-        _villeService.AddPersonToVille("NANTES", new Person { Id = 13, Pseudo = "NantesUser1", Email = "nantes1@demo.fr", EmailVerifie = true });
-        _villeService.AddPersonToVille("NANTES", new Person { Id = 14, Pseudo = "NantesUser2", Email = "nantes2@demo.fr", EmailVerifie = true });
-
-        // Ajouter des personnes dans Strasbourg
-        _villeService.AddPersonToVille("STRASBOURG", new Person { Id = 15, Pseudo = "StrasbourgUser1", Email = "strasbourg1@demo.fr", EmailVerifie = true });
-
-        // Ajouter des personnes dans Rennes
-        _villeService.AddPersonToVille("RENNES", new Person { Id = 16, Pseudo = "RennesUser1", Email = "rennes1@demo.fr", EmailVerifie = true });
-
-        // Ajouter quelques alvéoles d'exemple vérifiées
-        _villeService.AddAlveoleToVille("PARIS", new Alveole
+        // Build the persons by departement dictionary for compatibility
+        PersonsByDepartement = new Dictionary<string, List<Person>>();
+        foreach (var departement in Departements)
         {
-            Id = 1,
-            Nom = "Alvéole Écologique Paris",
-            Description = "Défense de l'environnement urbain",
-            Email = "eco.paris@demo.fr",
-            EmailVerifie = true,
-            VilleCode = "PARIS"
-        });
-
-        _villeService.AddAlveoleToVille("LYON", new Alveole
-        {
-            Id = 2,
-            Nom = "Professionnels Lyon",
-            Description = "Artisans et commerçants lyonnais",
-            Email = "pro.lyon@demo.fr",
-            EmailVerifie = true,
-            VilleCode = "LYON"
-        });
-
-        _villeService.AddAlveoleToVille("MARSEILLE", new Alveole
-        {
-            Id = 3,
-            Nom = "Jeunes Marseillais",
-            Description = "Représentation des jeunes de 16-25 ans",
-            Email = "jeunes.marseille@demo.fr",
-            EmailVerifie = true,
-            VilleCode = "MARSEILLE"
-        });
+            var personsInDept = await _departementService.GetPersonsInDepartementAsync(departement.Code);
+            PersonsByDepartement[departement.Code] = personsInDept;
+        }
     }
 }
