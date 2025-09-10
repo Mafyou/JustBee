@@ -1,7 +1,7 @@
 ﻿@page
 @model MapBeeModel
 @{
-    ViewData["Title"] = "MapBee - Carte des Ruches";
+    ViewData["Title"] = "Carte des Villes";
 }
 
 <!-- Hero Section for MapBee -->
@@ -9,57 +9,17 @@
     <div class="container hero-content">
         <div class="text-center">
             <img src="/img/beehive.svg" alt="Beehive Map" class="bee-icon">
-            <h1 class="display-4 fw-bold mb-3">🗺️ MapBee - Réseau des Ruches</h1>
+            <h1 class="display-4 fw-bold mb-3">🗺️ Réseau des Villes</h1>
             <p class="lead mb-4">
-                Cartographie interactive des alvéoles citoyennes et visualisation de l'essaimage démocratique
-                à travers les territoires français de la ruche participative.
+                Cartographie interactive des villes françaises et visualisation de l'essaimage démocratique.
             </p>
             <div class="d-flex justify-content-center gap-3">
-                <a href="/PersonManagement" class="btn btn-bee">
-                    <i class="fas fa-user-plus"></i> Gérer les Abeilles
+                <a href="/CreerAlveole" class="btn btn-bee">
+                    <i class="fas fa-plus"></i> Créer une Alvéole
                 </a>
                 <a href="#map-section" class="btn btn-outline-light">
-                    <i class="fas fa-map-marked-alt"></i> Explorer les Ruches
+                    <i class="fas fa-map-marked-alt"></i> Explorer les Villes
                 </a>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Beehive Statistics Section -->
-<div class="container my-4">
-    <div class="row text-center mb-4">
-        <div class="col-12">
-            <h2 class="h4 mb-3">🍯 Métriques de l'Essaimage Démocratique</h2>
-        </div>
-    </div>
-    <div class="row justify-content-center">
-        <div class="col-md-3 col-sm-6 mb-3">
-            <div class="stat-card">
-                <img src="/img/bee-hero.svg" alt="Total Bees" class="stat-icon">
-                <h5 class="stat-number">@Model.AllPersons.Count</h5>
-                <p class="stat-label">Abeilles Citoyennes</p>
-            </div>
-        </div>
-        <div class="col-md-3 col-sm-6 mb-3">
-            <div class="stat-card">
-                <img src="/img/beehive.svg" alt="Active Hives" class="stat-icon">
-                <h5 class="stat-number">@Model.Departements.Count(d => d.Persons.Any())</h5>
-                <p class="stat-label">Ruches Actives</p>
-            </div>
-        </div>
-        <div class="col-md-3 col-sm-6 mb-3">
-            <div class="stat-card">
-                <img src="/img/honeycomb.svg" alt="Coverage" class="stat-icon">
-                <h5 class="stat-number">@Math.Round((double)Model.Departements.Count(d => d.Persons.Any()) / Model.Departements.Count * 100, 1)%</h5>
-                <p class="stat-label">Taux d'Essaimage</p>
-            </div>
-        </div>
-        <div class="col-md-3 col-sm-6 mb-3">
-            <div class="stat-card">
-                <img src="/img/honeycomb.svg" alt="Average per Hive" class="stat-icon">
-                <h5 class="stat-number">@(Model.Departements.Any(d => d.Persons.Any()) ? Math.Round((double)Model.AllPersons.Count / Model.Departements.Count(d => d.Persons.Any()), 1) : 0)</h5>
-                <p class="stat-label">Abeilles par Ruche</p>
             </div>
         </div>
     </div>
@@ -71,7 +31,7 @@
         <div class="col-lg-8">
             <div class="section-card">
                 <div class="d-flex align-items-center justify-content-between mb-3">
-                    <h3 class="h4 mb-0">🗺️ Carte des Alvéoles Territoriales</h3>
+                    <h3 class="h4 mb-0">🗺️ Carte des Villes Françaises</h3>
                     <img src="/img/bee-hero.svg" alt="Map Bee" style="width: 35px; height: 25px;">
                 </div>
                 <div id="map" style="height: 600px; width: 100%; border-radius: 10px;"></div>
@@ -83,98 +43,84 @@
             <div class="section-card">
                 <div class="d-flex align-items-center mb-3">
                     <img src="/img/honeycomb.svg" alt="Info Honeycomb" style="width: 35px; height: 35px; margin-right: 10px;">
-                    <h5 class="mb-0">📊 Tableau de Bord de la Ruche</h5>
+                    <h5 class="mb-0">📊 Tableau de Bord</h5>
                 </div>
                 <div class="highlight-box">
                     <div class="row text-center">
-                        <div class="col-6">
+                        <div class="col-4">
                             <strong class="text-warning">@Model.AllPersons.Count</strong>
                             <br><small>🐝 Abeilles</small>
                         </div>
-                        <div class="col-6">
-                            <strong class="text-success">@Model.Departements.Count(d => d.Persons.Any())</strong>
-                            <br><small>🏠 Ruches</small>
+                        <div class="col-4">
+                            <strong class="text-success">@Model.AllAlveoles.Count</strong>
+                            <br><small>🏠 Alvéoles</small>
+                        </div>
+                        <div class="col-4">
+                            <strong class="text-info">@Model.Villes.Count(v => v.Persons.Any(p => p.EmailVerifie) || v.Alveoles.Any(a => a.EmailVerifie))</strong>
+                            <br><small>🏙️ Villes</small>
                         </div>
                     </div>
                 </div>
-                
-                @if (!Model.AllPersons.Any())
-                {
-                    <div class="alert alert-info mt-3" role="alert">
-                        <div class="d-flex align-items-center">
-                            <img src="/img/bee-hero.svg" alt="Lonely Bee" style="width: 30px; height: 23px; margin-right: 10px;">
-                            <div>
-                                <i class="fas fa-info-circle"></i> 
-                                Aucune abeille dans la ruche. 
-                                <a href="/PersonManagement" class="alert-link">Ajoutez des abeilles citoyennes</a> 
-                                pour commencer l'essaimage!
-                            </div>
-                        </div>
-                    </div>
-                }
             </div>
             
             <div class="section-card">
                 <div class="d-flex align-items-center mb-3">
-                    <img src="/img/beehive.svg" alt="Hives" style="width: 35px; height: 35px; margin-right: 10px;">
-                    <h5 class="mb-0">🏠 Ruches Territoriales Actives</h5>
+                    <img src="/img/beehive.svg" alt="Cities" style="width: 35px; height: 35px; margin-right: 10px;">
+                    <h5 class="mb-0">🏙️ Villes Actives</h5>
                 </div>
                 <div style="max-height: 400px; overflow-y: auto;">
-                    @if (Model.Departements.Any(d => d.Persons.Any()))
+                    @{
+                        var villesActives = Model.Villes.Where(v => 
+                            v.Persons.Any(p => p.EmailVerifie) || 
+                            v.Alveoles.Any(a => a.EmailVerifie)
+                        ).OrderByDescending(v => v.Persons.Count(p => p.EmailVerifie) + v.Alveoles.Count(a => a.EmailVerifie));
+                    }
+                    @if (villesActives.Any())
                     {
-                        @foreach (var dept in Model.Departements.Where(d => d.Persons.Any()).OrderByDescending(d => d.Persons.Count))
+                        @foreach (var ville in villesActives)
                         {
+                            var personnesVerifiees = ville.Persons.Where(p => p.EmailVerifie).ToList();
+                            var alveolesVerifiees = ville.Alveoles.Where(a => a.EmailVerifie).ToList();
+                            var totalElements = personnesVerifiees.Count + alveolesVerifiees.Count;
+                            
                             <div class="timeline-item mb-2">
                                 <div class="d-flex justify-content-between align-items-start">
                                     <div>
-                                        <strong>🏠 @dept.Code - @dept.Nom</strong> 
-                                        <span class="badge bg-warning text-dark ms-1">@dept.Persons.Count 🐝</span>
+                                        <strong>🏙️ @ville.Nom</strong> 
+                                        <span class="badge bg-warning text-dark ms-1">@totalElements</span>
                                         <br />
-                                        <small class="text-muted">📍 @dept.Region</small>
+                                        <small class="text-muted">📍 @ville.Region (@ville.Departement)</small>
                                     </div>
                                 </div>
                                 <div class="mt-1">
-                                    <small class="text-warning">
-                                        🐝 @string.Join(", ", dept.Persons.Select(p => p.Pseudo))
-                                    </small>
+                                    @if (personnesVerifiees.Any())
+                                    {
+                                        <small class="text-info">
+                                            🐝 @string.Join(", ", personnesVerifiees.Select(p => p.Pseudo))
+                                        </small>
+                                        @if (alveolesVerifiees.Any())
+                                        {
+                                            <br />
+                                        }
+                                    }
+                                    @if (alveolesVerifiees.Any())
+                                    {
+                                        <small class="text-success">
+                                            🏠 @string.Join(", ", alveolesVerifiees.Select(a => a.Nom))
+                                        </small>
+                                    }
                                 </div>
                             </div>
                         }
                     }
                     else
                     {
-                        <div class="text-center text-muted py-3">
-                            <img src="/img/beehive.svg" alt="Empty Hive" style="width: 60px; height: 60px; margin-bottom: 10px; opacity: 0.6;">
-                            <p>Aucune ruche avec des abeilles citoyennes</p>
-                            <a href="/PersonManagement" class="btn btn-bee btn-sm">
-                                <i class="fas fa-plus"></i> Démarrer l'essaimage
-                            </a>
+                        <div class="text-center py-3">
+                            <img src="/img/honeycomb.svg" alt="Empty" style="width: 40px; height: 40px; opacity: 0.5;">
+                            <p class="text-muted mt-2">Aucune ville active pour le moment</p>
+                            <a href="/CreerAlveole" class="btn btn-bee btn-sm">Créer la première alvéole</a>
                         </div>
                     }
-                </div>
-            </div>
-
-            <!-- Biodiversity Indicators (Frogs as secondary) -->
-            <div class="section-card">
-                <h5 class="h6 mb-3">🌱 Sentinelles Écologiques</h5>
-                <p class="small text-muted mb-3">Les grenouilles surveillent la santé de l'écosystème démocratique :</p>
-                <div class="row">
-                    <div class="col-6 text-center mb-2">
-                        <img src="/img/frog_big.png" alt="Tradition Guardian" style="width: 20px; height: 20px;">
-                        <small class="d-block">Gardienne</small>
-                    </div>
-                    <div class="col-6 text-center mb-2">
-                        <img src="/img/frog_peace.png" alt="Peace Mediator" style="width: 20px; height: 20px;">
-                        <small class="d-block">Médiatrice</small>
-                    </div>
-                    <div class="col-6 text-center">
-                        <img src="/img/frog_wings.png" alt="Future Visionary" style="width: 20px; height: 20px;">
-                        <small class="d-block">Visionnaire</small>
-                    </div>
-                    <div class="col-6 text-center">
-                        <img src="/img/frog_wings_front.png" alt="Change Leader" style="width: 20px; height: 20px;">
-                        <small class="d-block">Guide</small>
-                    </div>
                 </div>
             </div>
         </div>
@@ -188,8 +134,8 @@
             <div class="col-md-8">
                 <h3 class="h4 mb-3">🚀 Étendre l'Essaimage Démocratique</h3>
                 <p class="mb-0">
-                    Participez à l'expansion du réseau des ruches démocratiques en ajoutant de nouvelles abeilles citoyennes 
-                    et en créant des alvéoles dans votre territoire.
+                    Participez à l'expansion du réseau des ruches démocratiques en créant des alvéoles dans votre ville.
+                    Seules les alvéoles avec email vérifié apparaissent sur la carte.
                 </p>
             </div>
             <div class="col-md-4 text-center">
@@ -200,7 +146,7 @@
                 </div>
                 <div class="d-flex gap-2 justify-content-center">
                     <a href="/" class="btn btn-outline-warning btn-sm">Retour Ruche</a>
-                    <a href="/PersonManagement" class="btn btn-bee btn-sm">Gérer Abeilles</a>
+                    <a href="/CreerAlveole" class="btn btn-bee btn-sm">Créer Alvéole</a>
                 </div>
             </div>
         </div>
@@ -227,51 +173,71 @@
         attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
     }).addTo(map);
 
-    // Données des départements avec personnes
-    var departementsData = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(
-        Model.Departements.Where(d => d.Persons.Any()).Select(d => new {
-            code = d.Code,
-            nom = d.Nom,
-            region = d.Region,
-            latitude = d.Latitude,
-            longitude = d.Longitude,
-            personCount = d.Persons.Count,
-            persons = d.Persons.Select(p => new { id = p.Id, pseudo = p.Pseudo }).ToArray()
+    // Données des villes avec éléments vérifiés (personnes et alvéoles)
+    var villesData = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(
+        Model.Villes.Where(v => 
+            v.Persons.Any(p => p.EmailVerifie) || 
+            v.Alveoles.Any(a => a.EmailVerifie)
+        ).Select(v => new {
+            code = v.Code,
+            nom = v.Nom,
+            region = v.Region,
+            departement = v.Departement,
+            latitude = v.Latitude,
+            longitude = v.Longitude,
+            personCount = v.Persons.Count(p => p.EmailVerifie),
+            alveoleCount = v.Alveoles.Count(a => a.EmailVerifie),
+            totalCount = v.Persons.Count(p => p.EmailVerifie) + v.Alveoles.Count(a => a.EmailVerifie),
+            persons = v.Persons.Where(p => p.EmailVerifie).Select(p => new { id = p.Id, pseudo = p.Pseudo }).ToArray(),
+            alveoles = v.Alveoles.Where(a => a.EmailVerifie).Select(a => new { id = a.Id, nom = a.Nom }).ToArray()
         })
     ));
 
     // Vérifier s'il y a des données à afficher
-    if (departementsData && departementsData.length > 0) {
-        // Création des marqueurs pour chaque département avec des personnes
-        departementsData.forEach(function(dept) {
-            // Couleur du marqueur basée sur le nombre de personnes
-            var markerColor = dept.personCount > 2 ? 'red' : dept.personCount > 1 ? 'orange' : 'green';
+    if (villesData && villesData.length > 0) {
+        // Création des marqueurs pour chaque ville avec des éléments vérifiés
+        villesData.forEach(function(ville) {
+            // Couleur du marqueur basée sur le nombre total d'éléments
+            var markerColor = ville.totalCount > 2 ? 'red' : ville.totalCount > 1 ? 'orange' : 'green';
             
             // Création du contenu du popup
             var popupContent = `
                 <div class="popup-content">
                     <div class="d-flex align-items-center mb-2">
                         <img src="/img/beehive.svg" style="width: 25px; height: 25px; margin-right: 8px;">
-                        <h6 class="mb-0"><strong>🏠 ${dept.code} - ${dept.nom}</strong></h6>
+                        <h6 class="mb-0"><strong>🏙️ ${ville.nom}</strong></h6>
                     </div>
-                    <p class="text-muted mb-2"><em>📍 ${dept.region}</em></p>
-                    <div class="mb-2">
-                        <strong>${dept.personCount} abeille(s) citoyenne(s) :</strong>
-                        <ul class="list-unstyled mt-1">
-                            ${dept.persons.map(person => `<li>🐝 ${person.pseudo} <small class="text-muted">(ID: ${person.id})</small></li>`).join('')}
-                        </ul>
-                    </div>
+                    <p class="text-muted mb-2"><em>📍 ${ville.region} (${ville.departement})</em></p>
+                    
+                    ${ville.personCount > 0 ? `
+                        <div class="mb-2">
+                            <strong>🐝 ${ville.personCount} abeille(s) citoyenne(s) :</strong>
+                            <ul class="list-unstyled mt-1">
+                                ${ville.persons.map(person => `<li>🐝 ${person.pseudo} <small class="text-muted">(ID: ${person.id})</small></li>`).join('')}
+                            </ul>
+                        </div>
+                    ` : ''}
+                    
+                    ${ville.alveoleCount > 0 ? `
+                        <div class="mb-2">
+                            <strong>🏠 ${ville.alveoleCount} alvéole(s) :</strong>
+                            <ul class="list-unstyled mt-1">
+                                ${ville.alveoles.map(alveole => `<li>🏠 ${alveole.nom}</li>`).join('')}
+                            </ul>
+                        </div>
+                    ` : ''}
+                    
                     <div class="text-center">
-                        <a href="/PersonManagement" class="btn btn-bee btn-sm">
-                            <i class="fas fa-plus"></i> Ajouter une abeille
+                        <a href="/CreerAlveole" class="btn btn-bee btn-sm">
+                            <i class="fas fa-plus"></i> Créer une alvéole
                         </a>
                     </div>
                 </div>
             `;
 
-            // Création du marqueur avec une icône personnalisée
-            var marker = L.marker([dept.latitude, dept.longitude], {
-                title: `${dept.nom} (${dept.personCount} abeille(s) citoyenne(s))`
+            // Création du marqueur
+            var marker = L.marker([ville.latitude, ville.longitude], {
+                title: `${ville.nom} (${ville.totalCount} élément(s) vérifié(s))`
             }).addTo(map);
 
             // Ajout du popup au marqueur
@@ -279,7 +245,7 @@
         });
 
         // Ajustement de la vue pour inclure tous les marqueurs
-        if (departementsData.length > 0) {
+        if (villesData.length > 0) {
             var group = new L.featureGroup(map._layers);
             if (Object.keys(group._layers).length > 0) {
                 map.fitBounds(group.getBounds().pad(0.1));
@@ -292,10 +258,10 @@
             .setContent(`
                 <div class="text-center popup-content">
                     <img src="/img/beehive.svg" style="width: 40px; height: 40px; margin-bottom: 10px;">
-                    <h6>🗺️ Aucune abeille dans les ruches</h6>
+                    <h6>🗺️ Aucune alvéole vérifiée</h6>
                     <p>Commencez l'essaimage démocratique!</p>
-                    <a href="/PersonManagement" class="btn btn-bee btn-sm">
-                        <i class="fas fa-plus"></i> Démarrer l'essaimage
+                    <a href="/CreerAlveole" class="btn btn-bee btn-sm">
+                        <i class="fas fa-plus"></i> Créer une alvéole
                     </a>
                 </div>
             `)
@@ -306,10 +272,11 @@
     var legend = L.control({position: 'bottomright'});
     legend.onAdd = function (map) {
         var div = L.DomUtil.create('div', 'info legend');
-        div.innerHTML += '<h6>🍯 Légende des Ruches</h6>';
-        div.innerHTML += '<i style="background: green; width: 18px; height: 18px; display: inline-block; margin-right: 8px; border-radius: 50%;"></i> 1 abeille<br>';
-        div.innerHTML += '<i style="background: orange; width: 18px; height: 18px; display: inline-block; margin-right: 8px; border-radius: 50%;"></i> 2 abeilles<br>';
-        div.innerHTML += '<i style="background: red; width: 18px; height: 18px; display: inline-block; margin-right: 8px; border-radius: 50%;"></i> 3+ abeilles<br>';
+        div.innerHTML += '<h6>🍯 Légende</h6>';
+        div.innerHTML += '<i style="background: green; width: 18px; height: 18px; display: inline-block; margin-right: 8px; border-radius: 50%;"></i> 1 élément<br>';
+        div.innerHTML += '<i style="background: orange; width: 18px; height: 18px; display: inline-block; margin-right: 8px; border-radius: 50%;"></i> 2 éléments<br>';
+        div.innerHTML += '<i style="background: red; width: 18px; height: 18px; display: inline-block; margin-right: 8px; border-radius: 50%;"></i> 3+ éléments<br>';
+        div.innerHTML += '<small style="color: #666;">🐝 Abeilles + 🏠 Alvéoles vérifiées</small>';
         return div;
     };
     legend.addTo(map);
@@ -317,7 +284,7 @@
 
 <style>
     .popup-content {
-        min-width: 200px;
+        min-width: 250px;
     }
     
     .popup-content h6 {
@@ -327,5 +294,19 @@
     .popup-content .btn-bee {
         font-size: 0.8rem;
         padding: 0.4rem 0.8rem;
+    }
+
+    .legend {
+        background: white;
+        padding: 10px;
+        border-radius: 5px;
+        box-shadow: 0 0 15px rgba(0,0,0,0.2);
+        line-height: 18px;
+        color: #555;
+    }
+
+    .legend h6 {
+        margin: 0 0 5px 0;
+        color: #8B4513;
     }
 </style>

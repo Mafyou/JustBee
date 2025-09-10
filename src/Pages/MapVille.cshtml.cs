@@ -6,26 +6,13 @@ using Microsoft.Extensions.Options;
 
 namespace JustBeeWeb.Pages;
 
-public class MapBeeModel(IOptions<BrevoOptions> brevo) : PageModel
+public class MapVilleModel(IOptions<BrevoOptions> brevo) : PageModel
 {
     private readonly VilleService _villeService = new();
     private readonly IOptions<BrevoOptions> _brevo = brevo;
 
     public List<Ville> Villes { get; set; } = [];
     public List<Person> AllPersons { get; set; } = [];
-    public List<Alveole> AllAlveoles { get; set; } = [];
-
-    // Propriétés de compatibilité pour les anciennes références
-    public List<Departement> Departements =>
-        Villes.Select(v => new Departement
-        {
-            Code = v.Code,
-            Nom = v.Nom,
-            Region = v.Region,
-            Latitude = v.Latitude,
-            Longitude = v.Longitude,
-            Persons = v.Persons.Where(p => p.EmailVerifie).ToList() // Seulement les personnes vérifiées
-        }).ToList();
 
     public void OnGet()
     {
@@ -38,14 +25,13 @@ public class MapBeeModel(IOptions<BrevoOptions> brevo) : PageModel
             SeedPersonsInVilles();
         }
 
-        // Collecter seulement les personnes et alvéoles vérifiées pour la carte
-        AllPersons = _villeService.GetPersonsVerifiees();
-        AllAlveoles = _villeService.GetAlveolesVerifiees();
+        // Collecter toutes les personnes pour la carte
+        AllPersons = [.. Villes.SelectMany(v => v.Persons)];
     }
 
     private void SeedPersonsInVilles()
     {
-        // Ajouter des personnes dans Paris (avec email vérifié pour la démo)
+        // Ajouter des personnes dans Paris
         _villeService.AddPersonToVille("PARIS", new Person { Id = 1, Pseudo = "ParisUser1", Email = "paris1@demo.fr", EmailVerifie = true });
         _villeService.AddPersonToVille("PARIS", new Person { Id = 2, Pseudo = "ParisUser2", Email = "paris2@demo.fr", EmailVerifie = true });
 
@@ -82,36 +68,5 @@ public class MapBeeModel(IOptions<BrevoOptions> brevo) : PageModel
 
         // Ajouter des personnes dans Rennes
         _villeService.AddPersonToVille("RENNES", new Person { Id = 16, Pseudo = "RennesUser1", Email = "rennes1@demo.fr", EmailVerifie = true });
-
-        // Ajouter quelques alvéoles d'exemple vérifiées
-        _villeService.AddAlveoleToVille("PARIS", new Alveole
-        {
-            Id = 1,
-            Nom = "Alvéole Écologique Paris",
-            Description = "Défense de l'environnement urbain",
-            Email = "eco.paris@demo.fr",
-            EmailVerifie = true,
-            VilleCode = "PARIS"
-        });
-
-        _villeService.AddAlveoleToVille("LYON", new Alveole
-        {
-            Id = 2,
-            Nom = "Professionnels Lyon",
-            Description = "Artisans et commerçants lyonnais",
-            Email = "pro.lyon@demo.fr",
-            EmailVerifie = true,
-            VilleCode = "LYON"
-        });
-
-        _villeService.AddAlveoleToVille("MARSEILLE", new Alveole
-        {
-            Id = 3,
-            Nom = "Jeunes Marseillais",
-            Description = "Représentation des jeunes de 16-25 ans",
-            Email = "jeunes.marseille@demo.fr",
-            EmailVerifie = true,
-            VilleCode = "MARSEILLE"
-        });
     }
 }

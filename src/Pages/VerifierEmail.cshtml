@@ -1,0 +1,271 @@
+﻿@page
+@model VerifierEmailModel
+@{
+    ViewData["Title"] = Model.Success ? "Email Vérifié" : "Erreur de Vérification";
+}
+
+<!-- Hero Section -->
+<div class="hero-section">
+    <div class="container hero-content">
+        <div class="text-center">
+            @if (Model.Success)
+            {
+                <img src="/img/bee-hero.svg" alt="Email Verified" class="bee-icon verification-success">
+                <h1 class="display-4 fw-bold mb-3 text-success">🐝 Email Vérifié !</h1>
+            }
+            else
+            {
+                <img src="/img/beehive.svg" alt="Verification Failed" class="bee-icon verification-error">
+                <h1 class="display-4 fw-bold mb-3 text-danger">❌ Erreur de Vérification</h1>
+            }
+        </div>
+    </div>
+</div>
+
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="section-card">
+                @if (Model.Success)
+                {
+                    <div class="text-center verification-success-content">
+                        <div class="verification-icon-group mb-4">
+                            <img src="/img/bee-hero.svg" alt="Success Bee" style="width: 50px; height: 38px;" class="floating">
+                            <img src="/img/honeycomb.svg" alt="Honeycomb" style="width: 50px; height: 38px; margin: 0 15px;" class="bounceEmail">
+                            <img src="/img/beehive.svg" alt="Beehive" style="width: 50px; height: 50px;" class="scale">
+                        </div>
+                        
+                        <div class="alert alert-success" role="alert">
+                            <h4 class="alert-heading">🎉 Bienvenue Abeille Citoyenne !</h4>
+                            <p class="mb-0">@Model.Message</p>
+                        </div>
+
+                        @if (!string.IsNullOrEmpty(Model.PersonPseudo))
+                        {
+                            <div class="person-info-card">
+                                <h5 class="text-warning mb-3">🐝 Informations de votre Profil</h5>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <strong>Pseudo :</strong><br>
+                                        <span class="text-primary">@Model.PersonPseudo</span>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <strong>Ville :</strong><br>
+                                        <span class="text-primary">@Model.VilleNom</span>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+
+                        <div class="highlight-box mt-4">
+                            <h6 class="text-success">🌱 Vous êtes maintenant :</h6>
+                            <ul class="list-unstyled mt-2">
+                                <li>✅ <strong>Visible sur la carte</strong> des ruches démocratiques</li>
+                                <li>✅ <strong>Actif</strong> dans le réseau participatif</li>
+                                <li>✅ <strong>Connecté</strong> aux autres abeilles de votre ville</li>
+                                <li>✅ <strong>Prêt</strong> à participer aux discussions citoyennes</li>
+                            </ul>
+                        </div>
+
+                        <div class="mt-4">
+                            <a href="/MapBee" class="btn btn-bee btn-lg me-3">
+                                <i class="fas fa-map"></i> Voir la Carte des Ruches
+                            </a>
+                            <a href="/CreerAlveole" class="btn btn-outline-warning">
+                                <i class="fas fa-plus"></i> Créer une Alvéole
+                            </a>
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <div class="text-center verification-error-content">
+                        <div class="alert alert-danger" role="alert">
+                            <h4 class="alert-heading">🚫 Vérification Échouée</h4>
+                            <p class="mb-0">@Model.Message</p>
+                        </div>
+
+                        <div class="error-help mt-4">
+                            <h6 class="text-muted">🤔 Que faire maintenant ?</h6>
+                            <ul class="list-unstyled mt-3">
+                                <li class="mb-2">
+                                    <i class="fas fa-envelope text-primary"></i>
+                                    <strong>Vérifiez votre email</strong> : Le lien pourrait avoir expiré
+                                </li>
+                                <li class="mb-2">
+                                    <i class="fas fa-redo text-warning"></i>
+                                    <strong>Réessayez plus tard</strong> ou contactez l'administrateur
+                                </li>
+                                <li class="mb-2">
+                                    <i class="fas fa-question-circle text-info"></i>
+                                    <strong>Rejoignez une alvéole</strong> pour participer
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div class="mt-4">
+                            <a href="/CreerAlveole" class="btn btn-bee me-3">
+                                <i class="fas fa-plus"></i> Créer une Alvéole
+                            </a>
+                            <a href="/MapBee" class="btn btn-outline-warning">
+                                <i class="fas fa-map"></i> Voir la Carte
+                            </a>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
+    <!-- Informations sur le Plan B -->
+    <div class="row mt-5">
+        <div class="col-12">
+            <div class="section-card">
+                <div class="row align-items-center">
+                    <div class="col-md-8">
+                        <h3 class="h4 mb-3">🚀 Participez à l'Essaimage Démocratique</h3>
+                        <p class="mb-0">
+                            En tant qu'abeille citoyenne vérifiée, vous pouvez maintenant participer pleinement 
+                            au réseau des ruches démocratiques. Créez des alvéoles, rejoignez des discussions 
+                            et contribuez à renforcer la démocratie participative dans votre ville.
+                        </p>
+                    </div>
+                    <div class="col-md-4 text-center">
+                        <div class="bee-conclusion-group mb-3">
+                            <img src="/img/bee-hero.svg" alt="Bee Hero" style="width: 30px; height: 23px; margin: 0 3px;">
+                            <img src="/img/honeycomb.svg" alt="Honeycomb" style="width: 30px; height: 23px; margin: 0 3px;">
+                            <img src="/img/beehive.svg" alt="Beehive" style="width: 30px; height: 30px; margin: 0 3px;">
+                        </div>
+                        <div class="d-flex gap-2 justify-content-center">
+                            <a href="/" class="btn btn-outline-warning btn-sm">Plan B</a>
+                            <a href="/MapBee" class="btn btn-bee btn-sm">Carte</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Biodiversity indicators with frogs -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="section-card">
+                <h5 class="h6 mb-3">🌱 Sentinelles Écologiques de la Ruche</h5>
+                <p class="small text-muted mb-3">Les grenouilles surveillent la santé de l'écosystème démocratique :</p>
+                <div class="row text-center">
+                    <div class="col-3">
+                        <img src="/img/frog_big.png" alt="Tradition Guardian" style="width: 30px; height: 30px;">
+                        <small class="d-block mt-1">Gardienne des Traditions</small>
+                    </div>
+                    <div class="col-3">
+                        <img src="/img/frog_peace.png" alt="Peace Mediator" style="width: 30px; height: 30px;">
+                        <small class="d-block mt-1">Médiatrice de Paix</small>
+                    </div>
+                    <div class="col-3">
+                        <img src="/img/frog_wings.png" alt="Future Visionary" style="width: 30px; height: 30px;">
+                        <small class="d-block mt-1">Visionnaire du Futur</small>
+                    </div>
+                    <div class="col-3">
+                        <img src="/img/frog_wings_front.png" alt="Change Leader" style="width: 30px; height: 30px;">
+                        <small class="d-block mt-1">Guide du Changement</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .verification-success .bee-icon {
+        animation: bounceEmailIcon 1s ease-in-out;
+    }
+
+    .verification-error .bee-icon {
+        opacity: 0.6;
+        filter: grayscale(50%);
+    }
+
+    .verification-icon-group img.floating {
+        animation: floating 3s ease-in-out infinite;
+    }
+
+    .verification-icon-group img.bounceEmail {
+        animation: bounceEmail 2s ease-in-out infinite;
+    }
+
+    .verification-icon-group img.scale {
+        animation: scaleEmail 2.5s ease-in-out infinite;
+    }
+
+    .person-info-card {
+        background: linear-gradient(135deg, #FFF8DC, #FFFACD);
+        border: 2px solid #FFD700;
+        border-radius: 10px;
+        padding: 20px;
+        margin: 20px 0;
+    }
+
+    .verification-success-content .highlight-box {
+        background-color: #f8fff8;
+        border-left: 4px solid #28a745;
+        padding: 15px 20px;
+        border-radius: 5px;
+    }
+
+    .error-help {
+        background-color: #fff3cd;
+        border-left: 4px solid #ffc107;
+        padding: 15px 20px;
+        border-radius: 5px;
+    }
+
+    @@keyframes floating {
+        0%, 100% { transform: translateY(0px); }
+        50% { transform: translateY(-10px); }
+    }
+
+    @@keyframes bounceEmail {
+        0%, 100% { transform: translateY(0px); }
+        50% { transform: translateY(-15px); }
+    }
+
+    @@keyframes bounceEmailIcon {
+        0%, 100% { transform: translateY(0px); }
+        50% { transform: translateY(-15px); }
+    }
+
+    @@keyframes scaleEmail {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.1); }
+    }
+
+    .verification-success-content {
+        animation: fadeInUp 0.8s ease-out;
+    }
+
+    .verification-error-content {
+        animation: fadeInDown 0.8s ease-out;
+    }
+
+    @@keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @@keyframes fadeInDown {
+        from {
+            opacity: 0;
+            transform: translateY(-30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+</style>

@@ -43,7 +43,8 @@ public class PersonManagementModel() : PageModel
 
         var person = new Person
         {
-            Pseudo = NewPersonPseudo.Trim()
+            Pseudo = NewPersonPseudo.Trim(),
+            Email = $"{NewPersonPseudo.Trim().ToLower()}@demo.fr"
         };
 
         _departementService.AddPersonToDepartement(NewPersonDepartement, person);
@@ -84,7 +85,10 @@ public class PersonManagementModel() : PageModel
             var pseudo = pseudos[random.Next(pseudos.Length)] + "_" + random.Next(1000, 9999);
             var deptCode = departementCodes[random.Next(departementCodes.Length)];
 
-            var person = new Person { Pseudo = pseudo };
+            var person = new Person { 
+                Pseudo = pseudo,
+                Email = $"{pseudo.ToLower()}@demo.fr"
+            };
             _departementService.AddPersonToDepartement(deptCode, person);
         }
 

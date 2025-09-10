@@ -1,0 +1,243 @@
+@page
+@model MapVilleModel
+@{
+    ViewData["Title"] = "Carte des Villes";
+}
+
+<!-- Hero Section for MapVille -->
+<div class="hero-section">
+    <div class="container hero-content">
+        <div class="text-center">
+            <img src="/img/beehive.svg" alt="Beehive Map" class="bee-icon">
+            <h1 class="display-4 fw-bold mb-3">??? Réseau des Villes</h1>
+            <p class="lead mb-4">
+                Cartographie interactive des villes françaises et visualisation de l'essaimage démocratique.
+            </p>
+            <div class="d-flex justify-content-center gap-3">
+                <a href="/PersonManagement" class="btn btn-bee">
+                    <i class="fas fa-user-plus"></i> Gérer les Abeilles
+                </a>
+                <a href="#map-section" class="btn btn-outline-light">
+                    <i class="fas fa-map-marked-alt"></i> Explorer les Villes
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid" id="map-section">
+    <div class="row">
+        <!-- Carte Leaflet -->
+        <div class="col-lg-8">
+            <div class="section-card">
+                <div class="d-flex align-items-center justify-content-between mb-3">
+                    <h3 class="h4 mb-0">??? Carte des Villes Françaises</h3>
+                    <img src="/img/bee-hero.svg" alt="Map Bee" style="width: 35px; height: 25px;">
+                </div>
+                <div id="map" style="height: 600px; width: 100%; border-radius: 10px;"></div>
+            </div>
+        </div>
+        
+        <!-- Panneau d'informations -->
+        <div class="col-lg-4">
+            <div class="section-card">
+                <div class="d-flex align-items-center mb-3">
+                    <img src="/img/honeycomb.svg" alt="Info Honeycomb" style="width: 35px; height: 35px; margin-right: 10px;">
+                    <h5 class="mb-0">?? Tableau de Bord des Villes</h5>
+                </div>
+                <div class="highlight-box">
+                    <div class="row text-center">
+                        <div class="col-6">
+                            <strong class="text-warning">@Model.AllPersons.Count</strong>
+                            <br><small>?? Abeilles</small>
+                        </div>
+                        <div class="col-6">
+                            <strong class="text-success">@Model.Villes.Count(v => v.Persons.Any())</strong>
+                            <br><small>??? Villes</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="section-card">
+                <div class="d-flex align-items-center mb-3">
+                    <img src="/img/beehive.svg" alt="Cities" style="width: 35px; height: 35px; margin-right: 10px;">
+                    <h5 class="mb-0">??? Villes Actives</h5>
+                </div>
+                <div style="max-height: 400px; overflow-y: auto;">
+                    @if (Model.Villes.Any(v => v.Persons.Any()))
+                    {
+                        @foreach (var ville in Model.Villes.Where(v => v.Persons.Any()).OrderByDescending(v => v.Persons.Count))
+                        {
+                            <div class="timeline-item mb-2">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <div>
+                                        <strong>??? @ville.Nom</strong> 
+                                        <span class="badge bg-warning text-dark ms-1">@ville.Persons.Count ??</span>
+                                        <br />
+                                        <small class="text-muted">?? @ville.Region (@ville.Departement)</small>
+                                    </div>
+                                </div>
+                                <div class="mt-1">
+                                    <small class="text-warning">
+                                        ?? @string.Join(", ", ville.Persons.Select(p => p.Pseudo))
+                                    </small>
+                                </div>
+                            </div>
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Navigation Section -->
+<div class="container my-5">
+    <div class="section-card">
+        <div class="row align-items-center">
+            <div class="col-md-8">
+                <h3 class="h4 mb-3">?? Étendre l'Essaimage Démocratique</h3>
+                <p class="mb-0">
+                    Participez à l'expansion du réseau des ruches démocratiques en ajoutant de nouvelles abeilles citoyennes 
+                    et en créant des alvéoles dans votre ville.
+                </p>
+            </div>
+            <div class="col-md-4 text-center">
+                <div class="bee-conclusion-group mb-3">
+                    <img src="/img/bee-hero.svg" alt="Bee Hero" style="width: 30px; height: 23px; margin: 0 3px;">
+                    <img src="/img/honeycomb.svg" alt="Honeycomb" style="width: 30px; height: 23px; margin: 0 3px;">
+                    <img src="/img/beehive.svg" alt="Beehive" style="width: 30px; height: 30px; margin: 0 3px;">
+                </div>
+                <div class="d-flex gap-2 justify-content-center">
+                    <a href="/" class="btn btn-outline-warning btn-sm">Retour Ruche</a>
+                    <a href="/PersonManagement" class="btn btn-bee btn-sm">Gérer Abeilles</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Leaflet CSS -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+      crossorigin=""/>
+
+<!-- Leaflet JavaScript -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+        crossorigin=""></script>
+
+<script>
+    // Initialisation de la carte centrée sur la France
+    var map = L.map('map').setView([46.603354, 1.888334], 6);
+
+    // Ajout de la couche de tuiles OpenStreetMap
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+    }).addTo(map);
+
+    // Données des villes avec personnes
+    var villesData = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(
+        Model.Villes.Where(v => v.Persons.Any()).Select(v => new {
+            code = v.Code,
+            nom = v.Nom,
+            region = v.Region,
+            departement = v.Departement,
+            latitude = v.Latitude,
+            longitude = v.Longitude,
+            personCount = v.Persons.Count,
+            persons = v.Persons.Select(p => new { id = p.Id, pseudo = p.Pseudo }).ToArray()
+        })
+    ));
+
+    // Vérifier s'il y a des données à afficher
+    if (villesData && villesData.length > 0) {
+        // Création des marqueurs pour chaque ville avec des personnes
+        villesData.forEach(function(ville) {
+            // Couleur du marqueur basée sur le nombre de personnes
+            var markerColor = ville.personCount > 2 ? 'red' : ville.personCount > 1 ? 'orange' : 'green';
+            
+            // Création du contenu du popup
+            var popupContent = `
+                <div class="popup-content">
+                    <div class="d-flex align-items-center mb-2">
+                        <img src="/img/beehive.svg" style="width: 25px; height: 25px; margin-right: 8px;">
+                        <h6 class="mb-0"><strong>??? ${ville.nom}</strong></h6>
+                    </div>
+                    <p class="text-muted mb-2"><em>?? ${ville.region} (${ville.departement})</em></p>
+                    <div class="mb-2">
+                        <strong>${ville.personCount} abeille(s) citoyenne(s) :</strong>
+                        <ul class="list-unstyled mt-1">
+                            ${ville.persons.map(person => `<li>?? ${person.pseudo} <small class="text-muted">(ID: ${person.id})</small></li>`).join('')}
+                        </ul>
+                    </div>
+                    <div class="text-center">
+                        <a href="/PersonManagement" class="btn btn-bee btn-sm">
+                            <i class="fas fa-plus"></i> Ajouter une abeille
+                        </a>
+                    </div>
+                </div>
+            `;
+
+            // Création du marqueur avec une icône personnalisée
+            var marker = L.marker([ville.latitude, ville.longitude], {
+                title: `${ville.nom} (${ville.personCount} abeille(s) citoyenne(s))`
+            }).addTo(map);
+
+            // Ajout du popup au marqueur
+            marker.bindPopup(popupContent);
+        });
+
+        // Ajustement de la vue pour inclure tous les marqueurs
+        if (villesData.length > 0) {
+            var group = new L.featureGroup(map._layers);
+            if (Object.keys(group._layers).length > 0) {
+                map.fitBounds(group.getBounds().pad(0.1));
+            }
+        }
+    } else {
+        // Afficher un message si aucune donnée
+        var noDataPopup = L.popup()
+            .setLatLng([46.603354, 1.888334])
+            .setContent(`
+                <div class="text-center popup-content">
+                    <img src="/img/beehive.svg" style="width: 40px; height: 40px; margin-bottom: 10px;">
+                    <h6>??? Aucune abeille dans les villes</h6>
+                    <p>Commencez l'essaimage démocratique!</p>
+                    <a href="/PersonManagement" class="btn btn-bee btn-sm">
+                        <i class="fas fa-plus"></i> Démarrer l'essaimage
+                    </a>
+                </div>
+            `)
+            .openOn(map);
+    }
+
+    // Ajout d'une légende
+    var legend = L.control({position: 'bottomright'});
+    legend.onAdd = function (map) {
+        var div = L.DomUtil.create('div', 'info legend');
+        div.innerHTML += '<h6>?? Légende des Villes</h6>';
+        div.innerHTML += '<i style="background: green; width: 18px; height: 18px; display: inline-block; margin-right: 8px; border-radius: 50%;"></i> 1 abeille<br>';
+        div.innerHTML += '<i style="background: orange; width: 18px; height: 18px; display: inline-block; margin-right: 8px; border-radius: 50%;"></i> 2 abeilles<br>';
+        div.innerHTML += '<i style="background: red; width: 18px; height: 18px; display: inline-block; margin-right: 8px; border-radius: 50%;"></i> 3+ abeilles<br>';
+        return div;
+    };
+    legend.addTo(map);
+</script>
+
+<style>
+    .popup-content {
+        min-width: 200px;
+    }
+    
+    .popup-content h6 {
+        color: #8B4513;
+    }
+    
+    .popup-content .btn-bee {
+        font-size: 0.8rem;
+        padding: 0.4rem 0.8rem;
+    }
+</style>
