@@ -12,7 +12,7 @@
     <!-- Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
     <!-- Custom favicon -->
-    <link rel="icon" type="image/svg+xml" href="~/img/bee-hero.svg">
+    <link rel="icon" type="image/png" href="~/img/alveole.png">
 </head>
 
 <body>
@@ -21,7 +21,7 @@
             <div class="container">
                 <!-- Brand with bee theme -->
                 <a class="navbar-brand d-flex align-items-center fw-bold" asp-area="" asp-page="/Index">
-                    <img src="~/img/bee-hero.svg" alt="Plan B Logo" width="40" height="30" class="me-2">
+                    <img src="~/img/alveole.png" alt="Plan B Logo" width="40" height="30" class="me-2">
                     <span class="brand-text">Plan B Ruche Démocratique</span>
                 </a>
 
@@ -36,19 +36,19 @@
                     <ul class="navbar-nav mx-auto">
                         <li class="nav-item">
                             <a class="nav-link nav-link-custom d-flex align-items-center" asp-area="" asp-page="/Index">
-                                <img src="~/img/beehive.svg" alt="Home Hive" width="20" height="20" class="me-2 nav-frog">
+                                <img src="~/img/alveole.png" alt="Home Hive" width="20" height="20" class="me-2 nav-frog">
                                 <span>🏠 Ruche Mère</span>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link nav-link-custom d-flex align-items-center" asp-area="" asp-page="/MapBee">
-                                <img src="~/img/honeycomb.svg" alt="Map Cells" width="20" height="20" class="me-2 nav-frog">
+                                <img src="~/img/alveole.png" alt="Map Cells" width="20" height="20" class="me-2 nav-frog">
                                 <span>🗺️ Carte Alvéoles</span>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link nav-link-custom d-flex align-items-center" asp-area="" asp-page="/CreerAlveole">
-                                <img src="~/img/honeycomb.svg" alt="Create Alveole" width="20" height="20" class="me-2 nav-frog">
+                                <img src="~/img/alveole.png" alt="Create Alveole" width="20" height="20" class="me-2 nav-frog">
                                 <span>🏠 Créer Alvéole</span>
                             </a>
                         </li>
@@ -59,6 +59,11 @@
                             </a>
                         </li>
                     </ul>
+                    
+                    <!-- Add Rubrix Cube in navigation -->
+                    <div class="navbar-nav ms-auto">
+                        <img src="~/img/rubrixcube.png" alt="Rubrix Cube" width="30" height="30" class="nav-cube" style="opacity: 0.7;">
+                    </div>
                 </div>
             </div>
         </nav>
@@ -75,8 +80,9 @@
             <div class="row py-4">
                 <div class="col-md-6">
                     <div class="d-flex align-items-center mb-3">
-                        <img src="~/img/beehive.svg" alt="Plan B Hive" width="30" height="30" class="me-2">
+                        <img src="~/img/alveole.png" alt="Plan B Hive" width="30" height="30" class="me-2">
                         <h5 class="mb-0 text-warning">Plan B Ruche Démocratique</h5>
+                        <img src="~/img/rubrixcube.png" alt="Rubrix Cube" width="25" height="25" class="ms-2" style="opacity: 0.6;">
                     </div>
                     <p class="text-light mb-0">
                         Une innovation démocratique expérimentale organisée en ruche collaborative
@@ -119,9 +125,10 @@
                     </div>
                     <div class="col-md-6 text-md-end">
                         <div class="footer-bee-group">
-                            <img src="~/img/bee-hero.svg" alt="Bee Hero" width="25" height="19" class="footer-bee-icon" title="Abeille Héroïque">
-                            <img src="~/img/honeycomb.svg" alt="Honeycomb" width="25" height="25" class="footer-bee-icon" title="Alvéoles Hexagonales">
-                            <img src="~/img/beehive.svg" alt="Beehive" width="25" height="25" class="footer-bee-icon" title="Ruche Démocratique">
+                            <img src="~/img/alveole.png" alt="Bee Hero" width="25" height="19" class="footer-bee-icon" title="Abeille Héroïque">
+                            <img src="~/img/alveole.png" alt="Honeycomb" width="25" height="25" class="footer-bee-icon" title="Alvéoles Hexagonales">
+                            <img src="~/img/alveole.png" alt="Beehive" width="25" height="25" class="footer-bee-icon" title="Ruche Démocratique">
+                            <img src="~/img/rubrixcube.png" alt="Rubrix Cube" width="25" height="25" class="footer-bee-icon" title="Cube Démocratique">
                             <!-- Grenouilles en petite taille pour biodiversité -->
                             <span class="ms-2 opacity-50">
                                 <img src="~/img/frog_big.png" alt="Guardian" width="15" height="15" class="footer-frog-icon" title="Sentinelle Écologique">
