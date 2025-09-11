@@ -5,9 +5,6 @@
 @{
     ViewData["Title"] = "Carte des Alvéoles";
     
-    // Add response caching for better performance
-    Response.Headers.Append("Cache-Control", "public, max-age=300"); // 5 minutes
-    
     // Pre-calculate data for better performance - using source generator
     var villesDataForSerialization = Model.Villes.Where(v => 
         Model.AllPersons.Any(p => p.VilleCode == v.Code) || 

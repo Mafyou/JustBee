@@ -265,6 +265,7 @@
     let allVilles = [];
     let currentMode = 'search'; // 'search' ou 'list'
     let searchTimeout;
+    let searchCache = new Map(); // Cache côté client
 
     // Validation Bootstrap
     (function() {
@@ -297,6 +298,8 @@
     document.addEventListener('DOMContentLoaded', function() {
         initializeVilleSelector();
         setupEventListeners();
+        // Précharger les villes populaires
+        preloadPopularCities();
     });
 
     function initializeVilleSelector() {
@@ -304,7 +307,7 @@
         const villeCodeInput = document.getElementById('VilleCode');
         const resultsContainer = document.getElementById('ville-results');
         
-        // Configuration des événements de recherche
+        // Configuration des événements de recherche avec debounce optimisé
         searchInput.addEventListener('input', function() {
             const query = this.value.trim();
             
@@ -317,9 +320,10 @@
                 return;
             }
 
+            // Augmenter le délai pour réduire les appels
             searchTimeout = setTimeout(() => {
                 searchVilles(query);
-            }, 300);
+            }, 500); // Augmenté de 300ms à 500ms
         });
 
         // Validation personnalisée
@@ -364,22 +368,74 @@
             selectVilleFromList(this.value);
         });
 
-        // Filtrage de la liste
+        // Filtrage de la liste avec debounce
+        let filterTimeout;
         document.getElementById('filter-list').addEventListener('input', function() {
-            filterVilleList(this.value);
+            const filter = this.value;
+            clearTimeout(filterTimeout);
+            filterTimeout = setTimeout(() => {
+                filterVilleList(filter);
+            }, 200);
         });
+    }
+
+    // Fonction pour normaliser les chaînes et supprimer les accents
+    function normalizeString(str) {
+        if (!str) return str;
+        
+        return str.normalize('NFD')
+                  .replace(/[\u0300-\u036f]/g, '') // Supprimer les diacritiques
+                  .normalize('NFC');
+    }
+
+    // Précharger les villes populaires au démarrage
+    async function preloadPopularCities() {
+        try {
+            const response = await fetch('/api/villes/popular');
+            if (response.ok) {
+                const villes = await response.json();
+                // Mettre en cache les résultats
+                searchCache.set('popular', villes);
+            }
+        } catch (error) {
+            console.warn('Impossible de précharger les villes populaires:', error);
+        }
     }
 
     async function searchVilles(query) {
         const resultsContainer = document.getElementById('ville-results');
         
+        // Normaliser la requête pour la recherche avec accents
+        const normalizedQuery = normalizeString(query.toLowerCase());
+        
+        // Vérifier le cache d'abord (utiliser la requête normalisée comme clé)
+        const cacheKey = normalizedQuery;
+        if (searchCache.has(cacheKey)) {
+            displaySearchResults(searchCache.get(cacheKey));
+            return;
+        }
+        
         try {
+            // Afficher un indicateur de chargement
+            resultsContainer.innerHTML = '<div class="search-result-item text-muted"><i class="fas fa-spinner fa-spin"></i> Recherche en cours...</div>';
+            resultsContainer.style.display = 'block';
+
+            // Utiliser la requête originale pour l'API (le serveur gère la normalisation)
             const response = await fetch(`/api/villes/search?q=${encodeURIComponent(query)}`);
+            
+            if (!response.ok) {
+                throw new Error(`Erreur HTTP: ${response.status}`);
+            }
+            
             const data = await response.json();
+            
+            // Mettre en cache le résultat avec la clé normalisée
+            searchCache.set(cacheKey, data);
+            
             displaySearchResults(data);
         } catch (error) {
             console.error('Erreur lors de la recherche:', error);
-            resultsContainer.innerHTML = '<div class="search-result-item text-danger">Erreur lors de la recherche</div>';
+            resultsContainer.innerHTML = '<div class="search-result-item text-danger"><i class="fas fa-exclamation-triangle"></i> Service temporairement indisponible</div>';
             resultsContainer.style.display = 'block';
         }
     }
@@ -388,7 +444,7 @@
         const resultsContainer = document.getElementById('ville-results');
         
         if (villes.length === 0) {
-            resultsContainer.innerHTML = '<div class="search-result-item text-muted">Aucune ville trouvée</div>';
+            resultsContainer.innerHTML = '<div class="search-result-item text-muted"><i class="fas fa-search"></i> Aucune ville trouvée</div>';
             resultsContainer.style.display = 'block';
             return;
         }
@@ -417,17 +473,6 @@
         document.querySelector('.list-mode').style.display = 'block';
         
         if (allVilles.length === 0) {
-            // Afficher d'abord les informations sur le nombre de villes
-            try {
-                const countResponse = await fetch('/api/villes/count');
-                if (countResponse.ok) {
-                    const countData = await countResponse.json();
-                    console.log(`${countData.count} villes françaises disponibles`);
-                }
-            } catch (error) {
-                console.warn('Impossible de récupérer le nombre de villes:', error);
-            }
-            
             await loadAllVilles();
         }
         
@@ -446,11 +491,11 @@
 
     async function loadAllVilles() {
         const villeSelect = document.getElementById('ville-select');
-        villeSelect.innerHTML = '<option value="">Chargement des villes françaises...</option>';
+        villeSelect.innerHTML = '<option value=""><i class="fas fa-spinner fa-spin"></i> Chargement...</option>';
         
         try {
-            // Charger un échantillon plus important de villes (500 premières)
-            const response = await fetch('/api/villes/all-france?limit=500');
+            // Charger un échantillon raisonnable de villes (200 max pour éviter les problèmes de performance)
+            const response = await fetch('/api/villes/all-france?limit=200');
             if (!response.ok) {
                 throw new Error(`Erreur HTTP: ${response.status}`);
             }
@@ -472,7 +517,7 @@
             
         } catch (error) {
             console.error('Erreur lors du chargement des villes:', error);
-            villeSelect.innerHTML = '<option value="">Erreur lors du chargement des villes</option>';
+            villeSelect.innerHTML = '<option value="">Service temporairement indisponible</option>';
         }
     }
 
@@ -481,18 +526,24 @@
         searchInput.value = '';
         
         try {
-            // Charger les villes populaires depuis la nouvelle endpoint
-            const response = await fetch('/api/villes/popular');
-            if (!response.ok) {
-                throw new Error(`Erreur HTTP: ${response.status}`);
+            // Vérifier le cache d'abord
+            let villes;
+            if (searchCache.has('popular')) {
+                villes = searchCache.get('popular');
+            } else {
+                const response = await fetch('/api/villes/popular');
+                if (!response.ok) {
+                    throw new Error(`Erreur HTTP: ${response.status}`);
+                }
+                villes = await response.json();
+                searchCache.set('popular', villes);
             }
-            const villes = await response.json();
             
             displaySearchResults(villes);
         } catch (error) {
             console.error('Erreur lors du chargement des villes populaires:', error);
             const resultsContainer = document.getElementById('ville-results');
-            resultsContainer.innerHTML = '<div class="search-result-item text-danger">Erreur lors du chargement des villes populaires</div>';
+            resultsContainer.innerHTML = '<div class="search-result-item text-danger"><i class="fas fa-exclamation-triangle"></i> Service temporairement indisponible</div>';
             resultsContainer.style.display = 'block';
         }
     }
@@ -523,10 +574,13 @@
             return;
         }
         
+        // Normaliser le filtre pour la recherche avec accents
+        const normalizedFilter = normalizeString(filter.toLowerCase());
+        
         const filtered = allVilles.filter(ville => 
-            ville.nom.toLowerCase().includes(filter.toLowerCase()) ||
-            ville.departement.toLowerCase().includes(filter.toLowerCase()) ||
-            ville.region.toLowerCase().includes(filter.toLowerCase())
+            normalizeString(ville.nom.toLowerCase()).includes(normalizedFilter) ||
+            normalizeString(ville.departement.toLowerCase()).includes(normalizedFilter) ||
+            normalizeString(ville.region.toLowerCase()).includes(normalizedFilter)
         );
         
         populateVilleList(filtered);

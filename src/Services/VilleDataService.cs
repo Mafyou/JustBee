@@ -1,72 +1,144 @@
 using System.Text.Json;
 using JustBeeWeb.Serialization;
+using Microsoft.Extensions.Caching.Hybrid;
+using System.Globalization;
+using System.Text;
 
 namespace JustBeeWeb.Services;
 
-public class VilleDataService(HttpClient httpClient, ILogger<VilleDataService> logger)
+public class VilleDataService(HttpClient httpClient, ILogger<VilleDataService> logger, HybridCache cache)
 {
     private readonly HttpClient _httpClient = httpClient;
     private readonly ILogger<VilleDataService> _logger = logger;
-    private List<Ville>? _villesCache;
+    private readonly HybridCache _cache = cache;
     private readonly SemaphoreSlim _semaphore = new(1, 1);
 
     public async Task<List<Ville>> GetAllVillesFranceAsync()
     {
-        if (_villesCache != null)
-            return _villesCache;
-
-        await _semaphore.WaitAsync();
-        try
-        {
-            if (_villesCache != null)
-                return _villesCache;
-
-            _logger.LogInformation("Chargement des données des villes françaises...");
-
-            // Charger depuis l'API officielle française
-            var villes = await LoadVillesFromApiAsync();
-
-            // Fallback : charger les villes de base si l'API échoue
-            if (villes.Count == 0)
+        const string cacheKey = "AllVillesFrance";
+        
+        return await _cache.GetOrCreateAsync(
+            cacheKey,
+            async cancellationToken =>
             {
-                _logger.LogWarning("Impossible de charger depuis l'API, utilisation des données de base");
-                villes = GetVillesDeBase();
+                await _semaphore.WaitAsync(cancellationToken);
+                try
+                {
+                    _logger.LogInformation("Chargement des données des villes françaises...");
+
+                    // Charger depuis l'API officielle française
+                    var villes = await LoadVillesFromApiAsync();
+
+                    // Fallback : charger les villes de base si l'API échoue
+                    if (villes.Count == 0)
+                    {
+                        _logger.LogWarning("Impossible de charger depuis l'API, utilisation des données de base");
+                        villes = GetVillesDeBase();
+                    }
+
+                    var result = villes.OrderBy(v => v.Nom).ToList();
+                    _logger.LogInformation($"Chargement terminé : {result.Count} villes disponibles");
+
+                    return result;
+                }
+                finally
+                {
+                    _semaphore.Release();
+                }
+            },
+            new HybridCacheEntryOptions
+            {
+                Expiration = TimeSpan.FromHours(6), // Cache plus long pour les villes
+                LocalCacheExpiration = TimeSpan.FromHours(2)
             }
-
-            _villesCache = villes.OrderBy(v => v.Nom).ToList();
-            _logger.LogInformation($"Chargement terminé : {_villesCache.Count} villes disponibles");
-
-            return _villesCache;
-        }
-        finally
-        {
-            _semaphore.Release();
-        }
+        );
     }
 
     public async Task<List<Ville>> SearchVillesAsync(string searchTerm)
     {
-        var toutes = await GetAllVillesFranceAsync();
-
         if (string.IsNullOrWhiteSpace(searchTerm))
-            return toutes.Take(50).ToList(); // Limiter pour les performances
+            return await GetVillesPopulairesAsync();
 
-        var terme = searchTerm.ToLowerInvariant().Trim();
+        var terme = NormalizeString(searchTerm.ToLowerInvariant().Trim());
+        
+        // Cache basé sur le terme de recherche normalisé pour éviter les recherches répétées
+        var cacheKey = $"VilleSearch_{terme}";
+        
+        return await _cache.GetOrCreateAsync(
+            cacheKey,
+            async cancellationToken =>
+            {
+                var toutes = await GetAllVillesFranceAsync();
 
-        return toutes
-            .Where(v =>
-                v.Nom.ToLowerInvariant().Contains(terme) ||
-                v.Code.ToLowerInvariant().Contains(terme) ||
-                v.Departement.ToLowerInvariant().Contains(terme) ||
-                v.Region.ToLowerInvariant().Contains(terme) ||
-                // Recherche en début de mot pour une meilleure pertinence
-                v.Nom.ToLowerInvariant().StartsWith(terme) ||
-                v.Departement.ToLowerInvariant().StartsWith(terme) ||
-                v.Region.ToLowerInvariant().StartsWith(terme))
-            .OrderBy(v => v.Nom.ToLowerInvariant().StartsWith(terme) ? 0 : 1) // Prioriser les résultats qui commencent par le terme
-            .ThenBy(v => v.Nom)
-            .Take(100) // Limiter les résultats pour les performances
-            .ToList();
+                var results = toutes
+                    .Where(v =>
+                        // Recherche avec normalisation des accents
+                        NormalizeString(v.Nom.ToLowerInvariant()).Contains(terme) ||
+                        NormalizeString(v.Code.ToLowerInvariant()).Contains(terme) ||
+                        NormalizeString(v.Departement.ToLowerInvariant()).Contains(terme) ||
+                        NormalizeString(v.Region.ToLowerInvariant()).Contains(terme) ||
+                        // Recherche en début de mot pour une meilleure pertinence (avec normalisation)
+                        NormalizeString(v.Nom.ToLowerInvariant()).StartsWith(terme) ||
+                        NormalizeString(v.Departement.ToLowerInvariant()).StartsWith(terme) ||
+                        NormalizeString(v.Region.ToLowerInvariant()).StartsWith(terme))
+                    .OrderBy(v => NormalizeString(v.Nom.ToLowerInvariant()).StartsWith(terme) ? 0 : 1) // Prioriser les résultats qui commencent par le terme
+                    .ThenBy(v => v.Nom)
+                    .Take(50) // Limiter drastiquement les résultats pour de meilleures performances
+                    .ToList();
+
+                return results;
+            },
+            new HybridCacheEntryOptions
+            {
+                Expiration = TimeSpan.FromMinutes(15), // Cache court pour les recherches
+                LocalCacheExpiration = TimeSpan.FromMinutes(5)
+            }
+        );
+    }
+
+    /// <summary>
+    /// Normalise une chaîne en supprimant les accents et caractères diacritiques pour une recherche insensible aux accents
+    /// </summary>
+    private static string NormalizeString(string input)
+    {
+        if (string.IsNullOrEmpty(input))
+            return input;
+
+        // Normaliser vers la forme canonique décomposée (NFD)
+        var normalizedString = input.Normalize(NormalizationForm.FormD);
+        
+        // Supprimer tous les caractères diacritiques (accents)
+        var stringBuilder = new StringBuilder();
+        foreach (var c in normalizedString)
+        {
+            var unicodeCategory = CharUnicodeInfo.GetUnicodeCategory(c);
+            if (unicodeCategory != UnicodeCategory.NonSpacingMark)
+            {
+                stringBuilder.Append(c);
+            }
+        }
+        
+        // Retourner la forme normalisée (NFC)
+        return stringBuilder.ToString().Normalize(NormalizationForm.FormC);
+    }
+
+    public async Task<List<Ville>> GetVillesPopulairesAsync()
+    {
+        const string cacheKey = "VillesPopulaires";
+        
+        return await _cache.GetOrCreateAsync(
+            cacheKey,
+            async cancellationToken =>
+            {
+                // Retourner directement les villes populaires sans charger toutes les villes
+                return GetVillesDeBase().Take(30).ToList();
+            },
+            new HybridCacheEntryOptions
+            {
+                Expiration = TimeSpan.FromHours(12),
+                LocalCacheExpiration = TimeSpan.FromHours(6)
+            }
+        );
     }
 
     public async Task<List<Ville>> GetVillesWithLimitAsync(int limit = 100, int skip = 0)
@@ -75,7 +147,7 @@ public class VilleDataService(HttpClient httpClient, ILogger<VilleDataService> l
         
         return toutes
             .Skip(skip)
-            .Take(limit)
+            .Take(Math.Min(limit, 200)) // Limiter à 200 max
             .ToList();
     }
 
@@ -89,8 +161,11 @@ public class VilleDataService(HttpClient httpClient, ILogger<VilleDataService> l
     {
         try
         {
-            // Utiliser l'API officielle geo.api.gouv.fr
-            var response = await _httpClient.GetAsync("https://geo.api.gouv.fr/communes?fields=nom,code,codeDepartement,departement,codeRegion,region,centre&format=json");
+            // Limiter la requête API aux champs nécessaires et populations > 1000 pour réduire la charge
+            var apiUrl = "https://geo.api.gouv.fr/communes?fields=nom,code,codeDepartement,departement,codeRegion,region,centre,population&format=json&population>=1000";
+            
+            using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(10)); // Timeout de 10s
+            var response = await _httpClient.GetAsync(apiUrl, cts.Token);
 
             if (!response.IsSuccessStatusCode)
             {
@@ -98,7 +173,7 @@ public class VilleDataService(HttpClient httpClient, ILogger<VilleDataService> l
                 return [];
             }
 
-            var json = await response.Content.ReadAsStringAsync();
+            var json = await response.Content.ReadAsStringAsync(cts.Token);
             // Use the source generation context for deserialization
             var communesApi = JsonSerializer.Deserialize<CommuneApiResponse[]>(json, MapBeeSerializationContext.Default.CommuneApiResponseArray);
 
@@ -125,6 +200,11 @@ public class VilleDataService(HttpClient httpClient, ILogger<VilleDataService> l
             _logger.LogInformation($"Chargé {villes.Count} villes depuis l'API gouvernementale");
             return villes;
         }
+        catch (TaskCanceledException)
+        {
+            _logger.LogWarning("Timeout lors du chargement des villes depuis l'API");
+            return [];
+        }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Erreur lors du chargement des villes depuis l'API");
@@ -135,7 +215,7 @@ public class VilleDataService(HttpClient httpClient, ILogger<VilleDataService> l
     private List<Ville> GetVillesDeBase()
     {
         // Retourner les villes de base définies dans VilleService
-        // Cette méthode sert de fallback
+        // Cette méthode sert de fallback - Ajouter Carcès pour les tests
         return
         [
             // Grandes métropoles
@@ -181,7 +261,9 @@ public class VilleDataService(HttpClient httpClient, ILogger<VilleDataService> l
             new() { Code = "06029", Nom = "Cannes", Departement = "Alpes-Maritimes", Region = "Provence-Alpes-Côte d'Azur", Latitude = 43.5528, Longitude = 7.0174 },
             new() { Code = "66136", Nom = "Perpignan", Departement = "Pyrénées-Orientales", Region = "Occitanie", Latitude = 42.6976, Longitude = 2.8954 },
             new() { Code = "78646", Nom = "Versailles", Departement = "Yvelines", Region = "Île-de-France", Latitude = 48.8014, Longitude = 2.1301 },
-            new() { Code = "97209", Nom = "Fort-de-France", Departement = "Martinique", Region = "Martinique", Latitude = 14.6037, Longitude = -61.0594 }
+            new() { Code = "97209", Nom = "Fort-de-France", Departement = "Martinique", Region = "Martinique", Latitude = 14.6037, Longitude = -61.0594 },
+            // Ajouter Carcès pour les tests d'accents
+            new() { Code = "83027", Nom = "Carcès", Departement = "Var", Region = "Provence-Alpes-Côte d'Azur", Latitude = 43.4761, Longitude = 6.1856 }
         ];
     }
 }

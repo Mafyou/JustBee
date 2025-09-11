@@ -205,6 +205,9 @@ public class VillesController : ControllerBase
     {
         try
         {
+            // Ajouter cache de réponse pour éviter les requêtes répétées
+            Response.Headers.Append("Cache-Control", "public, max-age=600"); // 10 minutes
+
             var villes = await _villeDataService.SearchVillesAsync(q ?? "");
 
             var result = villes.Select(v => new VilleSearchResult
@@ -220,7 +223,8 @@ public class VillesController : ControllerBase
         }
         catch (Exception ex)
         {
-            return StatusCode(500, new ApiErrorResponse { Error = "Erreur lors de la recherche de villes", Details = ex.Message });
+            _logger.LogError(ex, "Erreur lors de la recherche de villes pour le terme: {SearchTerm}", q);
+            return StatusCode(500, new ApiErrorResponse { Error = "Erreur lors de la recherche de villes", Details = "Service temporairement indisponible" });
         }
     }
 
@@ -229,17 +233,17 @@ public class VillesController : ControllerBase
     {
         try
         {
-            var villes = await _villeDataService.GetAllVillesFranceAsync();
+            // Cache plus long pour la liste complète
+            Response.Headers.Append("Cache-Control", "public, max-age=1800"); // 30 minutes
+
+            var villes = await _villeDataService.GetVillesWithLimitAsync(limit ?? 100);
 
             if (villes.Count == 0)
             {
                 return Ok(new List<VilleSearchResult>());
             }
-
-            // Appliquer la limite si spécifiée
-            var limitedVilles = limit.HasValue ? villes.Take(limit.Value) : villes;
             
-            var result = limitedVilles.Select(v => new VilleSearchResult
+            var result = villes.Select(v => new VilleSearchResult
             {
                 Code = v.Code,
                 Nom = v.Nom,
@@ -252,8 +256,8 @@ public class VillesController : ControllerBase
         }
         catch (Exception ex)
         {
-            _logger?.LogError(ex, "Erreur lors du chargement des villes françaises");
-            return StatusCode(500, new ApiErrorResponse { Error = "Erreur lors du chargement des villes", Details = ex.Message });
+            _logger?.LogError(ex, "Erreur lors du chargement des villes françaises avec limite: {Limit}", limit);
+            return StatusCode(500, new ApiErrorResponse { Error = "Erreur lors du chargement des villes", Details = "Service temporairement indisponible" });
         }
     }
 
@@ -262,11 +266,12 @@ public class VillesController : ControllerBase
     {
         try
         {
-            // Retourner les villes populaires directement depuis le service
-            var villes = await _villeDataService.GetAllVillesFranceAsync();
+            // Cache très long pour les villes populaires
+            Response.Headers.Append("Cache-Control", "public, max-age=3600"); // 1 heure
+
+            var villes = await _villeDataService.GetVillesPopulairesAsync();
             
-            // Prendre les 50 premières villes triées par nom (qui incluent les grandes villes)
-            var popularVilles = villes.Take(50).Select(v => new VilleSearchResult
+            var popularVilles = villes.Select(v => new VilleSearchResult
             {
                 Code = v.Code,
                 Nom = v.Nom,
@@ -280,7 +285,7 @@ public class VillesController : ControllerBase
         catch (Exception ex)
         {
             _logger?.LogError(ex, "Erreur lors du chargement des villes populaires");
-            return StatusCode(500, new ApiErrorResponse { Error = "Erreur lors du chargement des villes populaires", Details = ex.Message });
+            return StatusCode(500, new ApiErrorResponse { Error = "Erreur lors du chargement des villes populaires", Details = "Service temporairement indisponible" });
         }
     }
 
@@ -289,13 +294,16 @@ public class VillesController : ControllerBase
     {
         try
         {
+            // Cache long pour le comptage
+            Response.Headers.Append("Cache-Control", "public, max-age=7200"); // 2 heures
+
             var count = await _villeDataService.GetTotalVillesCountAsync();
             return Ok(new VilleCountResponse { Count = count, Message = $"{count} villes françaises disponibles" });
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Erreur lors du comptage des villes");
-            return StatusCode(500, new ApiErrorResponse { Error = "Erreur lors du comptage des villes", Details = ex.Message });
+            return StatusCode(500, new ApiErrorResponse { Error = "Erreur lors du comptage des villes", Details = "Service temporairement indisponible" });
         }
     }
 }
