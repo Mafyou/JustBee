@@ -1,4 +1,5 @@
 using System.Text.Json;
+using JustBeeWeb.Serialization;
 
 namespace JustBeeWeb.Services;
 
@@ -50,16 +51,38 @@ public class VilleDataService(HttpClient httpClient, ILogger<VilleDataService> l
         if (string.IsNullOrWhiteSpace(searchTerm))
             return toutes.Take(50).ToList(); // Limiter pour les performances
 
-        var terme = searchTerm.ToLowerInvariant();
+        var terme = searchTerm.ToLowerInvariant().Trim();
 
         return toutes
             .Where(v =>
                 v.Nom.ToLowerInvariant().Contains(terme) ||
                 v.Code.ToLowerInvariant().Contains(terme) ||
                 v.Departement.ToLowerInvariant().Contains(terme) ||
-                v.Region.ToLowerInvariant().Contains(terme))
+                v.Region.ToLowerInvariant().Contains(terme) ||
+                // Recherche en début de mot pour une meilleure pertinence
+                v.Nom.ToLowerInvariant().StartsWith(terme) ||
+                v.Departement.ToLowerInvariant().StartsWith(terme) ||
+                v.Region.ToLowerInvariant().StartsWith(terme))
+            .OrderBy(v => v.Nom.ToLowerInvariant().StartsWith(terme) ? 0 : 1) // Prioriser les résultats qui commencent par le terme
+            .ThenBy(v => v.Nom)
             .Take(100) // Limiter les résultats pour les performances
             .ToList();
+    }
+
+    public async Task<List<Ville>> GetVillesWithLimitAsync(int limit = 100, int skip = 0)
+    {
+        var toutes = await GetAllVillesFranceAsync();
+        
+        return toutes
+            .Skip(skip)
+            .Take(limit)
+            .ToList();
+    }
+
+    public async Task<int> GetTotalVillesCountAsync()
+    {
+        var toutes = await GetAllVillesFranceAsync();
+        return toutes.Count;
     }
 
     private async Task<List<Ville>> LoadVillesFromApiAsync()
@@ -76,10 +99,8 @@ public class VilleDataService(HttpClient httpClient, ILogger<VilleDataService> l
             }
 
             var json = await response.Content.ReadAsStringAsync();
-            var communesApi = JsonSerializer.Deserialize<CommuneApiResponse[]>(json, new JsonSerializerOptions
-            {
-                PropertyNameCaseInsensitive = true
-            });
+            // Use the source generation context for deserialization
+            var communesApi = JsonSerializer.Deserialize<CommuneApiResponse[]>(json, MapBeeSerializationContext.Default.CommuneApiResponseArray);
 
             if (communesApi == null || communesApi.Length == 0)
             {
@@ -163,32 +184,4 @@ public class VilleDataService(HttpClient httpClient, ILogger<VilleDataService> l
             new() { Code = "97209", Nom = "Fort-de-France", Departement = "Martinique", Region = "Martinique", Latitude = 14.6037, Longitude = -61.0594 }
         ];
     }
-}
-
-// Classes pour la désérialisation de l'API
-public class CommuneApiResponse
-{
-    public string? Code { get; set; }
-    public string? Nom { get; set; }
-    public DepartementApi? Departement { get; set; }
-    public RegionApi? Region { get; set; }
-    public CentreApi? Centre { get; set; }
-}
-
-public class DepartementApi
-{
-    public string? Code { get; set; }
-    public string? Nom { get; set; }
-}
-
-public class RegionApi
-{
-    public string? Code { get; set; }
-    public string? Nom { get; set; }
-}
-
-public class CentreApi
-{
-    public string? Type { get; set; }
-    public double[]? Coordinates { get; set; }
 }

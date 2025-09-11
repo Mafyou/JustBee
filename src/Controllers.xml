@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<linker>
+  <!-- Preserve all controller types and their methods -->
+  <assembly fullname="JustBeeWeb" preserve="all">
+    <type fullname="JustBeeWeb.Controllers.*" preserve="all" />
+    <type fullname="JustBeeWeb.Serialization.*" preserve="all" />
+  </assembly>
+  
+  <!-- Preserve API Explorer metadata -->
+  <assembly fullname="Microsoft.AspNetCore.Mvc.ApiExplorer">
+    <type fullname="Microsoft.AspNetCore.Mvc.ApiExplorer.*" preserve="all" />
+  </assembly>
+  
+  <!-- Preserve MVC Core metadata providers -->
+  <assembly fullname="Microsoft.AspNetCore.Mvc.Core">
+    <type fullname="Microsoft.AspNetCore.Mvc.ModelBinding.Metadata.*" preserve="all" />
+    <type fullname="Microsoft.AspNetCore.Mvc.ModelBinding.*" preserve="all" />
+  </assembly>
+</linker>

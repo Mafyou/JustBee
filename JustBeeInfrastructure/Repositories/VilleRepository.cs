@@ -9,13 +9,13 @@ public class VilleRepository(JustBeeContext context) : IVilleRepository
     private readonly JustBeeContext _context = context;
 
     public async Task<IEnumerable<Ville>> GetAllAsync() =>
-        await _context.Villes.ToListAsync();
+        await _context.Villes.AsNoTracking().ToListAsync();
 
     public async Task<Ville?> GetByCodeAsync(string code) =>
-        await _context.Villes.FirstOrDefaultAsync(v => v.Code == code);
+        await _context.Villes.AsNoTracking().FirstOrDefaultAsync(v => v.Code == code);
 
     public async Task<Ville?> GetByNameAsync(string name) =>
-        await _context.Villes.FirstOrDefaultAsync(v => v.Nom == name);
+        await _context.Villes.AsNoTracking().FirstOrDefaultAsync(v => v.Nom == name);
 
     public async Task<IEnumerable<Ville>> SearchAsync(string searchTerm)
     {
@@ -24,6 +24,7 @@ public class VilleRepository(JustBeeContext context) : IVilleRepository
 
         var terme = searchTerm.ToLowerInvariant();
         return await _context.Villes
+            .AsNoTracking()
             .Where(v =>
                 v.Nom.ToLower().Contains(terme) ||
                 v.Code.ToLower().Contains(terme) ||
@@ -57,5 +58,5 @@ public class VilleRepository(JustBeeContext context) : IVilleRepository
     }
 
     public async Task<bool> ExistsAsync(string code) =>
-        await _context.Villes.AnyAsync(v => v.Code == code);
+        await _context.Villes.AsNoTracking().AnyAsync(v => v.Code == code);
 }

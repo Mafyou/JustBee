@@ -1,4 +1,5 @@
 ﻿using JustBeeWeb.Options;
+using JustBeeWeb.Serialization;
 using Microsoft.Extensions.Options;
 using System.Net.Http.Headers;
 using System.Text;
@@ -27,12 +28,12 @@ public class EmailService
         {
             var lienVerification = $"{baseUrl}/VerifierEmail?token={token}";
 
-            var emailData = new
+            var emailData = new EmailData
             {
-                sender = new { name = "Plan B Démocratie", email = "contact@mafyouit.tech" },
-                to = new[] { new { email, name = pseudo } },
-                subject = "🐝 Vérification de votre alvéole citoyenne - Plan B",
-                htmlContent = $@"
+                Sender = new EmailSender { Name = "Plan B Démocratie", Email = "contact@mafyouit.tech" },
+                To = [new EmailRecipient { Email = email, Name = pseudo }],
+                Subject = "🐝 Vérification de votre alvéole citoyenne - Plan B",
+                HtmlContent = $@"
                     <div style='font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;'>
                         <div style='background: linear-gradient(135deg, #FFD700, #FFA500); padding: 30px; text-align: center; border-radius: 10px 10px 0 0;'>
                             <h1 style='color: #8B4513; margin: 0; font-size: 28px;'>🍯 Bienvenue dans la Ruche Démocratique</h1>
@@ -90,7 +91,7 @@ public class EmailService
                 "
             };
 
-            var json = JsonSerializer.Serialize(emailData);
+            var json = JsonSerializer.Serialize(emailData, EmailSerializationContext.Default.EmailData);
             var content = new StringContent(json, Encoding.UTF8, "application/json");
 
             var response = await _httpClient.PostAsync("https://api.brevo.com/v3/smtp/email", content);
@@ -111,12 +112,12 @@ public class EmailService
         {
             var lienVerification = $"{baseUrl}/VerifierAlveole?token={token}";
 
-            var emailData = new
+            var emailData = new EmailData
             {
-                sender = new { name = "Plan B Démocratie", email = "contact@mafyouit.tech" },
-                to = new[] { new { email, name = nomAlveole } },
-                subject = $"🐝 Vérification de votre alvéole '{nomAlveole}' - Plan B",
-                htmlContent = $@"
+                Sender = new EmailSender { Name = "Plan B Démocratie", Email = "contact@mafyouit.tech" },
+                To = [new EmailRecipient { Email = email, Name = nomAlveole }],
+                Subject = $"🐝 Vérification de votre alvéole '{nomAlveole}' - Plan B",
+                HtmlContent = $@"
                     <div style='font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;'>
                         <div style='background: linear-gradient(135deg, #FFD700, #FFA500); padding: 30px; text-align: center; border-radius: 10px 10px 0 0;'>
                             <h1 style='color: #8B4513; margin: 0; font-size: 28px;'>🍯 Nouvelle Alvéole Créée</h1>
@@ -177,7 +178,7 @@ public class EmailService
                 "
             };
 
-            var json = JsonSerializer.Serialize(emailData);
+            var json = JsonSerializer.Serialize(emailData, EmailSerializationContext.Default.EmailData);
             var content = new StringContent(json, Encoding.UTF8, "application/json");
 
             var response = await _httpClient.PostAsync("https://api.brevo.com/v3/smtp/email", content);

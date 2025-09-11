@@ -1,5 +1,4 @@
 using JustBeeInfrastructure.Repositories;
-using JustBeeInfrastructure.Models;
 
 namespace JustBeeWeb.Services;
 
@@ -11,8 +10,8 @@ public class VilleService
     private readonly VilleDataService? _villeDataService;
 
     public VilleService(
-        IVilleRepository villeRepository, 
-        IPersonRepository personRepository, 
+        IVilleRepository villeRepository,
+        IPersonRepository personRepository,
         IAlveoleRepository alveoleRepository,
         VilleDataService? villeDataService = null)
     {
@@ -22,10 +21,10 @@ public class VilleService
         _villeDataService = villeDataService;
     }
 
-    public async Task<List<Ville>> GetAllVillesAsync() => 
+    public async Task<List<Ville>> GetAllVillesAsync() =>
         (await _villeRepository.GetAllAsync()).ToList();
 
-    public List<Ville> GetAllVilles() => 
+    public List<Ville> GetAllVilles() =>
         GetAllVillesAsync().Result;
 
     public async Task<List<Ville>> GetAllVillesFranceAsync()
@@ -84,14 +83,14 @@ public class VilleService
             person.VilleCode = villeCode;
             person.Latitude = ville.Latitude;
             person.Longitude = ville.Longitude;
-            
+
             await _personRepository.AddAsync(person);
             return true;
         }
         return false;
     }
 
-    public void AddPersonToVille(string villeCode, Person person) => 
+    public void AddPersonToVille(string villeCode, Person person) =>
         AddPersonToVilleAsync(villeCode, person).Wait();
 
     public async Task<bool> AddAlveoleToVilleAsync(string villeCode, Alveole alveole)
@@ -102,14 +101,14 @@ public class VilleService
             alveole.VilleCode = villeCode;
             alveole.Latitude = ville.Latitude;
             alveole.Longitude = ville.Longitude;
-            
+
             await _alveoleRepository.AddAsync(alveole);
             return true;
         }
         return false;
     }
 
-    public void AddAlveoleToVille(string villeCode, Alveole alveole) => 
+    public void AddAlveoleToVille(string villeCode, Alveole alveole) =>
         AddAlveoleToVilleAsync(villeCode, alveole).Wait();
 
     public async Task<bool> RemovePersonFromVilleAsync(string villeCode, int personId)
@@ -122,7 +121,7 @@ public class VilleService
         return false;
     }
 
-    public bool RemovePersonFromVille(string villeCode, int personId) => 
+    public bool RemovePersonFromVille(string villeCode, int personId) =>
         RemovePersonFromVilleAsync(villeCode, personId).Result;
 
     public async Task<bool> RemoveAlveoleFromVilleAsync(string villeCode, int alveoleId)
@@ -135,7 +134,7 @@ public class VilleService
         return false;
     }
 
-    public bool RemoveAlveoleFromVille(string villeCode, int alveoleId) => 
+    public bool RemoveAlveoleFromVille(string villeCode, int alveoleId) =>
         RemoveAlveoleFromVilleAsync(villeCode, alveoleId).Result;
 
     public async Task<List<Person>> GetAllPersonsAsync() =>

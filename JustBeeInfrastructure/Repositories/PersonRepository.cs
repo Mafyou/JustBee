@@ -9,24 +9,26 @@ public class PersonRepository(JustBeeContext context) : IPersonRepository
     private readonly JustBeeContext _context = context;
 
     public async Task<IEnumerable<Person>> GetAllAsync() =>
-        await _context.Persons.ToListAsync();
+        await _context.Persons.AsNoTracking().ToListAsync();
 
     public async Task<IEnumerable<Person>> GetVerifiedAsync() =>
         await _context.Persons
+            .AsNoTracking()
             .Where(p => p.EmailVerifie)
             .ToListAsync();
 
     public async Task<Person?> GetByIdAsync(int id) =>
-        await _context.Persons.FirstOrDefaultAsync(p => p.Id == id);
+        await _context.Persons.AsNoTracking().FirstOrDefaultAsync(p => p.Id == id);
 
     public async Task<Person?> GetByTokenAsync(string token) =>
         await _context.Persons.FirstOrDefaultAsync(p => p.TokenVerification == token);
 
     public async Task<Person?> GetByEmailAsync(string email) =>
-        await _context.Persons.FirstOrDefaultAsync(p => p.Email == email);
+        await _context.Persons.AsNoTracking().FirstOrDefaultAsync(p => p.Email == email);
 
     public async Task<IEnumerable<Person>> GetByVilleCodeAsync(string villeCode) =>
         await _context.Persons
+            .AsNoTracking()
             .Where(p => p.VilleCode == villeCode)
             .ToListAsync();
 

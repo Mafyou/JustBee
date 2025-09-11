@@ -1,4 +1,5 @@
 using JustBeeWeb.Services;
+using JustBeeWeb.Serialization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace JustBeeWeb.Controllers;
@@ -9,11 +10,13 @@ public class VillesController : ControllerBase
 {
     private readonly VilleService _villeService;
     private readonly VilleDataService _villeDataService;
+    private readonly ILogger<VillesController> _logger;
 
-    public VillesController(VilleService villeService, VilleDataService villeDataService)
+    public VillesController(VilleService villeService, VilleDataService villeDataService, ILogger<VillesController> logger)
     {
         _villeService = villeService;
         _villeDataService = villeDataService;
+        _logger = logger;
     }
 
     [HttpGet]
@@ -204,57 +207,95 @@ public class VillesController : ControllerBase
         {
             var villes = await _villeDataService.SearchVillesAsync(q ?? "");
 
-            var result = villes.Select(v => new
+            var result = villes.Select(v => new VilleSearchResult
             {
-                code = v.Code,
-                nom = v.Nom,
-                departement = v.Departement,
-                region = v.Region,
-                display = $"{v.Nom} ({v.Departement}, {v.Region})"
+                Code = v.Code,
+                Nom = v.Nom,
+                Departement = v.Departement,
+                Region = v.Region,
+                Display = $"{v.Nom} ({v.Departement}, {v.Region})"
             }).ToList();
 
             return Ok(result);
         }
         catch (Exception ex)
         {
-            return StatusCode(500, new { error = "Erreur lors de la recherche de villes", details = ex.Message });
+            return StatusCode(500, new ApiErrorResponse { Error = "Erreur lors de la recherche de villes", Details = ex.Message });
         }
     }
 
     [HttpGet("all-france")]
-    public async Task<IActionResult> GetAllFranceAsync()
+    public async Task<IActionResult> GetAllFranceAsync([FromQuery] int? limit = 100)
     {
         try
         {
             var villes = await _villeDataService.GetAllVillesFranceAsync();
 
-            var result = villes.Take(100).Select(v => new // Limiter pour éviter les réponses trop lourdes
+            if (villes.Count == 0)
             {
-                code = v.Code,
-                nom = v.Nom,
-                departement = v.Departement,
-                region = v.Region,
-                display = $"{v.Nom} ({v.Departement}, {v.Region})"
+                return Ok(new List<VilleSearchResult>());
+            }
+
+            // Appliquer la limite si spécifiée
+            var limitedVilles = limit.HasValue ? villes.Take(limit.Value) : villes;
+            
+            var result = limitedVilles.Select(v => new VilleSearchResult
+            {
+                Code = v.Code,
+                Nom = v.Nom,
+                Departement = v.Departement,
+                Region = v.Region,
+                Display = $"{v.Nom} ({v.Departement}, {v.Region})"
             }).ToList();
 
             return Ok(result);
         }
         catch (Exception ex)
         {
-            return StatusCode(500, new { error = "Erreur lors du chargement des villes", details = ex.Message });
+            _logger?.LogError(ex, "Erreur lors du chargement des villes françaises");
+            return StatusCode(500, new ApiErrorResponse { Error = "Erreur lors du chargement des villes", Details = ex.Message });
         }
     }
-}
 
-public class CreatePersonRequest
-{
-    public required string Pseudo { get; set; }
-    public required string Email { get; set; }
-}
+    [HttpGet("popular")]
+    public async Task<IActionResult> GetPopularVillesAsync()
+    {
+        try
+        {
+            // Retourner les villes populaires directement depuis le service
+            var villes = await _villeDataService.GetAllVillesFranceAsync();
+            
+            // Prendre les 50 premières villes triées par nom (qui incluent les grandes villes)
+            var popularVilles = villes.Take(50).Select(v => new VilleSearchResult
+            {
+                Code = v.Code,
+                Nom = v.Nom,
+                Departement = v.Departement,
+                Region = v.Region,
+                Display = $"{v.Nom} ({v.Departement}, {v.Region})"
+            }).ToList();
 
-public class CreateAlveoleRequest
-{
-    public required string Nom { get; set; }
-    public string? Description { get; set; }
-    public required string Email { get; set; }
+            return Ok(popularVilles);
+        }
+        catch (Exception ex)
+        {
+            _logger?.LogError(ex, "Erreur lors du chargement des villes populaires");
+            return StatusCode(500, new ApiErrorResponse { Error = "Erreur lors du chargement des villes populaires", Details = ex.Message });
+        }
+    }
+
+    [HttpGet("count")]
+    public async Task<IActionResult> GetVillesCountAsync()
+    {
+        try
+        {
+            var count = await _villeDataService.GetTotalVillesCountAsync();
+            return Ok(new VilleCountResponse { Count = count, Message = $"{count} villes françaises disponibles" });
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Erreur lors du comptage des villes");
+            return StatusCode(500, new ApiErrorResponse { Error = "Erreur lors du comptage des villes", Details = ex.Message });
+        }
+    }
 }

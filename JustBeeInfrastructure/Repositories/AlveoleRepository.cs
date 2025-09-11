@@ -10,17 +10,20 @@ public class AlveoleRepository(JustBeeContext context) : IAlveoleRepository
 
     public async Task<IEnumerable<Alveole>> GetAllAsync() =>
         await _context.Alveoles
+            .AsNoTracking()
             .Include(a => a.Ville)
             .ToListAsync();
 
     public async Task<IEnumerable<Alveole>> GetVerifiedAsync() =>
         await _context.Alveoles
+            .AsNoTracking()
             .Include(a => a.Ville)
             .Where(a => a.EmailVerifie)
             .ToListAsync();
 
     public async Task<Alveole?> GetByIdAsync(int id) =>
         await _context.Alveoles
+            .AsNoTracking()
             .Include(a => a.Ville)
             .FirstOrDefaultAsync(a => a.Id == id);
 
@@ -31,11 +34,13 @@ public class AlveoleRepository(JustBeeContext context) : IAlveoleRepository
 
     public async Task<Alveole?> GetByEmailAsync(string email) =>
         await _context.Alveoles
+            .AsNoTracking()
             .Include(a => a.Ville)
             .FirstOrDefaultAsync(a => a.Email == email);
 
     public async Task<IEnumerable<Alveole>> GetByVilleCodeAsync(string villeCode) =>
         await _context.Alveoles
+            .AsNoTracking()
             .Include(a => a.Ville)
             .Where(a => a.VilleCode == villeCode && a.EmailVerifie)
             .ToListAsync();
