@@ -22,9 +22,13 @@
 
   <ItemGroup>
     <Compile Remove=".github\**" />
+    <Compile Remove="JustBeeInfrastructure\**" />
     <Content Remove=".github\**" />
+    <Content Remove="JustBeeInfrastructure\**" />
     <EmbeddedResource Remove=".github\**" />
+    <EmbeddedResource Remove="JustBeeInfrastructure\**" />
     <None Remove=".github\**" />
+    <None Remove="JustBeeInfrastructure\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -38,7 +42,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\JustBeeInfrastructure\JustBeeInfrastructure.csproj" />
+    <ProjectReference Include="JustBeeInfrastructure\JustBeeInfrastructure.csproj" />
   </ItemGroup>
 
   <!-- Trimming configuration for better optimization -->
