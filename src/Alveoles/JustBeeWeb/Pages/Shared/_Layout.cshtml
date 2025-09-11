@@ -1,4 +1,10 @@
-﻿<!DOCTYPE html>
+﻿@{
+    // Determine email based on current domain
+    var host = Context.Request.Host.Value.ToLower();
+    var contactEmail = host.Contains("frogbee") ? "contact@frogbee.fr" : "contact@beefrog.fr";
+}
+
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -105,7 +111,7 @@
                             <i class="fas fa-map-marker-alt"></i> Carcès, Var (83)
                         </li>
                         <li class="footer-contact">
-                            <i class="fas fa-envelope"></i> contact@frogbee.fr / contact@beefrog.fr
+                            <i class="fas fa-envelope"></i> @contactEmail
                         </li>
                         <li class="footer-contact">
                             <i class="fas fa-calendar"></i> Essaimage lancé le 6 juillet 2025

@@ -1,5 +1,4 @@
 ﻿using JustBeeWeb.Options;
-using JustBeeWeb.Serialization;
 using Microsoft.Extensions.Options;
 using System.Net.Http.Headers;
 using System.Text;
@@ -22,15 +21,21 @@ public class EmailService
         _httpClient.DefaultRequestHeaders.Add("api-key", _brevoOptions.APIKey);
     }
 
+    private string GetContactEmail(string baseUrl)
+    {
+        return baseUrl.ToLower().Contains("frogbee") ? "contact@frogbee.fr" : "contact@beefrog.fr";
+    }
+
     public async Task<bool> EnvoyerEmailVerificationAsync(string email, string pseudo, string token, string baseUrl)
     {
         try
         {
             var lienVerification = $"{baseUrl}/VerifierEmail?token={token}";
+            var contactEmail = GetContactEmail(baseUrl);
 
             var emailData = new EmailData
             {
-                Sender = new EmailSender { Name = "Plan B Démocratie", Email = "contact@mafyouit.tech" },
+                Sender = new EmailSender { Name = "Plan B Démocratie", Email = contactEmail },
                 To = [new EmailRecipient { Email = email, Name = pseudo }],
                 Subject = "🐝 Vérification de votre alvéole citoyenne - Plan B",
                 HtmlContent = $@"
@@ -111,10 +116,11 @@ public class EmailService
         try
         {
             var lienVerification = $"{baseUrl}/VerifierAlveole?token={token}";
+            var contactEmail = GetContactEmail(baseUrl);
 
             var emailData = new EmailData
             {
-                Sender = new EmailSender { Name = "Plan B Démocratie", Email = "contact@mafyouit.tech" },
+                Sender = new EmailSender { Name = "Plan B Démocratie", Email = contactEmail },
                 To = [new EmailRecipient { Email = email, Name = nomAlveole }],
                 Subject = $"🐝 Vérification de votre alvéole '{nomAlveole}' - Plan B",
                 HtmlContent = $@"
