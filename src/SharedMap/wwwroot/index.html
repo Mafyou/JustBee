@@ -19,14 +19,21 @@
         }
         html,
         body {
-            background-color: #000000 !important; /* Fond noir partout */
-            color: #D4AF37; /* Texte or par défaut */
-            height: 100%;
+            background: linear-gradient(to top, #000000 0%, /* Noir en bas */
+            #1a1a1a 25%, /* Gris très foncé */
+            #333333 50%, /* Gris moyen */
+            #666666 75%, /* Gris clair */
+            transparent 100% /* Transparent en haut */
+            );
+            background-attachment: fixed;
+            color: #D4AF37;
+            height: 100vh;
             margin: 0;
+            min-height: 100%;
         }
 
         body {
-            background-color: #000000 !important;
+            background: transparent; /* Laisse voir le dégradé du HTML */
             color: #D4AF37;
             display: flex;
             flex-direction: column;
@@ -41,6 +48,16 @@
             font-family: 'Cormorant Garamond', Georgia, "Times New Roman", serif;
             color: #D4AF37; /* Titres en or */
             text-align: center;
+        }
+        /* Amélioration du contraste pour les éléments */
+        h3 {
+            color: #FAB700; /* Jaune pour plus de contraste */
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+        }
+
+        small {
+            color: #D4AF37;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
         }
 
         img {
@@ -74,16 +91,19 @@
             padding-bottom: 1em;
         }
 
-            svg text.v,
-            text.q {
-                font-family: 'Cormorant Garamond', Georgia, "Times New Roman", serif;
-                color: #5A5A5A !important; /* Texte de la carte en gris */
-                fill: #5A5A5A !important; /* Texte de la carte en gris */
-            }
+        /* Texte de la carte en gris */
+        svg text.v,
+        text.q {
+            font-family: 'Cormorant Garamond', Georgia, "Times New Roman", serif;
+            fill: #5A5A5A !important;
+            color: #5A5A5A !important;
+        }
 
         .tooltip-dept {
-            background: #D4AF37; /* Fond or */
-            color: #000000; /* Texte noir */
+            background: linear-gradient(135deg, #FAB700 0%, #D4AF37 100%);
+            color: #000000;
+            border: 1px solid #CF9800;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
             position: absolute;
             padding: 3px 8px;
             font-size: 14px;
@@ -97,30 +117,20 @@
 
         a:hover polygon,
         a:hover path {
-            fill: #D4AF37 !important; /* Survol en or */
+            fill: #FAB700 !important; /* Jaune au survol */
+            stroke: #CF9800 !important; /* Contour or foncé */
         }
 
         .a {
             fill: #dcddde;
         }
 
-        .a,
-        .b,
-        .c,
-        .e,
-        .f,
-        .g,
-        .h,
-        .i,
-        .j,
-        .k,
-        .l,
-        .m,
-        .n,
-        .o,
-        .p {
-            fill: #5A5A5A !important; /* Départements gris */
-            stroke: #D4AF37 !important; /* Contours or */
+        /* Départements maintenant en or par défaut */
+        .a, .b, .c, .d, .e, .f, .g, .h, .i, .j, .k, .l, .m, .n, .o, .p {
+            fill: #D4AF37 !important; /* Départements en or */
+            stroke: #5A5A5A !important; /* Contours gris */
+            stroke-width: 1px;
+            transition: fill 0.3s ease;
         }
 
         .b,
@@ -404,6 +414,32 @@
             border-radius: 8px;
             margin-top: 20px;
             display: none;
+        }
+        /* Animation pour les départements sélectionnés */
+        .departement-selected {
+            fill: #F1B100 !important; /* Couleur sun pour sélection */
+            stroke: #AD7F00 !important; /* Bronze pour le contour */
+            stroke-width: 2px;
+            filter: drop-shadow(0 0 5px #FAB700);
+        }
+
+        /* Animation de pulsation */
+        @keyframes pulse-glow {
+            0% {
+                filter: drop-shadow(0 0 5px #FAB700);
+            }
+
+            50% {
+                filter: drop-shadow(0 0 15px #FAB700);
+            }
+
+            100% {
+                filter: drop-shadow(0 0 5px #FAB700);
+            }
+        }
+
+        .departement-selected {
+            animation: pulse-glow 2s infinite;
         }
     </style>
 </head>
@@ -1227,6 +1263,27 @@
             link.addEventListener('touchcancel', () => {
                 clearTimeout(touchTimer);
                 tooltip.style.opacity = 0;
+            });
+        });
+        // Ajouter cette fonction pour gérer la sélection des départements
+        document.addEventListener('DOMContentLoaded', function () {
+            const departements = document.querySelectorAll('svg a');
+
+            departements.forEach(dept => {
+                dept.addEventListener('click', function (e) {
+                    e.preventDefault();
+
+                    // Retirer la sélection des autres départements
+                    document.querySelectorAll('.departement-selected').forEach(el => {
+                        el.classList.remove('departement-selected');
+                    });
+
+                    // Ajouter la sélection au département cliqué
+                    const polygon = this.querySelector('polygon, path');
+                    if (polygon) {
+                        polygon.classList.add('departement-selected');
+                    }
+                });
             });
         });
         // Script pour gérer l'envoi du formulaire
