@@ -2,15 +2,21 @@ using JustBeeInfrastructure.Context;
 using JustBeeInfrastructure.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using System.Text.Json;
 
 namespace JustBeeInfrastructure.Data;
 
 public static class DataSeeder
 {
+    // Helper class for logger generic type
+    private class DataSeederLogger { }
+
     public static async Task SeedDataAsync(IServiceProvider serviceProvider)
     {
         using var scope = serviceProvider.CreateScope();
         var context = scope.ServiceProvider.GetRequiredService<JustBeeContext>();
+        var logger = scope.ServiceProvider.GetRequiredService<ILogger<DataSeederLogger>>();
 
         // Ensure database is created
         await context.Database.EnsureCreatedAsync();
@@ -18,13 +24,17 @@ public static class DataSeeder
         // Seed Departements if not exist
         if (!await context.Departements.AnyAsync())
         {
+            logger.LogInformation("Seeding departements...");
             await SeedDepartementsAsync(context);
+            logger.LogInformation("Departements seeded successfully");
         }
 
-        // Seed Villes if not exist
+        // Seed Villes if not exist - now using external API for all French cities
         if (!await context.Villes.AnyAsync())
         {
-            await SeedVillesAsync(context);
+            logger.LogInformation("Seeding all French cities from government API...");
+            await SeedAllFrenchVillesAsync(context, scope.ServiceProvider, logger);
+            logger.LogInformation("Cities seeded successfully");
         }
 
         await context.SaveChangesAsync();
@@ -135,75 +145,171 @@ public static class DataSeeder
         await context.Departements.AddRangeAsync(departements);
     }
 
-    private static async Task SeedVillesAsync(JustBeeContext context)
+    private static async Task SeedAllFrenchVillesAsync(JustBeeContext context, IServiceProvider serviceProvider, ILogger<DataSeederLogger> logger)
     {
-        var villes = new List<Ville>
+        try
         {
-            // Grandes métropoles
-            new() { Code = "PARIS", Nom = "Paris", Departement = "Paris", Region = "Île-de-France", Latitude = 48.8566, Longitude = 2.3522 },
-            new() { Code = "MARSEILLE", Nom = "Marseille", Departement = "Bouches-du-Rhône", Region = "Provence-Alpes-Côte d'Azur", Latitude = 43.2965, Longitude = 5.3698 },
-            new() { Code = "LYON", Nom = "Lyon", Departement = "Rhône", Region = "Auvergne-Rhône-Alpes", Latitude = 45.7640, Longitude = 4.8357 },
-            new() { Code = "TOULOUSE", Nom = "Toulouse", Departement = "Haute-Garonne", Region = "Occitanie", Latitude = 43.6047, Longitude = 1.4442 },
-            new() { Code = "NICE", Nom = "Nice", Departement = "Alpes-Maritimes", Region = "Provence-Alpes-Côte d'Azur", Latitude = 43.7102, Longitude = 7.2620 },
-            new() { Code = "NANTES", Nom = "Nantes", Departement = "Loire-Atlantique", Region = "Pays de la Loire", Latitude = 47.2184, Longitude = -1.5536 },
-            new() { Code = "MONTPELLIE", Nom = "Montpellier", Departement = "Hérault", Region = "Occitanie", Latitude = 43.6110, Longitude = 3.8767 },
-            new() { Code = "STRASBOURG", Nom = "Strasbourg", Departement = "Bas-Rhin", Region = "Grand Est", Latitude = 48.5734, Longitude = 7.7521 },
-            new() { Code = "BORDEAUX", Nom = "Bordeaux", Departement = "Gironde", Region = "Nouvelle-Aquitaine", Latitude = 44.8378, Longitude = -0.5792 },
-            new() { Code = "LILLE", Nom = "Lille", Departement = "Nord", Region = "Hauts-de-France", Latitude = 50.6292, Longitude = 3.0573 },
-            
-            // Grandes villes régionales
-            new() { Code = "RENNES", Nom = "Rennes", Departement = "Ille-et-Vilaine", Region = "Bretagne", Latitude = 48.1173, Longitude = -1.6778 },
-            new() { Code = "REIMS", Nom = "Reims", Departement = "Marne", Region = "Grand Est", Latitude = 49.2583, Longitude = 4.0317 },
-            new() { Code = "STETIENNE", Nom = "Saint-Étienne", Departement = "Loire", Region = "Auvergne-Rhône-Alpes", Latitude = 45.4397, Longitude = 4.3872 },
-            new() { Code = "TOULON", Nom = "Toulon", Departement = "Var", Region = "Provence-Alpes-Côte d'Azur", Latitude = 43.1242, Longitude = 5.9280 },
-            new() { Code = "GRENOBLE", Nom = "Grenoble", Departement = "Isère", Region = "Auvergne-Rhône-Alpes", Latitude = 45.1885, Longitude = 5.7245 },
-            new() { Code = "DIJON", Nom = "Dijon", Departement = "Côte-d'Or", Region = "Bourgogne-Franche-Comté", Latitude = 47.3220, Longitude = 5.0415 },
-            new() { Code = "ANGERS", Nom = "Angers", Departement = "Maine-et-Loire", Region = "Pays de la Loire", Latitude = 47.4784, Longitude = -0.5632 },
-            new() { Code = "NIMES", Nom = "Nîmes", Departement = "Gard", Region = "Occitanie", Latitude = 43.8367, Longitude = 4.3601 },
-            new() { Code = "VILLEURBNE", Nom = "Villeurbanne", Departement = "Rhône", Region = "Auvergne-Rhône-Alpes", Latitude = 45.7667, Longitude = 4.8833 },
-            new() { Code = "LEMANS", Nom = "Le Mans", Departement = "Sarthe", Region = "Pays de la Loire", Latitude = 48.0061, Longitude = 0.1996 },
-            
-            // Villes moyennes représentatives
-            new() { Code = "AIXPROVENC", Nom = "Aix-en-Provence", Departement = "Bouches-du-Rhône", Region = "Provence-Alpes-Côte d'Azur", Latitude = 43.5297, Longitude = 5.4474 },
-            new() { Code = "BREST", Nom = "Brest", Departement = "Finistère", Region = "Bretagne", Latitude = 48.3904, Longitude = -4.4861 },
-            new() { Code = "TOURS", Nom = "Tours", Departement = "Indre-et-Loire", Region = "Centre-Val de Loire", Latitude = 47.3941, Longitude = 0.6848 },
-            new() { Code = "AMIENS", Nom = "Amiens", Departement = "Somme", Region = "Hauts-de-France", Latitude = 49.8941, Longitude = 2.2958 },
-            new() { Code = "LIMOGES", Nom = "Limoges", Departement = "Haute-Vienne", Region = "Nouvelle-Aquitaine", Latitude = 45.8336, Longitude = 1.2611 },
-            new() { Code = "CLERMONT", Nom = "Clermont-Ferrand", Departement = "Puy-de-Dôme", Region = "Auvergne-Rhône-Alpes", Latitude = 45.7797, Longitude = 3.0863 },
-            new() { Code = "BESANCON", Nom = "Besançon", Departement = "Doubs", Region = "Bourgogne-Franche-Comté", Latitude = 47.2378, Longitude = 6.0241 },
-            new() { Code = "ORLEANS", Nom = "Orléans", Departement = "Loiret", Region = "Centre-Val de Loire", Latitude = 47.9029, Longitude = 1.9093 },
-            new() { Code = "MULHOUSE", Nom = "Mulhouse", Departement = "Haut-Rhin", Region = "Grand Est", Latitude = 47.7508, Longitude = 7.3359 },
-            new() { Code = "ROUEN", Nom = "Rouen", Departement = "Seine-Maritime", Region = "Normandie", Latitude = 49.4431, Longitude = 1.0993 },
-            new() { Code = "NANCY", Nom = "Nancy", Departement = "Meurthe-et-Moselle", Region = "Grand Est", Latitude = 48.6921, Longitude = 6.1844 },
-            new() { Code = "ARGENTEUIL", Nom = "Argenteuil", Departement = "Val-d'Oise", Region = "Île-de-France", Latitude = 48.9474, Longitude = 2.2476 },
-            new() { Code = "MONTREUIL", Nom = "Montreuil", Departement = "Seine-Saint-Denis", Region = "Île-de-France", Latitude = 48.8634, Longitude = 2.4450 },
-            new() { Code = "CAEN", Nom = "Caen", Departement = "Calvados", Region = "Normandie", Latitude = 49.1858, Longitude = -0.3708 },
-            new() { Code = "TOURCOING", Nom = "Tourcoing", Departement = "Nord", Region = "Hauts-de-France", Latitude = 50.7236, Longitude = 3.1614 },
-            new() { Code = "ROUBAIX", Nom = "Roubaix", Departement = "Nord", Region = "Hauts-de-France", Latitude = 50.6942, Longitude = 3.1746 },
-            new() { Code = "NANTERRE", Nom = "Nanterre", Departement = "Hauts-de-Seine", Region = "Île-de-France", Latitude = 48.8915, Longitude = 2.2066 },
-            new() { Code = "AVIGNON", Nom = "Avignon", Departement = "Vaucluse", Region = "Provence-Alpes-Côte d'Azur", Latitude = 43.9493, Longitude = 4.8055 },
-            new() { Code = "CRETEIL", Nom = "Créteil", Departement = "Val-de-Marne", Region = "Île-de-France", Latitude = 48.7903, Longitude = 2.4555 },
-            new() { Code = "POITIERS", Nom = "Poitiers", Departement = "Vienne", Region = "Nouvelle-Aquitaine", Latitude = 46.5802, Longitude = 0.3404 },
-            new() { Code = "DUNKERQUE", Nom = "Dunkerque", Departement = "Nord", Region = "Hauts-de-France", Latitude = 51.0342, Longitude = 2.3770 },
-            new() { Code = "ASNIERES", Nom = "Asnières-sur-Seine", Departement = "Hauts-de-Seine", Region = "Île-de-France", Latitude = 48.9152, Longitude = 2.2874 },
-            new() { Code = "BOULOGNE", Nom = "Boulogne-Billancourt", Departement = "Hauts-de-Seine", Region = "Île-de-France", Latitude = 48.8356, Longitude = 2.2397 },
-            new() { Code = "PERPIGNAN", Nom = "Perpignan", Departement = "Pyrénées-Orientales", Region = "Occitanie", Latitude = 42.6976, Longitude = 2.8954 },
-            new() { Code = "VERSAILLES", Nom = "Versailles", Departement = "Yvelines", Region = "Île-de-France", Latitude = 48.8014, Longitude = 2.1301 },
-            new() { Code = "COLOMBES", Nom = "Colombes", Departement = "Hauts-de-Seine", Region = "Île-de-France", Latitude = 48.9226, Longitude = 2.2572 },
-            new() { Code = "FTDEFRANCE", Nom = "Fort-de-France", Departement = "Martinique", Region = "Martinique", Latitude = 14.6037, Longitude = -61.0594 },
-            new() { Code = "AULNAY", Nom = "Aulnay-sous-Bois", Departement = "Seine-Saint-Denis", Region = "Île-de-France", Latitude = 48.9349, Longitude = 2.4944 },
-            new() { Code = "RUEILMALM", Nom = "Rueil-Malmaison", Departement = "Hauts-de-Seine", Region = "Île-de-France", Latitude = 48.8772, Longitude = 2.1760 },
-            new() { Code = "ROCHELLE", Nom = "La Rochelle", Departement = "Charente-Maritime", Region = "Nouvelle-Aquitaine", Latitude = 46.1603, Longitude = -1.1511 },
-            new() { Code = "PAU", Nom = "Pau", Departement = "Pyrénées-Atlantiques", Region = "Nouvelle-Aquitaine", Latitude = 43.2951, Longitude = -0.3712 },
-            new() { Code = "AUBERVILL", Nom = "Aubervilliers", Departement = "Seine-Saint-Denis", Region = "Île-de-France", Latitude = 48.9145, Longitude = 2.3838 },
-            new() { Code = "CHAMPIGNY", Nom = "Champigny-sur-Marne", Departement = "Val-de-Marne", Region = "Île-de-France", Latitude = 48.8169, Longitude = 2.5145 },
-            new() { Code = "ANTIBES", Nom = "Antibes", Departement = "Alpes-Maritimes", Region = "Provence-Alpes-Côte d'Azur", Latitude = 43.5808, Longitude = 7.1251 },
-            new() { Code = "CANNES", Nom = "Cannes", Departement = "Alpes-Maritimes", Region = "Provence-Alpes-Côte d'Azur", Latitude = 43.5528, Longitude = 7.0174 },
-            new() { Code = "BAGNEUX", Nom = "Bagneux", Departement = "Hauts-de-Seine", Region = "Île-de-France", Latitude = 48.7957, Longitude = 2.3149 },
-            new() { Code = "DRANCY", Nom = "Drancy", Departement = "Seine-Saint-Denis", Region = "Île-de-France", Latitude = 48.9282, Longitude = 2.4454 },
-            new() { Code = "CARCES", Nom = "Carcès", Departement = "Var", Region = "Provence-Alpes-Côte d'Azur", Latitude = 43.4725, Longitude = 6.1836 }
-        };
+            logger.LogInformation("Loading all French cities from government API...");
+            var villes = await LoadVillesDirectlyFromApiAsync(serviceProvider, logger);
 
-        await context.Villes.AddRangeAsync(villes);
+            if (villes.Count == 0)
+            {
+                logger.LogWarning("No cities loaded from API, falling back to basic cities");
+                villes = GetFallbackVilles();
+            }
+
+            if (villes.Count > 0)
+            {
+                // Process cities in batches to avoid memory issues and SQL Server timeout
+                const int batchSize = 1000;
+                var totalBatches = (int)Math.Ceiling((double)villes.Count / batchSize);
+
+                logger.LogInformation($"Processing {villes.Count} cities in {totalBatches} batches of {batchSize}");
+
+                for (int i = 0; i < totalBatches; i++)
+                {
+                    var batch = villes.Skip(i * batchSize).Take(batchSize).ToList();
+                    
+                    // Ensure navigation collections are initialized to prevent EF issues
+                    foreach (var ville in batch)
+                    {
+                        ville.Persons = [];
+                        ville.Alveoles = [];
+                    }
+
+                    await context.Villes.AddRangeAsync(batch);
+                    
+                    // Save each batch to avoid keeping too much in memory and prevent SQL timeouts
+                    await context.SaveChangesAsync();
+                    
+                    logger.LogInformation($"Processed batch {i + 1}/{totalBatches} ({batch.Count} cities)");
+                    
+                    // Clear change tracker to free memory
+                    context.ChangeTracker.Clear();
+                }
+
+                logger.LogInformation($"Successfully seeded {villes.Count} French cities");
+            }
+            else
+            {
+                logger.LogError("No cities were loaded - this should not happen");
+            }
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "Error occurred while seeding cities");
+            
+            // Fallback to basic cities if everything fails
+            logger.LogInformation("Falling back to basic cities due to error");
+            var fallbackVilles = GetFallbackVilles();
+            
+            foreach (var ville in fallbackVilles)
+            {
+                ville.Persons = [];
+                ville.Alveoles = [];
+            }
+            
+            await context.Villes.AddRangeAsync(fallbackVilles);
+            logger.LogInformation($"Seeded {fallbackVilles.Count} fallback cities");
+        }
+    }
+
+    private static async Task<List<Ville>> LoadVillesDirectlyFromApiAsync(IServiceProvider serviceProvider, ILogger<DataSeederLogger> logger)
+    {
+        try
+        {
+            // Create HttpClient directly since IHttpClientFactory might not be available
+            using var httpClient = new HttpClient();
+            httpClient.Timeout = TimeSpan.FromMinutes(5); // Increase timeout for large API response
+
+            logger.LogInformation("Making direct API call to load French cities...");
+            
+            var response = await httpClient.GetAsync("https://geo.api.gouv.fr/communes?fields=nom,code,codeDepartement,departement,codeRegion,region,centre&format=json");
+
+            if (!response.IsSuccessStatusCode)
+            {
+                logger.LogWarning($"API call failed with status: {response.StatusCode}");
+                return [];
+            }
+
+            var json = await response.Content.ReadAsStringAsync();
+            
+            // Parse the JSON manually since we don't have access to serialization context here
+            using var document = JsonDocument.Parse(json);
+            var villes = new List<Ville>();
+
+            foreach (var element in document.RootElement.EnumerateArray())
+            {
+                try
+                {
+                    var code = element.GetProperty("code").GetString();
+                    var nom = element.GetProperty("nom").GetString();
+                    var departementNom = element.GetProperty("departement").GetProperty("nom").GetString();
+                    var regionNom = element.GetProperty("region").GetProperty("nom").GetString();
+                    
+                    if (element.TryGetProperty("centre", out var centreElement) && 
+                        centreElement.TryGetProperty("coordinates", out var coordsElement) &&
+                        coordsElement.GetArrayLength() == 2)
+                    {
+                        var longitude = coordsElement[0].GetDouble();
+                        var latitude = coordsElement[1].GetDouble();
+
+                        if (!string.IsNullOrEmpty(code) && !string.IsNullOrEmpty(nom))
+                        {
+                            villes.Add(new Ville
+                            {
+                                Code = code,
+                                Nom = nom,
+                                Departement = departementNom ?? "",
+                                Region = regionNom ?? "",
+                                Latitude = latitude,
+                                Longitude = longitude,
+                                Persons = [],
+                                Alveoles = []
+                            });
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    // Skip malformed entries
+                    logger.LogDebug($"Skipping malformed city entry: {ex.Message}");
+                }
+            }
+
+            logger.LogInformation($"Loaded {villes.Count} cities from direct API call");
+            return villes;
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "Error loading cities directly from API");
+            return [];
+        }
+    }
+
+    private static List<Ville> GetFallbackVilles()
+    {
+        // Fallback to essential French cities if API fails
+        return new List<Ville>
+        {
+            // Grandes métropoles with official INSEE codes
+            new() { Code = "75056", Nom = "Paris", Departement = "Paris", Region = "Île-de-France", Latitude = 48.8566, Longitude = 2.3522, Persons = [], Alveoles = [] },
+            new() { Code = "13055", Nom = "Marseille", Departement = "Bouches-du-Rhône", Region = "Provence-Alpes-Côte d'Azur", Latitude = 43.2965, Longitude = 5.3698, Persons = [], Alveoles = [] },
+            new() { Code = "69123", Nom = "Lyon", Departement = "Rhône", Region = "Auvergne-Rhône-Alpes", Latitude = 45.7640, Longitude = 4.8357, Persons = [], Alveoles = [] },
+            new() { Code = "31555", Nom = "Toulouse", Departement = "Haute-Garonne", Region = "Occitanie", Latitude = 43.6047, Longitude = 1.4442, Persons = [], Alveoles = [] },
+            new() { Code = "06088", Nom = "Nice", Departement = "Alpes-Maritimes", Region = "Provence-Alpes-Côte d'Azur", Latitude = 43.7102, Longitude = 7.2620, Persons = [], Alveoles = [] },
+            new() { Code = "44109", Nom = "Nantes", Departement = "Loire-Atlantique", Region = "Pays de la Loire", Latitude = 47.2184, Longitude = -1.5536, Persons = [], Alveoles = [] },
+            new() { Code = "34172", Nom = "Montpellier", Departement = "Hérault", Region = "Occitanie", Latitude = 43.6110, Longitude = 3.8767, Persons = [], Alveoles = [] },
+            new() { Code = "67482", Nom = "Strasbourg", Departement = "Bas-Rhin", Region = "Grand Est", Latitude = 48.5734, Longitude = 7.7521, Persons = [], Alveoles = [] },
+            new() { Code = "33063", Nom = "Bordeaux", Departement = "Gironde", Region = "Nouvelle-Aquitaine", Latitude = 44.8378, Longitude = -0.5792, Persons = [], Alveoles = [] },
+            new() { Code = "59350", Nom = "Lille", Departement = "Nord", Region = "Hauts-de-France", Latitude = 50.6292, Longitude = 3.0573, Persons = [], Alveoles = [] },
+            // Add a few more important cities including Carcès
+            new() { Code = "35238", Nom = "Rennes", Departement = "Ille-et-Vilaine", Region = "Bretagne", Latitude = 48.1173, Longitude = -1.6778, Persons = [], Alveoles = [] },
+            new() { Code = "51454", Nom = "Reims", Departement = "Marne", Region = "Grand Est", Latitude = 49.2583, Longitude = 4.0317, Persons = [], Alveoles = [] },
+            new() { Code = "42218", Nom = "Saint-Étienne", Departement = "Loire", Region = "Auvergne-Rhône-Alpes", Latitude = 45.4397, Longitude = 4.3872, Persons = [], Alveoles = [] },
+            new() { Code = "83137", Nom = "Toulon", Departement = "Var", Region = "Provence-Alpes-Côte d'Azur", Latitude = 43.1242, Longitude = 5.9280, Persons = [], Alveoles = [] },
+            new() { Code = "38185", Nom = "Grenoble", Departement = "Isère", Region = "Auvergne-Rhône-Alpes", Latitude = 45.1885, Longitude = 5.7245, Persons = [], Alveoles = [] },
+            new() { Code = "83049", Nom = "Carcès", Departement = "Var", Region = "Provence-Alpes-Côte d'Azur", Latitude = 43.4725, Longitude = 6.1836, Persons = [], Alveoles = [] }
+        };
     }
 }
