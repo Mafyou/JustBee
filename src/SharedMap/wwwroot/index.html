@@ -18,6 +18,8 @@
         body {
             height: 100%;
             margin: 0;
+            background-color: #000000; /* Fond noir */
+            color: #D4AF37; /* Texte or */
         }
 
         body {
@@ -72,13 +74,13 @@
             svg text.v,
             text.q {
                 font-family: 'Cormorant Garamond', Georgia, "Times New Roman", serif;
-                color: #BFB8AC !important;
+                color: #5A5A5A !important; /* Texte de la carte en gris */
             }
 
         .tooltip-dept {
+            background: #D4AF37; /* Fond or */
+            color: #000000; /* Texte noir */
             position: absolute;
-            background: #333;
-            color: #fff;
             padding: 3px 8px;
             font-size: 14px;
             font-family: 'Cormorant Garamond', Georgia, "Times New Roman", serif;
@@ -89,12 +91,9 @@
             z-index: 1000;
         }
 
-        a:hover polygon {
-            fill: #AD7F00 !important;
-        }
-
+        a:hover polygon,
         a:hover path {
-            fill: #AD7F00 !important;
+            fill: #D4AF37 !important; /* Survol en or */
         }
 
         .a {
@@ -117,6 +116,8 @@
         .o,
         .p {
             stroke: #000;
+            fill: #5A5A5A; /* Départements en gris */
+            stroke: #D4AF37; /* Contours en or */
         }
 
         .b,
@@ -273,11 +274,11 @@
         }
         /* Styles pour le formulaire d'inscription */
         .newsletter-section {
-            background: linear-gradient(135deg, #1a2332 0%, #2a3441 100%);
+            background: #000000; /* Fond noir au lieu du dégradé */
+            border-top: 2px solid #D4AF37; /* Bordure or */
             padding: 40px 20px;
             margin-top: 40px;
             text-align: center;
-            border-top: 2px solid #FBBA01;
         }
 
         .newsletter-container {
@@ -287,7 +288,7 @@
 
         .newsletter-title {
             font-family: 'Cormorant Garamond', Georgia, "Times New Roman", serif;
-            color: #FBBA01;
+            color: #D4AF37; /* Titre or */
             font-size: 2.2em;
             margin-bottom: 15px;
             font-weight: bold;
@@ -295,7 +296,7 @@
 
         .newsletter-description {
             font-family: 'Proza Libre', Helvetica, Arial, sans-serif;
-            color: #E5E0D8;
+            color: #5A5A5A; /* Description grise */
             font-size: 1.1em;
             margin-bottom: 30px;
             line-height: 1.6;
@@ -310,12 +311,12 @@
         }
 
         .email-input {
+            border: 2px solid #5A5A5A; /* Bordure grise */
+            background: rgba(90, 90, 90, 0.2); /* Fond gris transparent */
+            color: #D4AF37; /* Texte or */
             flex: 1;
             padding: 12px 16px;
-            border: 2px solid #AD7F00;
             border-radius: 25px;
-            background: rgba(229, 224, 216, 0.1);
-            color: #E5E0D8;
             font-family: 'Proza Libre', Helvetica, Arial, sans-serif;
             font-size: 16px;
             outline: none;
@@ -323,19 +324,19 @@
         }
 
             .email-input::placeholder {
-                color: #BFB8AC;
+                color: #5A5A5A; /* Placeholder gris */
             }
 
             .email-input:focus {
-                border-color: #FBBA01;
-                background: rgba(251, 186, 1, 0.1);
+                border-color: #D4AF37; /* Bordure or au focus */
+                background: rgba(212, 175, 55, 0.1); /* Fond or transparent au focus */
                 box-shadow: 0 0 10px rgba(251, 186, 1, 0.3);
             }
 
         .submit-btn {
+            background: linear-gradient(135deg, #D4AF37 0%, #5A5A5A 100%); /* Dégradé or vers gris */
+            color: #000000; /* Texte noir sur bouton */
             padding: 12px 24px;
-            background: linear-gradient(135deg, #FBBA01 0%, #CF9800 100%);
-            color: #242E3D;
             border: none;
             border-radius: 25px;
             font-family: 'Proza Libre', Helvetica, Arial, sans-serif;
@@ -347,7 +348,7 @@
         }
 
             .submit-btn:hover {
-                background: linear-gradient(135deg, #CF9800 0%, #AD7F00 100%);
+                background: linear-gradient(135deg, #5A5A5A 0%, #D4AF37 100%); /* Inverse au hover */
                 transform: translateY(-2px);
                 box-shadow: 0 5px 15px rgba(251, 186, 1, 0.4);
             }
