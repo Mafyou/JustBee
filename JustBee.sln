@@ -3,9 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.14.36414.22
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JustBeeWeb", "src\JustBeeWeb.csproj", "{961483F6-5FA4-4C26-8D77-FC5AEAE5C940}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JustBeeWeb", "src\Alveoles\JustBeeWeb\JustBeeWeb.csproj", "{961483F6-5FA4-4C26-8D77-FC5AEAE5C940}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JustBeeInfrastructure", "src\JustBeeInfrastructure\JustBeeInfrastructure.csproj", "{533F8AD5-65EF-4C62-BF4F-4237B014C1A8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JustBeeInfrastructure", "src\Alveoles\JustBeeInfrastructure\JustBeeInfrastructure.csproj", "{533F8AD5-65EF-4C62-BF4F-4237B014C1A8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShareStandaloneMap", "src\SharedMap\ShareStandaloneMap.csproj", "{FF3AC0EF-E51C-48FB-A6DB-078FC46371D8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{533F8AD5-65EF-4C62-BF4F-4237B014C1A8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{533F8AD5-65EF-4C62-BF4F-4237B014C1A8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{533F8AD5-65EF-4C62-BF4F-4237B014C1A8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FF3AC0EF-E51C-48FB-A6DB-078FC46371D8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FF3AC0EF-E51C-48FB-A6DB-078FC46371D8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FF3AC0EF-E51C-48FB-A6DB-078FC46371D8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FF3AC0EF-E51C-48FB-A6DB-078FC46371D8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

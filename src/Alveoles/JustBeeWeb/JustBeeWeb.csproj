@@ -42,7 +42,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="JustBeeInfrastructure\JustBeeInfrastructure.csproj" />
+    <ProjectReference Include="..\JustBeeInfrastructure\JustBeeInfrastructure.csproj" />
   </ItemGroup>
 
   <!-- Trimming configuration for better optimization -->
