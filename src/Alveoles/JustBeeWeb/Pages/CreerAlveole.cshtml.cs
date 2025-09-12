@@ -1,6 +1,7 @@
 ﻿using JustBeeWeb.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using System.ComponentModel.DataAnnotations;
 
 namespace JustBeeWeb.Pages;
 
@@ -18,15 +19,20 @@ public class CreerAlveoleModel : PageModel
     }
 
     [BindProperty]
+    [Required(ErrorMessage = "Le nom de l'alvéole est obligatoire.")]
     public string NomAlveole { get; set; } = string.Empty;
 
     [BindProperty]
+    [Required(ErrorMessage = "La description est obligatoire.")]
     public string Description { get; set; } = string.Empty;
 
     [BindProperty]
+    [Required(ErrorMessage = "La ville est obligatoire.")]
     public string VilleCode { get; set; } = string.Empty;
 
     [BindProperty]
+    [Required(ErrorMessage = "L'email est obligatoire.")]
+    [EmailAddress(ErrorMessage = "Veuillez saisir un email valide.")]
     public string Email { get; set; } = string.Empty;
 
     public List<Ville> Villes { get; set; } = [];
@@ -46,12 +52,13 @@ public class CreerAlveoleModel : PageModel
             return Page();
         }
 
-        // Validation des données
+        // Validation des données (redondante avec ModelState mais garde pour sécurité)
         if (string.IsNullOrWhiteSpace(NomAlveole) ||
             string.IsNullOrWhiteSpace(Email) ||
-            string.IsNullOrWhiteSpace(VilleCode))
+            string.IsNullOrWhiteSpace(VilleCode) ||
+            string.IsNullOrWhiteSpace(Description))
         {
-            TempData["Error"] = "Tous les champs sont obligatoires.";
+            TempData["Error"] = "Tous les champs obligatoires doivent être renseignés.";
             await OnGetAsync();
             return Page();
         }
@@ -69,7 +76,7 @@ public class CreerAlveoleModel : PageModel
         var nouvelleAlveole = new Alveole
         {
             Nom = NomAlveole.Trim(),
-            Description = Description?.Trim() ?? string.Empty,
+            Description = Description.Trim(),
             VilleCode = VilleCode,
             Email = Email.Trim().ToLower()
         };

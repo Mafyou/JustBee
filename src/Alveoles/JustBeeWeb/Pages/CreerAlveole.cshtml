@@ -153,11 +153,15 @@
 
                     <div class="mb-3">
                         <label asp-for="Description" class="form-label">
-                            <i class="fas fa-align-left"></i> Description (optionnelle)
+                            <i class="fas fa-align-left"></i> Description *
                         </label>
                         <textarea asp-for="Description" class="form-control" rows="3" 
-                                  placeholder="Décrivez vos objectifs, vos actions ou votre vision pour cette alvéole..."></textarea>
-                        <small class="text-muted">📝 Présentez votre alvéole aux autres abeilles citoyennes</small>
+                                  placeholder="Décrivez vos objectifs, vos actions ou votre vision pour cette alvéole..." required></textarea>
+                        <span asp-validation-for="Description" class="text-danger"></span>
+                        <div class="invalid-feedback">
+                            Veuillez décrire votre alvéole.
+                        </div>
+                        <small class="text-muted">📝 Présentez votre alvéole aux autres abeilles citoyennes (obligatoire)</small>
                     </div>
 
                     <div class="text-center mt-4">
