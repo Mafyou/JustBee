@@ -2,6 +2,8 @@
 @model CreerAlveoleModel
 @{
     ViewData["Title"] = "Créer une Alvéole";
+    var isAjax = HttpContext.Request.Headers["X-Requested-With"] == "XMLHttpRequest";
+    Layout = isAjax ? null : "_Layout";
 }
 
 <!-- Hero Section -->

@@ -1,7 +1,29 @@
 ﻿@page
-@model IndexModel
+@using System.Text.Json
+@model MapBeeModel
 @{
     ViewData["Title"] = "Plan B - Démocratie Participative";
+
+    // Pre-calculate data for better performance - using source generator
+    var villesDataForSerialization = Model.Villes.Where(v =>
+        Model.AllPersons.Any(p => p.VilleCode == v.Code) ||
+        Model.AllAlveoles.Any(a => a.VilleCode == v.Code)
+    ).Select(v => new VilleMapData
+    {
+        Code = v.Code,
+        Nom = v.Nom,
+        Region = v.Region,
+        Departement = v.Departement,
+        Latitude = v.Latitude,
+        Longitude = v.Longitude,
+        PersonCount = Model.AllPersons.Count(p => p.VilleCode == v.Code),
+        AlveoleCount = Model.AllAlveoles.Count(a => a.VilleCode == v.Code),
+        TotalCount = Model.AllPersons.Count(p => p.VilleCode == v.Code) + Model.AllAlveoles.Count(a => a.VilleCode == v.Code),
+        Persons = Model.AllPersons.Where(p => p.VilleCode == v.Code).Select(p => new PersonMapData { Id = p.Id, Pseudo = p.Pseudo }).ToArray(),
+        Alveoles = Model.AllAlveoles.Where(a => a.VilleCode == v.Code).Select(a => new AlveoleMapData { Id = a.Id, Nom = a.Nom }).ToArray()
+    }).ToArray();
+
+    var villesDataJson = JsonSerializer.Serialize(villesDataForSerialization, MapBeeSerializationContext.Default.VilleMapDataArray);
 }
 
 <div class="hero-section">
@@ -307,3 +329,55 @@
         </div>
     </div>
 </div>
+<!-- Fin du contenu principal Index -->
+
+<!-- Conteneur pour le scroll infini -->
+<div id="infinite-scroll-content"></div>
+
+<script>
+        // Pre-calculated data using source generator for better performance and trimming compatibility
+        var villesData = @Html.Raw(villesDataJson);
+let nextPages = [
+    '/MapBee',
+    '/CreerAlveole'
+];
+let currentPageIndex = 0;
+let loading = false;
+
+function ensureLeafletAssetsAndInit() {
+    initializeMap();
+}
+
+function loadNextPage() {
+    if (loading || currentPageIndex >= nextPages.length) return;
+    loading = true;
+    const url = nextPages[currentPageIndex];
+    fetch(url, { headers: { 'X-Requested-With': 'XMLHttpRequest' } })
+        .then(response => response.text())
+        .then(html => {
+            let tempDiv = document.createElement('div');
+            tempDiv.innerHTML = html;
+            let bodyContent = tempDiv.querySelector('body') || tempDiv;
+            let scrollContainer = document.getElementById('infinite-scroll-content');
+            Array.from(bodyContent.children).forEach(child => {
+                // N'insère pas les <script> du contenu AJAX
+                if (child.tagName !== 'SCRIPT') {
+                    scrollContainer.appendChild(child.cloneNode(true));
+                }
+            });
+            // Si on vient de charger MapBee, on s'assure que Leaflet et la carte sont initialisés
+            if (url.toLowerCase().includes('mapbee')) {
+                ensureLeafletAssetsAndInit();
+            }
+            currentPageIndex++;
+            loading = false;
+        })
+        .catch(() => { loading = false; });
+}
+
+window.addEventListener('scroll', function() {
+    if ((window.innerHeight + window.scrollY) >= (document.body.offsetHeight - 800)) {
+        loadNextPage();
+    }
+});
+</script>
