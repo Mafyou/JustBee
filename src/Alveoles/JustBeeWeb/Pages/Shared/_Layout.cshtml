@@ -31,6 +31,15 @@
             pointer-events: none;
             display: block;
         }
+
+        .heart-icon {
+            width: 20px;
+            height: 20px;
+            margin-left: 4px;
+            margin-right: 4px;
+            vertical-align: middle;
+            opacity: 0.8;
+        }
     </style>
 </head>
 
@@ -42,6 +51,7 @@
                 <!-- Brand with bee theme -->
                 <a class="navbar-brand d-flex align-items-center fw-bold" asp-area="" asp-page="/Index">
                     <img src="~/img/alveole.png" alt="Plan B Logo" width="40" height="30" class="me-2">
+                    <img src="~/img/heart.png" alt="Cœur" class="heart-icon">
                     <span class="brand-text">Plan B Ruche Démocratique</span>
                 </a>
 
@@ -57,32 +67,38 @@
                         <li class="nav-item">
                             <a class="nav-link nav-link-custom d-flex align-items-center" asp-area="" asp-page="/Index">
                                 <img src="~/img/alveole.png" alt="Home Hive" width="20" height="20" class="me-2 nav-frog">
-                                <span>🏠 Ruche Mère</span>
+                                <img src="~/img/heart.png" alt="Cœur" class="heart-icon">
+                                <span>🏠 Mairie</span>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link nav-link-custom d-flex align-items-center" asp-area="" asp-page="/MapBee">
                                 <img src="~/img/alveole.png" alt="Map Cells" width="20" height="20" class="me-2 nav-frog">
+                                <img src="~/img/heart.png" alt="Cœur" class="heart-icon">
                                 <span>🗺️ Carte Alvéoles</span>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link nav-link-custom d-flex align-items-center" asp-area="" asp-page="/CreerAlveole">
                                 <img src="~/img/alveole.png" alt="Create Alveole" width="20" height="20" class="me-2 nav-frog">
+                                <img src="~/img/heart.png" alt="Cœur" class="heart-icon">
                                 <span>🏠 Créer Alvéole</span>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link nav-link-custom d-flex align-items-center" asp-area="" asp-page="/Privacy">
                                 <img src="~/img/frog_peace.png" alt="Privacy" width="20" height="20" class="me-2 nav-frog">
+                                <img src="~/img/heart.png" alt="Cœur" class="heart-icon">
                                 <span>🔒 Confidentialité</span>
                             </a>
                         </li>
                     </ul>
-                    
+
                     <!-- Add Rubrix Cube in navigation -->
                     <div class="navbar-nav ms-auto">
-                        <img src="~/img/rubrixcube.png" alt="Rubrix Cube" width="30" height="30" class="nav-cube" style="opacity: 0.7;">
+                        <img src="~/img/rubrixcube.png" alt="Rubrix Cube" width="30" height="30" class="nav-cube"
+                            style="opacity: 0.7;">
+                        <img src="~/img/heart.png" alt="Cœur" class="heart-icon">
                     </div>
                 </div>
             </div>
@@ -101,34 +117,47 @@
                 <div class="col-md-6">
                     <div class="d-flex align-items-center mb-3">
                         <img src="~/img/alveole.png" alt="Plan B Hive" width="30" height="30" class="me-2">
+                        <img src="~/img/heart.png" alt="Cœur" class="heart-icon">
                         <h5 class="mb-0 text-warning">Plan B Ruche Démocratique</h5>
-                        <img src="~/img/rubrixcube.png" alt="Rubrix Cube" width="25" height="25" class="ms-2" style="opacity: 0.6;">
+                        <img src="~/img/rubrixcube.png" alt="Rubrix Cube" width="25" height="25" class="ms-2"
+                            style="opacity: 0.6;">
+                        <img src="~/img/heart.png" alt="Cœur" class="heart-icon">
                     </div>
                     <p class="text-light mb-0">
                         Une innovation démocratique expérimentale organisée en ruche collaborative
                         avec des alvéoles citoyennes pour une réappropriation bottom-up du pouvoir.
+                        <img src="~/img/heart.png" alt="Cœur" class="heart-icon">
                     </p>
                 </div>
                 <div class="col-md-3">
-                    <h6 class="text-warning mb-3">🍯 Navigation Ruche</h6>
+                    <h6 class="text-warning mb-3">🍯 Navigation Ruche <img src="~/img/heart.png" alt="Cœur"
+                        class="heart-icon"></h6>
                     <ul class="list-unstyled">
-                        <li><a href="/" class="footer-link">🏠 Ruche Mère</a></li>
-                        <li><a href="/MapBee" class="footer-link">🗺️ Carte des Alvéoles</a></li>
-                        <li><a href="/CreerAlveole" class="footer-link">🏠 Créer Alvéole</a></li>
-                        <li><a href="/Privacy" class="footer-link">🔒 Protection Données</a></li>
+                        <li><a href="/" class="footer-link">🏠 Mairie <img src="~/img/heart.png" alt="Cœur"
+                                class="heart-icon"></a></li>
+                        <li><a href="/MapBee" class="footer-link">🗺️ Carte des Alvéoles <img src="~/img/heart.png"
+                                alt="Cœur" class="heart-icon"></a></li>
+                        <li><a href="/CreerAlveole" class="footer-link">🏠 Créer Alvéole <img src="~/img/heart.png"
+                                alt="Cœur" class="heart-icon"></a></li>
+                        <li><a href="/Privacy" class="footer-link">🔒 Protection Données <img src="~/img/heart.png"
+                                alt="Cœur" class="heart-icon"></a></li>
                     </ul>
                 </div>
                 <div class="col-md-3">
-                    <h6 class="text-warning mb-3">🐝 Contact Ruche</h6>
+                    <h6 class="text-warning mb-3">🐝 Contact Ruche <img src="~/img/heart.png" alt="Cœur"
+                        class="heart-icon"></h6>
                     <ul class="list-unstyled">
                         <li class="footer-contact">
-                            <i class="fas fa-map-marker-alt"></i> Carcès, Var (83)
+                            <i class="fas fa-map-marker-alt"></i> Carcès, Var (83) <img src="~/img/heart.png" alt="Cœur"
+                                class="heart-icon">
                         </li>
                         <li class="footer-contact">
-                            <i class="fas fa-envelope"></i> @contactEmail
+                            <i class="fas fa-envelope"></i> @contactEmail <img src="~/img/heart.png" alt="Cœur"
+                                class="heart-icon">
                         </li>
                         <li class="footer-contact">
-                            <i class="fas fa-calendar"></i> Essaimage lancé le 6 juillet 2025
+                            <i class="fas fa-calendar"></i> Essaimage lancé le 6 juillet 2025 <img src="~/img/heart.png"
+                                alt="Cœur" class="heart-icon">
                         </li>
                     </ul>
                 </div>
@@ -140,21 +169,38 @@
                     <div class="col-md-6">
                         <p class="mb-0 text-light">
                             &copy; 2025 Plan B Ruche Démocratique -
-                            <a asp-area="" asp-page="/Privacy" class="footer-link">Politique de Confidentialité</a>
+                            <a asp-area="" asp-page="/Privacy" class="footer-link">Politique de Confidentialité <img
+                                src="~/img/heart.png" alt="Cœur" class="heart-icon"></a>
                         </p>
                     </div>
                     <div class="col-md-6 text-md-end">
                         <div class="footer-bee-group">
-                            <img src="~/img/alveole.png" alt="Bee Hero" width="25" height="19" class="footer-bee-icon" title="Abeille Héroïque">
-                            <img src="~/img/alveole.png" alt="Honeycomb" width="25" height="25" class="footer-bee-icon" title="Alvéoles Hexagonales">
-                            <img src="~/img/alveole.png" alt="Beehive" width="25" height="25" class="footer-bee-icon" title="Ruche Démocratique">
-                            <img src="~/img/rubrixcube.png" alt="Rubrix Cube" width="25" height="25" class="footer-bee-icon" title="Cube Démocratique">
+                            <img src="~/img/alveole.png" alt="Bee Hero" width="25" height="19" class="footer-bee-icon"
+                                title="Abeille Héroïque">
+                            <img src="~/img/heart.png" alt="Cœur" class="heart-icon">
+                            <img src="~/img/alveole.png" alt="Honeycomb" width="25" height="25" class="footer-bee-icon"
+                                title="Alvéoles Hexagonales">
+                            <img src="~/img/heart.png" alt="Cœur" class="heart-icon">
+                            <img src="~/img/alveole.png" alt="Beehive" width="25" height="25" class="footer-bee-icon"
+                                title="Ruche Démocratique">
+                            <img src="~/img/heart.png" alt="Cœur" class="heart-icon">
+                            <img src="~/img/rubrixcube.png" alt="Rubrix Cube" width="25" height="25" class="footer-bee-icon"
+                                title="Cube Démocratique">
+                            <img src="~/img/heart.png" alt="Cœur" class="heart-icon">
                             <!-- Grenouilles en petite taille pour biodiversité -->
                             <span class="ms-2 opacity-50">
-                                <img src="~/img/frog_big.png" alt="Guardian" width="15" height="15" class="footer-frog-icon" title="Sentinelle Écologique">
-                                <img src="~/img/frog_peace.png" alt="Peace" width="15" height="15" class="footer-frog-icon" title="Médiatrice">
-                                <img src="~/img/frog_wings.png" alt="Vision" width="15" height="15" class="footer-frog-icon" title="Visionnaire">
-                                <img src="~/img/frog_wings_front.png" alt="Leadership" width="15" height="15" class="footer-frog-icon" title="Guide">
+                                <img src="~/img/frog_big.png" alt="Guardian" width="15" height="15" class="footer-frog-icon"
+                                    title="Sentinelle Écologique">
+                                <img src="~/img/heart.png" alt="Cœur" class="heart-icon">
+                                <img src="~/img/frog_peace.png" alt="Peace" width="15" height="15" class="footer-frog-icon"
+                                    title="Médiatrice">
+                                <img src="~/img/heart.png" alt="Cœur" class="heart-icon">
+                                <img src="~/img/frog_wings.png" alt="Vision" width="15" height="15" class="footer-frog-icon"
+                                    title="Visionnaire">
+                                <img src="~/img/heart.png" alt="Cœur" class="heart-icon">
+                                <img src="~/img/frog_wings_front.png" alt="Leadership" width="15" height="15" class="footer-frog-icon"
+                                    title="Guide">
+                                <img src="~/img/heart.png" alt="Cœur" class="heart-icon">
                             </span>
                         </div>
                     </div>
