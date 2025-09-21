@@ -4,10 +4,34 @@
 @model MapBeeModel
 @{
     ViewData["Title"] = "Carte des Alvéoles";
-    
+
     // Détection AJAX pour éviter l'inclusion du layout lors d'un chargement AJAX
     var isAjax = HttpContext.Request.Headers["X-Requested-With"] == "XMLHttpRequest";
     Layout = isAjax ? null : "_Layout";
+	var villesDataJson = "[]";
+    if (!isAjax)
+    {
+        // Pre-calculate data for better performance - using source generator
+        var villesDataForSerialization = Model.Villes.Where(v =>
+            Model.AllPersons.Any(p => p.VilleCode == v.Code) ||
+            Model.AllAlveoles.Any(a => a.VilleCode == v.Code)
+        ).Select(v => new VilleMapData
+        {
+            Code = v.Code,
+            Nom = v.Nom,
+            Region = v.Region,
+            Departement = v.Departement,
+            Latitude = v.Latitude,
+            Longitude = v.Longitude,
+            PersonCount = Model.AllPersons.Count(p => p.VilleCode == v.Code),
+            AlveoleCount = Model.AllAlveoles.Count(a => a.VilleCode == v.Code),
+            TotalCount = Model.AllPersons.Count(p => p.VilleCode == v.Code) + Model.AllAlveoles.Count(a => a.VilleCode == v.Code),
+            Persons = Model.AllPersons.Where(p => p.VilleCode == v.Code).Select(p => new PersonMapData { Id = p.Id, Pseudo = p.Pseudo }).ToArray(),
+            Alveoles = Model.AllAlveoles.Where(a => a.VilleCode == v.Code).Select(a => new AlveoleMapData { Id = a.Id, Nom = a.Nom }).ToArray()
+        }).ToArray();
+
+        villesDataJson = JsonSerializer.Serialize(villesDataForSerialization, MapBeeSerializationContext.Default.VilleMapDataArray);
+    }
 }
 
 <!-- Hero Section for MapBee -->
@@ -168,6 +192,14 @@
         </div>
     </div>
 </div>
+
+<script>
+    // If layout is not null, load leaflet map
+    if ("@(isAjax.ToString().ToLower())" === "false") {
+        var villesData = @Html.Raw(villesDataJson);
+        initializeMap();
+    }
+</script>
 
 <style>
     .popup-content {
