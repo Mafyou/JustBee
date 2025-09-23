@@ -23,6 +23,8 @@ jobs:
         uses: actions/setup-dotnet@v3
         with:
           dotnet-version: '9.0.x'
+      - name: Restore dependencies
+        run: dotnet restore ./src/Alveoles/JustBeeWeb/JustBeeWeb.csproj
       - name: Publish .NET
         run: |
           dotnet publish ./src/Alveoles/JustBeeWeb/JustBeeWeb.csproj -c Release -o ./src/Alveoles/JustBeeWeb/bin/Release/net9.0/publish
