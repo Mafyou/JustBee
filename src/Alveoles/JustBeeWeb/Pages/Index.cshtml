@@ -349,7 +349,7 @@ function ensureLeafletAssetsAndInit() {
 }
 
 function loadNextPage() {
-    if (loading || currentPageIndex >= nextPages.length) return;
+    if (loading || currentPageIndex >= nextPages.length - 200) return;
     loading = true;
     const url = nextPages[currentPageIndex];
     fetch(url, { headers: { 'X-Requested-With': 'XMLHttpRequest' } })

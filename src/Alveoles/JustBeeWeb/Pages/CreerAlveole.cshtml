@@ -179,6 +179,39 @@
                             <i class="fas fa-arrow-left"></i> Retour à la Carte
                         </a>
                     </div>
+                    
+                    <!-- Section grenouille avec broches -->
+                    <div class="frog-sponsor-section mt-5 text-center">
+                        <div class="frog-container position-relative d-inline-block">
+                            <img src="/img/bigger_frog.png" alt="Sponsor Frog" class="frog-image">
+                            
+                            <!-- Broche œil gauche -->
+                            <a href="https://www.google.com/search?q=juan+branco" target="_blank" class="broche-link broche-eye-left" title="Rechercher Juan Branco">
+                                <img src="/img/broche.png" alt="Broche" class="broche-pin">
+                            </a>
+                            
+                            <!-- Broche œil droit -->
+                            <a href="https://www.google.com/search?q=juan+branco" target="_blank" class="broche-link broche-eye-right" title="Rechercher Juan Branco">
+                                <img src="/img/broche.png" alt="Broche" class="broche-pin">
+                            </a>
+                            
+                            <!-- Broche ventre -->
+                            <a href="https://www.google.com/search?q=juan+branco" target="_blank" class="broche-link broche-belly" title="Rechercher Juan Branco">
+                                <img src="/img/broche.png" alt="Broche" class="broche-pin">
+                            </a>
+
+                            <!-- Broche patte avant gauche -->
+                            <a href="https://www.google.com/search?q=juan+branco" target="_blank" class="broche-link broche-front-left" title="Rechercher Juan Branco">
+                                <img src="/img/broche.png" alt="Broche" class="broche-pin">
+                            </a>
+                            
+                            <!-- Broche patte avant droite -->
+                            <a href="https://www.google.com/search?q=juan+branco" target="_blank" class="broche-link broche-front-right" title="Rechercher Juan Branco">
+                                <img src="/img/broche.png" alt="Broche" class="broche-pin">
+                            </a>
+                        </div>
+
+                    </div>
                 </form>
             </div>
         </div>
@@ -187,7 +220,7 @@
         <div class="col-lg-4">
             <div class="section-card">
                 <div class="d-flex align-items-center mb-3">
-                    <img src="/img/alveole.png" alt="Alveole Info" style="width: 35px; height: 35px; margin-right: 10px;">
+                    <img src="/img/alveole.png" alt="Alvéole Info" style="width: 35px; height: 35px; margin-right: 10px;">
                     <h5 class="mb-0">🍯 Qu'est-ce qu'une Alvéole ?</h5>
                 </div>
                 
@@ -791,5 +824,119 @@
     
     .search-results {
         max-height: 200px;
+    }
+
+    /* Styles pour la section grenouille sponsor */
+    .frog-sponsor-section {
+        margin-top: 2rem;
+        padding: 1.5rem;
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        border-radius: 15px;
+        border: 2px dashed #FFD700;
+    }
+
+    .frog-container {
+        position: relative;
+        display: inline-block;
+    }
+
+    .frog-image {
+        width: 400px;
+        height: auto;
+        filter: drop-shadow(0 4px 8px rgba(0,0,0,0.1));
+        transition: transform 0.3s ease;
+    }
+
+    .frog-image:hover {
+        transform: scale(1.05);
+    }
+
+    .broche-link {
+        position: absolute;
+        z-index: 10;
+        transition: all 0.3s ease;
+        text-decoration: none;
+    }
+
+    .broche-pin {
+        width: 40px;
+        height: 40px;
+        filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+        transition: all 0.3s ease;
+    }
+
+    .broche-link:hover .broche-pin {
+        transform: scale(1.3) rotate(15deg);
+        filter: drop-shadow(0 4px 8px rgba(255,215,0,0.6));
+    }
+
+    /* Positionnement des broches */
+    .broche-eye-left {
+        top: 15%;
+        left: 25%;
+    }
+
+    .broche-eye-right {
+        top: 15%;
+        right: 25%;
+    }
+
+    .broche-belly {
+        top: 50%;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+
+    .broche-front-left {
+        bottom: 20%;
+        left: 10%;
+    }
+
+    .broche-front-right {
+        bottom: 20%;
+        right: 10%;
+    }
+
+    /* Animation des broches */
+    @@keyframes broche-glow {
+        0%, 100% {
+            box-shadow: 0 0 5px rgba(255,215,0,0.5);
+        }
+        50% {
+            box-shadow: 0 0 15px rgba(255,215,0,0.8);
+        }
+    }
+
+    .broche-link:hover {
+        animation: broche-glow 1s infinite;
+        border-radius: 50%;
+    }
+
+    /* Responsive pour la section grenouille */
+    @@media (max-width: 768px) {
+        .frog-image {
+            width: 300px;
+        }
+        
+        .broche-pin {
+            width: 30px;
+            height: 30px;
+        }
+        
+        .frog-sponsor-section {
+            padding: 1rem;
+            margin-top: 1.5rem;
+        }
+    }
+
+    @@media (max-width: 576px) {
+        .frog-image {
+            width: 240px;
+        }
+        
+        .broche-pin {
+            width: 25px;
+            height: 25px;
+        }
     }
 </style>

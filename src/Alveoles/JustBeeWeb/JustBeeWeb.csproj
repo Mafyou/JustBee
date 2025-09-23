@@ -55,5 +55,8 @@
   <ItemGroup>
     <TrimmerRootDescriptor Include="Controllers.xml" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="wwwroot\lib\leaflet\" />
+  </ItemGroup>
 
 </Project>
