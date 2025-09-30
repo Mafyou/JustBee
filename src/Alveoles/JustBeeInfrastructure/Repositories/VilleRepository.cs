@@ -26,10 +26,10 @@ public class VilleRepository(JustBeeContext context) : IVilleRepository
         return await _context.Villes
             .AsNoTracking()
             .Where(v =>
-                v.Nom.ToLower().Contains(terme) ||
-                v.Code.ToLower().Contains(terme) ||
-                v.Departement.ToLower().Contains(terme) ||
-                v.Region.ToLower().Contains(terme))
+                v.Nom.StartsWith(terme, StringComparison.CurrentCultureIgnoreCase) ||
+                v.Code.StartsWith(terme, StringComparison.CurrentCultureIgnoreCase) ||
+                v.Departement.StartsWith(terme, StringComparison.CurrentCultureIgnoreCase) ||
+                v.Region.StartsWith(terme, StringComparison.CurrentCultureIgnoreCase))
             .ToListAsync();
     }
 

@@ -2,34 +2,26 @@ using JustBeeInfrastructure.Repositories;
 
 namespace JustBeeWeb.Services;
 
-public class VilleService
+public class VilleService(
+    IVilleRepository villeRepository,
+    IPersonRepository personRepository,
+    IAlveoleRepository alveoleRepository,
+    VilleDataService? villeDataService = null)
 {
-    private readonly IVilleRepository _villeRepository;
-    private readonly IPersonRepository _personRepository;
-    private readonly IAlveoleRepository _alveoleRepository;
-    private readonly VilleDataService? _villeDataService;
-
-    public VilleService(
-        IVilleRepository villeRepository,
-        IPersonRepository personRepository,
-        IAlveoleRepository alveoleRepository,
-        VilleDataService? villeDataService = null)
-    {
-        _villeRepository = villeRepository;
-        _personRepository = personRepository;
-        _alveoleRepository = alveoleRepository;
-        _villeDataService = villeDataService;
-    }
+    private readonly IVilleRepository _villeRepository = villeRepository;
+    private readonly IPersonRepository _personRepository = personRepository;
+    private readonly IAlveoleRepository _alveoleRepository = alveoleRepository;
+    private readonly VilleDataService? _villeDataService = villeDataService;
 
     public async Task<List<Ville>> GetAllVillesAsync() =>
-        (await _villeRepository.GetAllAsync()).ToList();
+        [.. (await _villeRepository.GetAllAsync())];
 
-    public List<Ville> GetAllVilles() =>
-        GetAllVillesAsync().Result;
+    public async Task<List<Ville>> GetAllVilles() =>
+        await GetAllVillesAsync();
 
     public async Task<List<Ville>> GetAllVillesFranceAsync()
     {
-        if (_villeDataService != null)
+        if (_villeDataService is not null)
         {
             return await _villeDataService.GetAllVillesFranceAsync();
         }
@@ -38,27 +30,27 @@ public class VilleService
 
     public async Task<List<Ville>> SearchVillesAsync(string searchTerm)
     {
-        if (_villeDataService != null)
+        if (_villeDataService is not null)
         {
             return await _villeDataService.SearchVillesAsync(searchTerm);
         }
 
-        return (await _villeRepository.SearchAsync(searchTerm)).ToList();
+        return [.. await _villeRepository.SearchAsync(searchTerm)];
     }
 
     public async Task<Ville?> GetVilleByCodeAsync(string code)
     {
         // Chercher d'abord dans la base de données
         var ville = await _villeRepository.GetByCodeAsync(code);
-        if (ville != null)
+        if (ville is not null)
             return ville;
 
         // Si pas trouvé et qu'on a le service de données France, créer une ville
-        if (_villeDataService != null)
+        if (_villeDataService is not null)
         {
             var villesFrance = await _villeDataService.GetAllVillesFranceAsync();
             var villeFrance = villesFrance.FirstOrDefault(v => v.Code == code);
-            if (villeFrance != null)
+            if (villeFrance is not null)
             {
                 return await _villeRepository.AddAsync(villeFrance);
             }
@@ -77,7 +69,7 @@ public class VilleService
             // Générer un token de vérification si l'email n'est pas encore vérifié
             if (!person.EmailVerifie && string.IsNullOrEmpty(person.TokenVerification))
             {
-                person.TokenVerification = Guid.NewGuid().ToString();
+                person.TokenVerification = $"{Guid.NewGuid()}";
             }
 
             person.VilleCode = villeCode;
@@ -138,22 +130,22 @@ public class VilleService
         RemoveAlveoleFromVilleAsync(villeCode, alveoleId).Result;
 
     public async Task<List<Person>> GetAllPersonsAsync() =>
-        (await _personRepository.GetAllAsync()).ToList();
+        [.. await _personRepository.GetAllAsync()];
 
     public List<Person> GetAllPersons() => GetAllPersonsAsync().Result;
 
     public async Task<List<Person>> GetPersonsVerifieesAsync() =>
-        (await _personRepository.GetVerifiedAsync()).ToList();
+        [.. await _personRepository.GetVerifiedAsync()];
 
     public List<Person> GetPersonsVerifiees() => GetPersonsVerifieesAsync().Result;
 
     public async Task<List<Alveole>> GetAllAlveolesAsync() =>
-        (await _alveoleRepository.GetAllAsync()).ToList();
+        [.. await _alveoleRepository.GetAllAsync()];
 
     public List<Alveole> GetAllAlveoles() => GetAllAlveolesAsync().Result;
 
     public async Task<List<Alveole>> GetAlveolesVerifieesAsync() =>
-        (await _alveoleRepository.GetVerifiedAsync()).ToList();
+        [.. await _alveoleRepository.GetVerifiedAsync()];
 
     public List<Alveole> GetAlveolesVerifiees() => GetAlveolesVerifieesAsync().Result;
 
