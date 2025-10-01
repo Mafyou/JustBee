@@ -14,7 +14,7 @@ public class VilleService(
     private readonly VilleDataService? _villeDataService = villeDataService;
 
     public async Task<List<Ville>> GetAllVillesAsync() =>
-        [.. (await _villeRepository.GetAllAsync())];
+        [.. await _villeRepository.GetAllAsync()];
 
     public async Task<List<Ville>> GetAllVilles() =>
         await GetAllVillesAsync();

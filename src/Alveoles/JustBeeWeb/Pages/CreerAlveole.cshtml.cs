@@ -1,22 +1,14 @@
 ﻿using JustBeeWeb.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using System.ComponentModel.DataAnnotations;
 
 namespace JustBeeWeb.Pages;
 
-public class CreerAlveoleModel : PageModel
+public class CreerAlveoleModel(VilleService villeService, EmailService emailService, AlveoleService alveoleService) : PageModel
 {
-    private readonly VilleService _villeService;
-    private readonly EmailService _emailService;
-    private readonly AlveoleService _alveoleService;
-
-    public CreerAlveoleModel(VilleService villeService, EmailService emailService, AlveoleService alveoleService)
-    {
-        _villeService = villeService;
-        _emailService = emailService;
-        _alveoleService = alveoleService;
-    }
+    private readonly VilleService _villeService = villeService;
+    private readonly EmailService _emailService = emailService;
+    private readonly AlveoleService _alveoleService = alveoleService;
 
     [BindProperty]
     [Required(ErrorMessage = "Le nom de l'alvéole est obligatoire.")]
@@ -41,7 +33,7 @@ public class CreerAlveoleModel : PageModel
     {
         // Charger les villes les plus populaires pour l'affichage initial
         Villes = await _villeService.GetAllVillesAsync();
-        Villes = Villes.OrderBy(v => v.Nom).ToList();
+        Villes = [.. Villes.OrderBy(v => v.Nom)];
     }
 
     public async Task<IActionResult> OnPostAsync()
@@ -65,7 +57,7 @@ public class CreerAlveoleModel : PageModel
 
         // Vérifier que la ville existe (ceci va maintenant chercher dans toutes les villes de France)
         var ville = await _villeService.GetVilleByCodeAsync(VilleCode);
-        if (ville == null)
+        if (ville is null)
         {
             TempData["Error"] = "Ville sélectionnée invalide.";
             await OnGetAsync();

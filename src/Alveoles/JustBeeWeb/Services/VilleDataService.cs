@@ -1,8 +1,7 @@
-using System.Text.Json;
-using JustBeeWeb.Serialization;
 using Microsoft.Extensions.Caching.Hybrid;
 using System.Globalization;
 using System.Text;
+using System.Text.Json;
 
 namespace JustBeeWeb.Services;
 
@@ -16,7 +15,7 @@ public class VilleDataService(HttpClient httpClient, ILogger<VilleDataService> l
     public async Task<List<Ville>> GetAllVillesFranceAsync()
     {
         const string cacheKey = "AllVillesFrance";
-        
+
         return await _cache.GetOrCreateAsync(
             cacheKey,
             async cancellationToken =>
@@ -60,10 +59,10 @@ public class VilleDataService(HttpClient httpClient, ILogger<VilleDataService> l
             return await GetVillesPopulairesAsync();
 
         var terme = NormalizeString(searchTerm.ToLowerInvariant().Trim());
-        
+
         // Cache basé sur le terme de recherche normalisé pour éviter les recherches répétées
         var cacheKey = $"VilleSearch_{terme}";
-        
+
         return await _cache.GetOrCreateAsync(
             cacheKey,
             async cancellationToken =>
@@ -106,7 +105,7 @@ public class VilleDataService(HttpClient httpClient, ILogger<VilleDataService> l
 
         // Normaliser vers la forme canonique décomposée (NFD)
         var normalizedString = input.Normalize(NormalizationForm.FormD);
-        
+
         // Supprimer tous les caractères diacritiques (accents)
         var stringBuilder = new StringBuilder();
         foreach (var c in normalizedString)
@@ -117,7 +116,7 @@ public class VilleDataService(HttpClient httpClient, ILogger<VilleDataService> l
                 stringBuilder.Append(c);
             }
         }
-        
+
         // Retourner la forme normalisée (NFC)
         return stringBuilder.ToString().Normalize(NormalizationForm.FormC);
     }
@@ -125,7 +124,7 @@ public class VilleDataService(HttpClient httpClient, ILogger<VilleDataService> l
     public async Task<List<Ville>> GetVillesPopulairesAsync()
     {
         const string cacheKey = "VillesPopulaires";
-        
+
         return await _cache.GetOrCreateAsync(
             cacheKey,
             async cancellationToken =>
@@ -144,7 +143,7 @@ public class VilleDataService(HttpClient httpClient, ILogger<VilleDataService> l
     public async Task<List<Ville>> GetVillesWithLimitAsync(int limit = 100, int skip = 0)
     {
         var toutes = await GetAllVillesFranceAsync();
-        
+
         return toutes
             .Skip(skip)
             .Take(Math.Min(limit, 200)) // Limiter à 200 max
@@ -163,7 +162,7 @@ public class VilleDataService(HttpClient httpClient, ILogger<VilleDataService> l
         {
             // Limiter la requête API aux champs nécessaires et populations > 1000 pour réduire la charge
             var apiUrl = "https://geo.api.gouv.fr/communes?fields=nom,code,codeDepartement,departement,codeRegion,region,centre,population&format=json&population>=1000";
-            
+
             using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(10)); // Timeout de 10s
             var response = await _httpClient.GetAsync(apiUrl, cts.Token);
 

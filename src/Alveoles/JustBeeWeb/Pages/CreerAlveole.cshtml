@@ -38,7 +38,7 @@
 
 <div class="container my-5" id="creation-form">
     <!-- Messages de feedback -->
-    @if (TempData["Success"] != null)
+    @if (TempData["Success"] is not null)
     {
         <div class="alert alert-success alert-dismissible fade show" role="alert">
             <div class="d-flex align-items-center">
@@ -51,7 +51,7 @@
         </div>
     }
 
-    @if (TempData["Error"] != null)
+    @if (TempData["Error"] is not null)
     {
         <div class="alert alert-danger alert-dismissible fade show" role="alert">
             <div class="d-flex align-items-center">
@@ -64,7 +64,7 @@
         </div>
     }
 
-    @if (TempData["Warning"] != null)
+    @if (TempData["Warning"] is not null)
     {
         <div class="alert alert-warning alert-dismissible fade show" role="alert">
             <div class="d-flex align-items-center">
@@ -334,7 +334,7 @@
     let allVilles = [];
     let currentMode = 'search'; // 'search' ou 'list'
     let searchTimeout;
-    let searchCache = new Map(); // Cache côté client
+    // let searchCache = new Map(); // Cache côté client
 
     // Validation Bootstrap
     (function() {
@@ -464,7 +464,7 @@
             if (response.ok) {
                 const villes = await response.json();
                 // Mettre en cache les résultats
-                searchCache.set('popular', villes);
+                // searchCache.set('popular', villes);
             }
         } catch (error) {
             console.warn('Impossible de précharger les villes populaires:', error);
@@ -478,11 +478,11 @@
         const normalizedQuery = normalizeString(query.toLowerCase());
         
         // Vérifier le cache d'abord (utiliser la requête normalisée comme clé)
-        const cacheKey = normalizedQuery;
-        if (searchCache.has(cacheKey)) {
-            displaySearchResults(searchCache.get(cacheKey));
-            return;
-        }
+        // const cacheKey = normalizedQuery;
+        // if (searchCache.has(cacheKey)) {
+        //     displaySearchResults(searchCache.get(cacheKey));
+        //     return;
+        // }
         
         try {
             // Afficher un indicateur de chargement
@@ -499,7 +499,7 @@
             const data = await response.json();
             
             // Mettre en cache le résultat avec la clé normalisée
-            searchCache.set(cacheKey, data);
+            // searchCache.set(cacheKey, data);
             
             displaySearchResults(data);
         } catch (error) {
@@ -596,17 +596,12 @@
         
         try {
             // Vérifier le cache d'abord
-            let villes;
-            if (searchCache.has('popular')) {
-                villes = searchCache.get('popular');
-            } else {
-                const response = await fetch('/api/villes/popular');
-                if (!response.ok) {
-                    throw new Error(`Erreur HTTP: ${response.status}`);
-                }
-                villes = await response.json();
-                searchCache.set('popular', villes);
+            const response = await fetch('/api/villes/popular');
+            if (!response.ok) {
+                throw new Error(`Erreur HTTP: ${response.status}`);
             }
+            let villes = await response.json();
+            // searchCache.set('popular', villes);
             
             displaySearchResults(villes);
         } catch (error) {
