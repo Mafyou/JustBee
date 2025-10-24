@@ -35,6 +35,10 @@
 <!-- Primary SEO Meta Tags -->
 <title>@fullTitle</title>
 <meta name="title" content="@fullTitle">
+@if (ViewData["Description"] != null)
+{
+    <meta name="description" content="@ViewData["Description"]" />
+}
 <meta name="description" content="@pageDescription">
 <meta name="keywords" content="@pageKeywords">
 <meta name="author" content="@siteAuthor">
