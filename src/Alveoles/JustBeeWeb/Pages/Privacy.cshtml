@@ -1,280 +1,310 @@
 ﻿@page
 @model PrivacyModel
 @{
-    ViewData["Title"] = "Politique de Confidentialité";
+    ViewData["Title"] = "Politique de Confidentialité RGPD - Plan B Ruche Démocratique";
+    ViewData["Description"] = "Politique de confidentialité conforme RGPD du Plan B Ruche Démocratique. Protection des données personnelles, droits des citoyens et sécurité dans nos alvéoles numériques.";
+    ViewData["Keywords"] = "politique confidentialité, RGPD, protection données, Plan B privacy, données personnelles, droits citoyens, sécurité numérique, alvéoles protection";
+    ViewData["Type"] = "article";
+
+    // Get base URL safely
+    var baseUrl = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}";
+    var description = ViewData["Description"]?.ToString() ?? "";
+    
+    // Structured data for privacy policy - simplified
+    ViewData["StructuredData"] = "<script type=\"application/ld+json\">{\"@context\":\"https://schema.org\",\"@type\":\"LegalDocument\",\"name\":\"Politique de Confidentialité Plan B Ruche Démocratique\",\"description\":\"" + description + "\",\"url\":\"" + baseUrl + "/Privacy\",\"datePublished\":\"2025-01-01\",\"dateModified\":\"" + DateTime.UtcNow.ToString("yyyy-MM-dd") + "\",\"publisher\":{\"@type\":\"Organization\",\"name\":\"Plan B Ruche Démocratique\",\"url\":\"" + baseUrl + "\"},\"about\":{\"@type\":\"Thing\",\"name\":\"Protection des données RGPD\",\"description\":\"Politique de protection des données conforme au RGPD\"},\"legislationResponsible\":{\"@type\":\"Legislation\",\"name\":\"RGPD - Règlement Général sur la Protection des Données\",\"jurisdiction\":\"EU\"}}</script>";
+
+    // Additional structured data for FAQ
+  ViewData["FAQStructuredData"] = "<script type=\"application/ld+json\">{\"@context\":\"https://schema.org\",\"@type\":\"FAQPage\",\"mainEntity\":[{\"@type\":\"Question\",\"name\":\"Quelles données collecte Plan B Ruche Démocratique ?\",\"acceptedAnswer\":{\"@type\":\"Answer\",\"text\":\"Nous collectons uniquement les données nécessaires au fonctionnement des alvéoles citoyennes : pseudo, ville d'appartenance, contributions démocratiques et données techniques essentielles.\"}},{\"@type\":\"Question\",\"name\":\"Plan B est-il conforme au RGPD ?\",\"acceptedAnswer\":{\"@type\":\"Answer\",\"text\":\"Oui, Plan B Ruche Démocratique est entièrement conforme au RGPD. Nous respectons tous les droits des citoyens européens concernant leurs données personnelles.\"}},{\"@type\":\"Question\",\"name\":\"Comment exercer mes droits sur mes données ?\",\"acceptedAnswer\":{\"@type\":\"Answer\",\"text\":\"Vous pouvez exercer vos droits (accès, rectification, effacement, portabilité, opposition) en contactant notre DPO à dpo@planb-democratie.fr. Réponse garantie sous 72h.\"}}]}</script>";
 }
 
-<!-- Hero Section for Privacy -->
-<div class="hero-section">
+<!-- Hero Section for Privacy with legal structure -->
+<section class="hero-section" itemscope itemtype="https://schema.org/LegalDocument">
     <div class="container hero-content">
         <div class="text-center">
-            <img src="/img/rooster.png" alt="Privacy Hive" class="bee-icon">
-            <h1 class="display-4 fw-bold mb-3">🔒 Politique de Confidentialité</h1>
-            <p class="lead mb-4">
-                Protection des données dans la ruche démocratique et respect de la vie privée 
+    <img src="/img/rooster.png" alt="Icône protection confidentialité" class="bee-icon" width="80" height="60" loading="lazy">
+        <h1 class="display-4 fw-bold mb-3" itemprop="name">🔒 Politique de Confidentialité</h1>
+   <p class="lead mb-4" itemprop="description">
+  Protection des données dans la ruche démocratique et respect de la vie privée 
                 des abeilles citoyennes du Plan B participatif.
-            </p>
-            <a href="#privacy-details" class="btn btn-bee btn-lg">Découvrir nos Engagements</a>
+     </p>
+     <div class="legal-info mb-4">
+           <p class="small text-light">
+              <strong>Dernière mise à jour :</strong> <time itemprop="dateModified" datetime="@DateTime.UtcNow.ToString("yyyy-MM-dd")">@DateTime.UtcNow.ToString("dd MMMM yyyy")</time> | 
+    <strong>Conforme RGPD</strong> ✅
+  </p>
+            </div>
+            <a href="#privacy-details" class="btn btn-bee btn-lg" aria-label="Consulter les détails de notre politique de confidentialité">Découvrir nos Engagements</a>
         </div>
     </div>
-</div>
+</section>
 
 <!-- Data Protection Principles Section -->
-<div class="container my-5">
+<section class="container my-5" itemscope itemtype="https://schema.org/DataCatalog">
     <div class="row text-center mb-4">
-        <div class="col-12">
-            <h2 class="h3 mb-3">🍯 Principes de Protection dans la Ruche</h2>
-            <p class="text-muted">La ruche démocratique protège scrupuleusement les données de ses abeilles citoyennes</p>
+    <div class="col-12">
+     <h2 class="h3 mb-3" itemprop="name">🍯 Principes de Protection dans la Ruche</h2>
+            <p class="text-muted" itemprop="description">La ruche démocratique protège scrupuleusement les données de ses abeilles citoyennes</p>
         </div>
     </div>
     <div class="row justify-content-center">
         <div class="col-md-3 col-sm-6 mb-3">
-            <div class="honeycomb-card">
-                <img src="/img/rooster.png" alt="Data Protection" class="honeycomb-image">
-                <h5>Ruche Sécurisée</h5>
-                <p class="small">Protection maximale des données dans nos alvéoles numériques</p>
-            </div>
+            <article class="honeycomb-card" itemscope itemtype="https://schema.org/SecurityPolicy">
+          <img src="/img/rooster.png" alt="Protection des données" class="honeycomb-image" width="60" height="45" loading="lazy">
+    <h5 itemprop="name">Ruche Sécurisée</h5>
+  <p class="small" itemprop="description">Protection maximale des données dans nos alvéoles numériques</p>
+    </article>
         </div>
         <div class="col-md-3 col-sm-6 mb-3">
-            <div class="honeycomb-card">
-                <img src="/img/rooster.png" alt="Transparency" class="honeycomb-image">
-                <h5>Transparence du Miel</h5>
-                <p class="small">Utilisation claire et transparente de vos informations</p>
-            </div>
-        </div>
+   <article class="honeycomb-card" itemscope itemtype="https://schema.org/TransparencyPolicy">
+       <img src="/img/rooster.png" alt="Transparence des données" class="honeycomb-image" width="60" height="45" loading="lazy">
+   <h5 itemprop="name">Transparence du Miel</h5>
+            <p class="small" itemprop="description">Utilisation claire et transparente de vos informations</p>
+        </article>
+      </div>
         <div class="col-md-3 col-sm-6 mb-3">
-            <div class="honeycomb-card">
-                <img src="/img/rooster.png" alt="User Control" class="honeycomb-image">
-                <h5>Contrôle Citoyen</h5>
-                <p class="small">Chaque abeille garde le contrôle de ses données personnelles</p>
-            </div>
+      <article class="honeycomb-card" itemscope itemtype="https://schema.org/UserRights">
+         <img src="/img/rooster.png" alt="Contrôle utilisateur" class="honeycomb-image" width="60" height="45" loading="lazy">
+  <h5 itemprop="name">Contrôle Citoyen</h5>
+        <p class="small" itemprop="description">Chaque abeille garde le contrôle de ses données personnelles</p>
+     </article>
         </div>
-        <div class="col-md-3 col-sm-6 mb-3">
-            <div class="living-cell-card">
-                <img src="/img/rooster.png" alt="GDPR Compliance" class="honeycomb-image">
-                <h5>Conformité RGPD</h5>
-                <p class="small">Respect scrupuleux de la réglementation européenne</p>
-            </div>
-        </div>
-    </div>
-</div>
+      <div class="col-md-3 col-sm-6 mb-3">
+         <article class="living-cell-card" itemscope itemtype="https://schema.org/CompliancePolicy">
+        <img src="/img/rooster.png" alt="Conformité RGPD" class="honeycomb-image" width="60" height="45" loading="lazy">
+           <h5 itemprop="name">Conformité RGPD</h5>
+                <p class="small" itemprop="description">Respect scrupuleux de la réglementation européenne</p>
+     </article>
+  </div>
+ </div>
+</section>
 
-<div class="container" id="privacy-details">
+<main class="container" id="privacy-details">
     <div class="row">
         <div class="col-lg-8">
-            <div class="section-card">
-                <img src="/img/honeycomb.svg" alt="Data Collection" class="section-icon">
-                <h2 class="h3 mb-3">📊 Collecte des Données dans la Ruche</h2>
-                <p>
-                    Dans le cadre du <strong>Plan B pour la démocratie participative</strong>, nous collectons 
-                    uniquement les informations nécessaires au fonctionnement des alvéoles citoyennes et 
-                    à l'organisation de la ruche démocratique.
-                </p>
-                <div class="highlight-box">
-                    <strong>🔍 Données récoltées dans la ruche :</strong>
-                    <ul class="key-points mt-2">
-                        <li><strong>Identité des abeilles :</strong> Pseudo, ruche territoriale d'appartenance</li>
-                        <li><strong>Participation démocratique :</strong> Alvéole d'appartenance, contributions au miel collectif</li>
-                        <li><strong>Données techniques :</strong> Adresse IP, cookies de session pour la navigation</li>
-                        <li><strong>Communications :</strong> Messages dans le cadre des délibérations d'alvéoles</li>
-                    </ul>
-                    <img src="/img/rooster.png" alt="Data Guardian Bee" class="float-end bee-float" style="width: 40px; height: 30px; margin-left: 10px;">
-                </div>
-            </div>
+            <article class="section-card" itemscope itemtype="https://schema.org/DataPolicy">
+      <img src="/img/honeycomb.svg" alt="Collecte de données" class="section-icon" width="40" height="30" loading="lazy">
+      <h2 class="h3 mb-3" itemprop="name">📊 Collecte des Données dans la Ruche</h2>
+       <div itemprop="text">
+          <p>
+       Dans le cadre du <strong>Plan B pour la démocratie participative</strong>, nous collectons 
+        uniquement les informations nécessaires au fonctionnement des alvéoles citoyennes et 
+                à l'organisation de la ruche démocratique.
+     </p>
+   <div class="highlight-box" itemscope itemtype="https://schema.org/DataFeed">
+           <strong>🔍 Données récoltées dans la ruche :</strong>
+     <ul class="key-points mt-2" itemprop="dataFeedElement">
+         <li><strong>Identité des abeilles :</strong> Pseudo, ruche territoriale d'appartenance</li>
+       <li><strong>Participation démocratique :</strong> Alvéole d'appartenance, contributions au miel collectif</li>
+         <li><strong>Données techniques :</strong> Adresse IP, cookies de session pour la navigation</li>
+   <li><strong>Communications :</strong> Messages dans le cadre des délibérations d'alvéoles</li>
+  </ul>
+        <img src="/img/rooster.png" alt="Gardien des données" class="float-end bee-float" style="width: 40px; height: 30px; margin-left: 10px;" loading="lazy">
+     </div>
+     </div>
+     </article>
 
-            <div class="section-card">
-                <img src="/img/rooster.png" alt="Data Usage" class="section-icon">
-                <h2 class="h3 mb-3">⚡ Utilisation des Données</h2>
-                <div class="row">
-                    <div class="col-md-6">
-                        <ul class="key-points">
-                            <li><strong>Fonctionnement des alvéoles :</strong> Organisation des groupes de travail citoyens</li>
-                            <li><strong>Cartographie de l'essaimage :</strong> Visualisation de la répartition des ruches</li>
-                        </ul>
-                    </div>
-                    <div class="col-md-6">
-                        <ul class="key-points">
-                            <li><strong>Communication dans la ruche :</strong> Facilitation des échanges entre abeilles</li>
-                            <li><strong>Amélioration du miel :</strong> Optimisation continue de la plateforme</li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="text-end mt-3">
-                    <img src="/img/rooster.png" alt="Usage Honeycomb" style="width: 60px; height: 45px; opacity: 0.7;">
-                </div>
+            <article class="section-card" itemscope itemtype="https://schema.org/UseagePolicy">
+           <img src="/img/rooster.png" alt="Utilisation des données" class="section-icon" width="40" height="30" loading="lazy">
+     <h2 class="h3 mb-3" itemprop="name">⚡ Utilisation des Données</h2>
+         <div class="row" itemprop="description">
+         <div class="col-md-6">
+        <ul class="key-points">
+      <li><strong>Fonctionnement des alvéoles :</strong> Organisation des groupes de travail citoyens</li>
+      <li><strong>Cartographie de l'essaimage :</strong> Visualisation de la répartition des ruches</li>
+  </ul>
+   </div>
+          <div class="col-md-6">
+             <ul class="key-points">
+     <li><strong>Communication dans la ruche :</strong> Facilitation des échanges entre abeilles</li>
+                <li><strong>Amélioration du miel :</strong> Optimisation continue de la plateforme</li>
+       </ul>
+          </div>
             </div>
+             <div class="text-end mt-3">
+          <img src="/img/rooster.png" alt="Utilisation des alvéoles" style="width: 60px; height: 45px; opacity: 0.7;" loading="lazy">
+     </div>
+    </article>
 
-            <div class="section-card">
-                <h2 class="h3 mb-3">🛡️ Sécurité de la Ruche</h2>
-                <p>
-                    Conformément aux principes du <strong>RGPD</strong> et aux valeurs démocratiques du Plan B, 
-                    nous mettons en place des mesures de sécurité robustes pour protéger les données 
-                    de chaque abeille citoyenne dans nos alvéoles numériques.
-                </p>
-                <div class="highlight-box">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <ul class="key-points">
-                                <li><strong>Chiffrement :</strong> Données protégées comme le miel dans ses alvéoles</li>
-                                <li><strong>Accès restreint :</strong> Principe du moindre privilège appliqué</li>
-                            </ul>
-                        </div>
-                        <div class="col-md-6">
-                            <ul class="key-points">
-                                <li><strong>Audit de la ruche :</strong> Contrôles de sécurité périodiques</li>
-                                <li><strong>Sauvegarde :</strong> Protection contre la perte du miel numérique</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
+     <article class="section-card" itemscope itemtype="https://schema.org/SecurityPolicy">
+ <h2 class="h3 mb-3" itemprop="name">🛡️ Sécurité de la Ruche</h2>
+       <div itemprop="description">
+ <p>
+Conformément aux principes du <strong>RGPD</strong> et aux valeurs démocratiques du Plan B, 
+   nous mettons en place des mesures de sécurité robustes pour protéger les données 
+     de chaque abeille citoyenne dans nos alvéoles numériques.
+          </p>
+  <div class="highlight-box">
+              <div class="row">
+     <div class="col-md-6">
+  <ul class="key-points">
+        <li><strong>Chiffrement :</strong> Données protégées comme le miel dans ses alvéoles</li>
+           <li><strong>Accès restreint :</strong> Principe du moindre privilège appliqué</li>
+            </ul>
+         </div>
+      <div class="col-md-6">
+  <ul class="key-points">
+           <li><strong>Audit de la ruche :</strong> Contrôles de sécurité périodiques</li>
+    <li><strong>Sauvegarde :</strong> Protection contre la perte du miel numérique</li>
+       </ul>
+               </div>
+                   </div>
+          </div>
+          </div>
+   </article>
+   </div>
+
+        <aside class="col-lg-4">
+        <section class="section-card" itemscope itemtype="https://schema.org/UserRights">
+ <div class="d-flex align-items-center mb-3">
+        <h3 class="h4 mb-0 me-2" itemprop="name">👤 Droits des Abeilles</h3>
+      <img src="/img/rooster.png" alt="Droits citoyens" style="width: 35px; height: 25px;" loading="lazy">
+     </div>
+          <p class="small mb-3">En tant qu'abeille citoyenne de la ruche démocratique, vous bénéficiez de droits fondamentaux :</p>
+ 
+            <nav class="timeline" aria-label="Droits des utilisateurs" itemprop="description">
+               <div class="timeline-item">
+        <div class="d-flex align-items-center">
+    <img src="/img/rooster.png" alt="" style="width: 15px; height: 15px; margin-right: 8px;" role="presentation" loading="lazy">
+                <div>
+         <strong>Droit d'accès</strong><br>
+          <small>Consulter vos données dans la ruche à tout moment</small>
+      </div>
         </div>
+           </div>
+           <div class="timeline-item">
+           <div class="d-flex align-items-center">
+       <img src="/img/rooster.png" alt="" style="width: 15px; height: 15px; margin-right: 8px;" role="presentation" loading="lazy">
+              <div>
+    <strong>Droit de rectification</strong><br>
+  <small>Corriger ou mettre à jour vos informations d'abeille</small>
+      </div>
+     </div>
+    </div>
+             <div class="timeline-item">
+     <div class="d-flex align-items-center">
+                  <img src="/img/rooster.png" alt="" style="width: 15px; height: 15px; margin-right: 8px;" role="presentation" loading="lazy">
+      <div>
+       <strong>Droit à l'effacement</strong><br>
+   <small>Demander la suppression de vos données de la ruche</small>
+      </div>
+   </div>
+     </div>
+  <div class="timeline-item">
+ <div class="d-flex align-items-center">
+      <img src="/img/rooster.png" alt="" style="width: 15px; height: 15px; margin-right: 8px;" role="presentation" loading="lazy">
+        <div>
+           <strong>Droit à la portabilité</strong><br>
+    <small>Récupérer votre miel de données dans un format lisible</small>
+           </div>
+    </div>
+          </div>
+        <div class="timeline-item">
+ <div class="d-flex align-items-center">
+          <img src="/img/rooster.png" alt="" style="width: 15px; height: 15px; margin-right: 8px;" role="presentation" loading="lazy">
+          <div>
+       <strong>Droit d'opposition</strong><br>
+   <small>Vous opposer au traitement de vos données</small>
+    </div>
+     </div>
+       </div>
+   </nav>
+  </section>
 
-        <div class="col-lg-4">
-            <div class="section-card">
-                <div class="d-flex align-items-center mb-3">
-                    <h3 class="h4 mb-0 me-2">👤 Droits des Abeilles</h3>
-                    <img src="/img/rooster.png" alt="Rights Bee" style="width: 35px; height: 25px;">
-                </div>
-                <p class="small mb-3">En tant qu'abeille citoyenne de la ruche démocratique, vous bénéficiez de droits fondamentaux :</p>
-                
-                <div class="timeline">
-                    <div class="timeline-item">
-                        <div class="d-flex align-items-center">
-                            <img src="/img/rooster.png" alt="Access" style="width: 15px; height: 15px; margin-right: 8px;">
-                            <div>
-                                <strong>Droit d'accès</strong><br>
-                                <small>Consulter vos données dans la ruche à tout moment</small>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="timeline-item">
-                        <div class="d-flex align-items-center">
-                            <img src="/img/rooster.png" alt="Rectification" style="width: 15px; height: 15px; margin-right: 8px;">
-                            <div>
-                                <strong>Droit de rectification</strong><br>
-                                <small>Corriger ou mettre à jour vos informations d'abeille</small>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="timeline-item">
-                        <div class="d-flex align-items-center">
-                            <img src="/img/rooster.png" alt="Erasure" style="width: 15px; height: 15px; margin-right: 8px;">
-                            <div>
-                                <strong>Droit à l'effacement</strong><br>
-                                <small>Demander la suppression de vos données de la ruche</small>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="timeline-item">
-                        <div class="d-flex align-items-center">
-                            <img src="/img/rooster.png" alt="Portability" style="width: 15px; height: 15px; margin-right: 8px;">
-                            <div>
-                                <strong>Droit à la portabilité</strong><br>
-                                <small>Récupérer votre miel de données dans un format lisible</small>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="timeline-item">
-                        <div class="d-flex align-items-center">
-                            <img src="/img/rooster.png" alt="Opposition" style="width: 15px; height: 15px; margin-right: 8px;">
-                            <div>
-                                <strong>Droit d'opposition</strong><br>
-                                <small>Vous opposer au traitement de vos données</small>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="section-card">
-                <div class="d-flex align-items-center mb-3">
-                    <h3 class="h4 mb-0 me-2">📞 Contact</h3>
-                    <img src="/img/beehive.svg" alt="Contact Hive" style="width: 35px; height: 35px;">
-                </div>
-                <div class="highlight-box text-center">
-                    <p class="mb-2">
-                        <strong>Délégué à la Protection des Données</strong><br>
-                        <small class="text-muted">Plan B - Ruche Démocratique</small>
-                    </p>
-                    <div class="mb-3">
-                        <i class="fas fa-envelope text-warning"></i>
-                        <strong> dpo@planb-democratie.fr</strong>
-                    </div>
-                    <div class="mb-3">
-                        <i class="fas fa-map-marker-alt text-warning"></i>
-                        <strong> Carcès, Var (83)</strong>
-                    </div>
-                    <small class="text-muted">
-                        Réponse garantie sous 72h conformément au RGPD
-                    </small>
-                </div>
-            </div>
-
-            <!-- Biodiversity Indicators (Frogs as secondary) -->
-            <div class="section-card">
-                <h5 class="h6 mb-3">🌱 Sentinelles Écologiques</h5>
-                <p class="small text-muted mb-3">Les grenouilles surveillent la santé de l'écosystème de données :</p>
-                <div class="row">
-                    <div class="col-6 text-center mb-2">
-                        <img src="/img/frog_big.png" alt="Data Guardian" style="width: 20px; height: 20px;">
-                        <small class="d-block">Gardienne</small>
-                    </div>
-                    <div class="col-6 text-center mb-2">
-                        <img src="/img/frog_peace.png" alt="Privacy Mediator" style="width: 20px; height: 20px;">
-                        <small class="d-block">Médiatrice</small>
-                    </div>
-                    <div class="col-6 text-center">
-                        <img src="/img/frog_wings.png" alt="Future Vision" style="width: 20px; height: 20px;">
-                        <small class="d-block">Visionnaire</small>
-                    </div>
-                    <div class="col-6 text-center">
-                        <img src="/img/frog_wings_front.png" alt="Change Guide" style="width: 20px; height: 20px;">
-                        <small class="d-block">Guide</small>
-                    </div>
-                </div>
-            </div>
+  <section class="section-card" itemscope itemtype="https://schema.org/ContactPoint">
+         <div class="d-flex align-items-center mb-3">
+<h3 class="h4 mb-0 me-2">📞 Contact</h3>
+   <img src="/img/beehive.svg" alt="Contact ruche" style="width: 35px; height: 35px;" loading="lazy">
+       </div>
+    <address class="highlight-box text-center" itemprop="address">
+        <p class="mb-2">
+    <strong>Délégué à la Protection des Données</strong><br>
+                <small class="text-muted" itemprop="name">Plan B - Ruche Démocratique</small>
+         </p>
+    <div class="mb-3">
+                <i class="fas fa-envelope text-warning" aria-hidden="true"></i>
+  <strong> <a href="mailto:dpo@planb-democratie.fr" itemprop="email">dpo@planb-democratie.fr</a></strong>
         </div>
+   <div class="mb-3" itemprop="address" itemscope itemtype="https://schema.org/PostalAddress">
+          <i class="fas fa-map-marker-alt text-warning" aria-hidden="true"></i>
+               <strong> <span itemprop="addressLocality">Carcès</span>, <span itemprop="addressRegion">Var</span> (<span itemprop="postalCode">83</span>)</strong>
+      </div>
+      <small class="text-muted">
+    Réponse garantie sous 72h conformément au RGPD
+      </small>
+     </address>
+  </section>
+
+   <!-- Biodiversity Indicators (Frogs as secondary) -->
+      <aside class="section-card">
+         <h5 class="h6 mb-3">🌱 Sentinelles Écologiques</h5>
+     <p class="small text-muted mb-3">Les grenouilles surveillent la santé de l'écosystème de données :</p>
+          <div class="row">
+      <div class="col-6 text-center mb-2">
+      <img src="/img/frog_big.png" alt="Grenouille gardienne données" style="width: 20px; height: 20px;" loading="lazy">
+   <small class="d-block">Gardienne</small>
+         </div>
+       <div class="col-6 text-center mb-2">
+ <img src="/img/frog_peace.png" alt="Grenouille médiatrice confidentialité" style="width: 20px; height: 20px;" loading="lazy">
+        <small class="d-block">Médiatrice</small>
+          </div>
+         <div class="col-6 text-center">
+         <img src="/img/frog_wings.png" alt="Grenouille vision futur" style="width: 20px; height: 20px;" loading="lazy">
+ <small class="d-block">Visionnaire</small>
+      </div>
+ <div class="col-6 text-center">
+      <img src="/img/frog_wings_front.png" alt="Grenouille guide changement" style="width: 20px; height: 20px;" loading="lazy">
+  <small class="d-block">Guide</small>
+          </div>
+                </div>
+       </aside>
+        </aside>
     </div>
 
-    <div class="row mt-4">
+    <!-- Final Policy Evolution Section -->
+    <section class="row mt-4">
         <div class="col-12">
-            <div class="section-card">
-                <div class="d-flex align-items-center justify-content-between mb-3">
-                    <h2 class="h3 mb-0">🌱 Évolution de la Politique</h2>
-                    <div class="bee-conclusion-group">
-                        <img src="/img/rooster.png" alt="Bee Hero" style="width: 30px; height: 23px; margin: 0 3px;">
-                        <img src="/img/rooster.png" alt="Honeycomb" style="width: 30px; height: 23px; margin: 0 3px;">
-                        <img src="/img/rooster.png" alt="Beehive" style="width: 30px; height: 30px; margin: 0 3px;">
-                    </div>
-                </div>
-                <p>
-                    Cette politique de confidentialité évolue avec les besoins de la ruche démocratique et les 
-                    évolutions réglementaires. Comme les abeilles qui s'adaptent aux saisons et aux changements 
-                    environnementaux, nous adaptons nos pratiques aux nouvelles exigences de protection des données 
-                    tout en préservant l'esprit collaboratif de nos alvéoles citoyennes.
-                </p>
-                <div class="highlight-box">
-                    <div class="row text-center">
-                        <div class="col-md-4">
-                            <strong>Dernière mise à jour :</strong><br>
-                            <small class="text-muted">9 septembre 2025</small>
-                        </div>
-                        <div class="col-md-4">
-                            <strong>Version :</strong><br>
-                            <small class="text-muted">Plan B Ruche v1.0</small>
-                        </div>
-                        <div class="col-md-4">
-                            <strong>Statut :</strong><br>
-                            <small class="text-success">✅ Conforme RGPD</small>
-                        </div>
-                    </div>
-                </div>
-                <div class="text-center mt-4">
-                    <a href="/" class="btn btn-bee me-3">Retour à la Ruche</a>
-                    <a href="/MapBee" class="btn btn-outline-warning">Voir l'Essaimage</a>
-                </div>
-            </div>
+            <article class="section-card" itemscope itemtype="https://schema.org/LegalDocument">
+       <div class="d-flex align-items-center justify-content-between mb-3">
+        <h2 class="h3 mb-0" itemprop="name">🌱 Évolution de la Politique</h2>
+  <div class="bee-conclusion-group">
+<img src="/img/rooster.png" alt="Protection héroïque" style="width: 30px; height: 23px; margin: 0 3px;" loading="lazy">
+     <img src="/img/rooster.png" alt="Alvéole sécurisée" style="width: 30px; height: 23px; margin: 0 3px;" loading="lazy">
+         <img src="/img/rooster.png" alt="Ruche protégée" style="width: 30px; height: 30px; margin: 0 3px;" loading="lazy">
+       </div>
+       </div>
+        <div itemprop="text">
+     <p>
+      Cette politique de confidentialité évolue avec les besoins de la ruche démocratique et les 
+       évolutions réglementaires. Comme les abeilles qui s'adaptent aux saisons et aux changements 
+    environnementaux, nous adaptons nos pratiques aux nouvelles exigences de protection des données 
+       tout en préservant l'esprit collaboratif de nos alvéoles citoyennes.
+           </p>
+         <div class="highlight-box">
+    <div class="row text-center">
+          <div class="col-md-4">
+        <strong>Dernière mise à jour :</strong><br>
+           <small class="text-muted">
+      <time datetime="2025-09-09">9 septembre 2025</time>
+             </small>
+              </div>
+            <div class="col-md-4">
+          <strong>Version :</strong><br>
+          <small class="text-muted" itemprop="version">Plan B Ruche v1.0</small>
+      </div>
+         <div class="col-md-4">
+      <strong>Statut :</strong><br>
+            <small class="text-success">✅ Conforme RGPD</small>
+  </div>
+     </div>
         </div>
-    </div>
-</div>
+         <nav class="text-center mt-4" aria-label="Navigation politique confidentialité">
+         <a href="/" class="btn btn-bee me-3" aria-label="Retour à l'accueil de la ruche">Retour à la Ruche</a>
+  <a href="/MapBee" class="btn btn-outline-warning" aria-label="Voir la carte de l'essaimage démocratique">Voir l'Essaimage</a>
+              </nav>
+              </div>
+            </article>
+        </div>
+    </section>
+</main>
+
+@Html.Raw(ViewData["FAQStructuredData"])

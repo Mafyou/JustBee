@@ -1,0 +1,203 @@
+﻿@{
+    // SEO Configuration - Dynamic meta tags
+    var currentPage = ViewContext.RouteData.Values["page"]?.ToString() ?? "";
+    var currentAction = ViewContext.RouteData.Values["action"]?.ToString() ?? "";
+    var host = Context.Request.Host.Value.ToLower();
+    var protocol = Context.Request.IsHttps ? "https" : "http";
+    var baseUrl = $"{protocol}://{host}";
+    var currentUrl = $"{baseUrl}{Context.Request.Path}{Context.Request.QueryString}";
+
+    // Default SEO values
+    var siteTitle = "Plan B Ruche Démocratique - Innovation Citoyenne";
+    var siteDescription = "Plan B : Révolution démocratique participative avec alvéoles citoyennes. Démocratie locale innovante, conseils d'universalité municipale et engagement citoyen en France.";
+    var siteKeywords = "démocratie participative, Plan B, alvéoles citoyennes, ruche démocratique, innovation politique, conseils municipaux, engagement citoyen, France, démocratie locale";
+    var siteAuthor = "Plan B Ruche Démocratique";
+
+    // Page-specific SEO optimization
+    var pageTitle = ViewData["Title"]?.ToString() ?? siteTitle;
+    var pageDescription = ViewData["Description"]?.ToString() ?? siteDescription;
+    var pageKeywords = ViewData["Keywords"]?.ToString() ?? siteKeywords;
+    var pageImage = ViewData["Image"]?.ToString() ?? $"{baseUrl}/img/alveole-social.png";
+    var pageType = ViewData["Type"]?.ToString() ?? "website";
+
+    // Enhanced titles for better SEO
+    var fullTitle = pageTitle != siteTitle ? $"{pageTitle} - {siteTitle}" : siteTitle;
+
+    // Structured data configuration
+    var structuredData = ViewData["StructuredData"]?.ToString();
+}
+
+<!-- Essential Meta Tags -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="x-ua-compatible" content="ie=edge">
+
+<!-- Primary SEO Meta Tags -->
+<title>@fullTitle</title>
+<meta name="title" content="@fullTitle">
+<meta name="description" content="@pageDescription">
+<meta name="keywords" content="@pageKeywords">
+<meta name="author" content="@siteAuthor">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+<meta name="googlebot" content="index, follow">
+<meta name="bingbot" content="index, follow">
+
+<!-- Language and Geographic Targeting -->
+<meta name="language" content="fr-FR">
+<meta name="geo.region" content="FR">
+<meta name="geo.country" content="France">
+<meta name="geo.placename" content="France">
+<meta name="ICBM" content="46.2276, 2.2137">
+
+<!-- Canonical URL -->
+<link rel="canonical" href="@currentUrl">
+
+<!-- Open Graph / Facebook Meta Tags -->
+<meta property="og:type" content="@pageType">
+<meta property="og:title" content="@fullTitle">
+<meta property="og:description" content="@pageDescription">
+<meta property="og:image" content="@pageImage">
+<meta property="og:url" content="@currentUrl">
+<meta property="og:site_name" content="@siteTitle">
+<meta property="og:locale" content="fr_FR">
+<meta property="article:author" content="@siteAuthor">
+
+<!-- Twitter Card Meta Tags -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@@PlanBRuche">
+<meta name="twitter:creator" content="@@PlanBRuche">
+<meta name="twitter:title" content="@fullTitle">
+<meta name="twitter:description" content="@pageDescription">
+<meta name="twitter:image" content="@pageImage">
+<meta name="twitter:url" content="@currentUrl">
+
+<!-- LinkedIn Meta Tags -->
+<meta property="article:publisher" content="Plan B Ruche Démocratique">
+<meta property="article:section" content="Politique">
+<meta property="article:tag" content="démocratie participative, innovation politique, citoyenneté">
+
+<!-- WhatsApp Meta Tags -->
+<meta property="og:image:alt" content="Plan B Ruche Démocratique - Innovation citoyenne et démocratie participative">
+
+<!-- Additional Meta Tags for Rich Snippets -->
+<meta name="theme-color" content="#FFD700">
+<meta name="msapplication-TileColor" content="#FFD700">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Plan B Ruche">
+
+<!-- Favicons and Web App Icons -->
+<link rel="icon" type="image/png" sizes="32x32" href="~/img/alveole.png">
+<link rel="icon" type="image/png" sizes="16x16" href="~/img/alveole.png">
+<link rel="apple-touch-icon" href="~/img/alveole.png">
+<link rel="manifest" href="~/manifest.json">
+
+<!-- RSS Feed -->
+<link rel="alternate" type="application/rss+xml" title="Plan B Ruche Démocratique - Actualités" href="~/feed.xml">
+
+<!-- DNS Prefetch for Performance -->
+<link rel="dns-prefetch" href="//cdnjs.cloudflare.com">
+<link rel="dns-prefetch" href="//fonts.googleapis.com">
+
+<!-- Structured Data (JSON-LD) -->
+@if (!string.IsNullOrEmpty(structuredData))
+{
+    @Html.Raw(structuredData)
+}
+
+<script type="application/ld+json">
+{
+  "@@context": "https://schema.org",
+  "@@type": "Organization",
+  "name": "Plan B Ruche Démocratique",
+  "description": "@siteDescription",
+  "url": "@baseUrl",
+  "logo": "@baseUrl/img/alveole.png",
+  "foundingDate": "2025",
+  "sameAs": [
+    "https://twitter.com/PlanBRuche",
+    "https://www.facebook.com/PlanBRuche"
+  ],
+  "contactPoint": {
+    "@@type": "ContactPoint",
+    "telephone": "+33-X-XX-XX-XX-XX",
+    "contactType": "customer service",
+    "areaServed": "FR",
+    "availableLanguage": "French"
+  },
+  "address": {
+    "@@type": "PostalAddress",
+    "addressLocality": "Carcès",
+    "addressRegion": "Var",
+    "postalCode": "83570",
+    "addressCountry": "FR"
+  }
+}
+</script>
+
+<!-- Page-specific Structured Data -->
+@if (currentPage == "/Index" || string.IsNullOrEmpty(currentPage))
+{
+<script type="application/ld+json">
+{
+  "@@context": "https://schema.org",
+  "@@type": "WebSite",
+  "name": "Plan B Ruche Démocratique",
+  "url": "@baseUrl",
+  "description": "@siteDescription",
+  "potentialAction": {
+    "@@type": "SearchAction",
+    "target": "@baseUrl/MapBee?search={search_term_string}",
+"query-input": "required name=search_term_string"
+  },
+  "publisher": {
+    "@@type": "Organization",
+    "name": "Plan B Ruche Démocratique",
+    "logo": {
+      "@@type": "ImageObject",
+      "url": "@baseUrl/img/alveole.png"
+    }
+  }
+}
+</script>
+}
+
+@if (currentPage == "/MapBee")
+{
+<script type="application/ld+json">
+{
+  "@@context": "https://schema.org",
+  "@@type": "Map",
+  "name": "Carte des Alvéoles Citoyennes",
+  "description": "Cartographie interactive des alvéoles citoyennes et visualisation de l'essaimage démocratique en France",
+  "url": "@currentUrl",
+  "mapType": "VenueMap"
+}
+</script>
+}
+
+@if (currentPage == "/CreerAlveole")
+{
+<script type="application/ld+json">
+{
+  "@@context": "https://schema.org",
+  "@@type": "WebApplication",
+  "name": "Création d'Alvéole Citoyenne",
+  "description": "Application pour créer et rejoindre une alvéole citoyenne dans le cadre du Plan B démocratique",
+  "url": "@currentUrl",
+  "applicationCategory": "GovernmentApplication",
+  "operatingSystem": "Web Browser"
+}
+</script>
+}
+
+<!-- Performance and Preload Hints -->
+<link rel="preconnect" href="https://cdnjs.cloudflare.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" href="~/css/site.css" as="style">
+<link rel="preload" href="~/img/alveole.png" as="image">
+
+<!-- Hreflang for International SEO (if needed) -->
+<link rel="alternate" hreflang="fr" href="@currentUrl">
+<link rel="alternate" hreflang="fr-FR" href="@currentUrl">
+<link rel="alternate" hreflang="x-default" href="@currentUrl">

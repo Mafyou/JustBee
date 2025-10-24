@@ -2,7 +2,13 @@
 @using System.Text.Json
 @model MapBeeModel
 @{
-    ViewData["Title"] = "Plan B - Démocratie Participative";
+    ViewData["Title"] = "Plan B Ruche Démocratique - Innovation Citoyenne et Démocratie Participative";
+    ViewData["Description"] = "Le Plan B révolutionne la démocratie locale avec les alvéoles citoyennes. Conseils d'universalité municipale, innovation politique et engagement citoyen pour une France plus démocratique.";
+    ViewData["Keywords"] = "Plan B, démocratie participative, alvéoles citoyennes, ruche démocratique, conseil municipal, innovation politique, citoyenneté active, France, gouvernance locale, engagement citoyen";
+    ViewData["Type"] = "website";
+
+    // Structured data
+    ViewData["StructuredData"] = "<script type=\"application/ld+json\">{\"@context\":\"https://schema.org\",\"@type\":\"GovernmentOrganization\",\"name\":\"Plan B Ruche Démocratique\",\"description\":\"Le Plan B révolutionne la démocratie locale avec les alvéoles citoyennes.\",\"foundingDate\":\"2025-07-06\",\"serviceArea\":{\"@type\":\"Country\",\"name\":\"France\"}}</script>";
 
     // Pre-calculate data for better performance - using source generator
     var villesDataForSerialization = Model.Villes.Where(v =>
@@ -12,13 +18,13 @@
     {
         Code = v.Code,
         Nom = v.Nom,
-        Region = v.Region,
+   Region = v.Region,
         Departement = v.Departement,
         Latitude = v.Latitude,
-        Longitude = v.Longitude,
+     Longitude = v.Longitude,
         PersonCount = Model.AllPersons.Count(p => p.VilleCode == v.Code),
         AlveoleCount = Model.AllAlveoles.Count(a => a.VilleCode == v.Code),
-        TotalCount = Model.AllPersons.Count(p => p.VilleCode == v.Code) + Model.AllAlveoles.Count(a => a.VilleCode == v.Code),
+     TotalCount = Model.AllPersons.Count(p => p.VilleCode == v.Code) + Model.AllAlveoles.Count(a => a.VilleCode == v.Code),
         Persons = Model.AllPersons.Where(p => p.VilleCode == v.Code).Select(p => new PersonMapData { Id = p.Id, Pseudo = p.Pseudo }).ToArray(),
         Alveoles = Model.AllAlveoles.Where(a => a.VilleCode == v.Code).Select(a => new AlveoleMapData { Id = a.Id, Nom = a.Nom }).ToArray()
     }).ToArray();
@@ -26,358 +32,373 @@
     var villesDataJson = JsonSerializer.Serialize(villesDataForSerialization, MapBeeSerializationContext.Default.VilleMapDataArray);
 }
 
-<div class="hero-section">
-    <div class="container hero-content">
-        <div class="text-center">
-            <img src="/img/alveole.png" alt="Bee Hero" class="bee-icon">
-            <h1 class="display-4 fw-bold mb-3">10 Septembre : Le Jour de la Ruche</h1>
-            <p class="lead mb-4">
-                Fin de l'attente, début de l'action. Le Plan B est notre réponse.
-                Un appel à la responsabilité, non à la révolte. Un appel à la construction, non à la destruction.
-            </p>
-            
-            <!-- Slogan principal plus grand -->
-            <div class="slogan-container mb-4">
-                <img src="/img/frog_wings.png" alt="Future Visionary Left" style="width: 350px; height: auto; margin-right: 15px;">
-                <img src="/img/slogan_main.png" alt="Slogan Principal Plan B" class="slogan-image">
-                <img src="/img/frog_wings.png" alt="Future Visionary Right" style="width: 350px; height: auto; margin-left: 15px; transform: scaleX(-1);">
-            </div>
-            
-            <a href="#details" class="btn btn-bee btn-lg">Découvrir le Plan B</a>
-        </div>
-    </div>
-</div>
-
-<!-- Beehive Structure Section -->
-<div class="container my-5">
-    <div class="row text-center mb-4">
-        <div class="col-12">
-            <h2 class="h3 mb-3">🐝 De la Mairie à la Ruche : une transformation concrète</h2>
-            <p class="text-muted">Nous ne prenons pas le pouvoir, nous le partageons. Le Plan B n'est pas un coup d'État, c'est une mue.</p>
-            
-            <!-- Slogan français petit en sous-titre -->
-            <div class="slogan-small-container mt-2">
-                <img src="/img/slogan_fra.png" alt="Slogan France" class="slogan-small-image">
-            </div>
-            
-            <!-- Add rubrixcube.png here -->
-            <div class="mt-3">
-                <img src="/img/rubrixcube.png" alt="Rubrix Cube" style="width: 60px; height: 60px; opacity: 0.8;">
-            </div>
-        </div>
-    </div>
-    <div class="row justify-content-center">
-        <div class="col-md-3 col-sm-6 mb-3">
-            <div class="honeycomb-card">
-                <img src="/img/alveole.png" alt="Professional Cells" class="honeycomb-image">
-                <h5>Professionnels du Vivant</h5>
-                <p class="small">Agriculteurs, apiculteurs, viticulteurs. Ceux qui nourrissent notre terre.</p>
-            </div>
-        </div>
-        <div class="col-md-3 col-sm-6 mb-3">
-            <div class="honeycomb-card">
-                <img src="/img/alveole.png" alt="Public Agents" class="honeycomb-image">
-                <h5>Citoyens Tirés au Sort</h5>
-                <p class="small">Pour garantir l'équité dans la représentation</p>
-            </div>
-        </div>
-        <div class="col-md-3 col-sm-6 mb-3">
-            <div class="honeycomb-card">
-                <img src="/img/alveole.png" alt="Generational" class="honeycomb-image">
-                <h5>Toutes les Générations</h5>
-                <p class="small">Jeunes, seniors, pour un dialogue intergénérationnel</p>
-            </div>
-        </div>
-        <div class="col-md-3 col-sm-6 mb-3">
-            <div class="honeycomb-card">
-                <img src="/img/alveole.png" alt="Citizens" class="honeycomb-image">
-                <h5>Artisans & Professionnels</h5>
-                <p class="small">Santé, enseignants, pour un ancrage fort dans le quotidien</p>
-            </div>
-        </div>
-    </div>
+<article>
+    <!-- Hero Section with enhanced SEO -->
+    <section class="hero-section" itemscope itemtype="https://schema.org/WebPageElement">
+   <div class="container hero-content">
+<div class="text-center">
+  <img src="/img/alveole.png" alt="Symbole de la ruche démocratique Plan B" class="bee-icon" width="80" height="60">
+    <h1 class="display-4 fw-bold mb-3" itemprop="headline">10 Septembre : Le Jour de la Ruche</h1>
+     <p class="lead mb-4" itemprop="description">
+      Fin de l'attente, début de l'action. Le Plan B est notre réponse.
+     Un appel à la responsabilité, non à la révolte. Un appel à la construction, non à la destruction.
+     </p>
     
-    <!-- Special Living Cell -->
-    <div class="row justify-content-center mt-4">
-        <div class="col-md-6">
-            <div class="living-cell-card">
-                <div class="d-flex align-items-center justify-content-center mb-3">
-                    <img src="/img/alveole.png" alt="Living Cell" class="living-cell-icon me-3">
-                    <div>
-                        <h4 class="mb-1">🌱 Alvéole du Vivant</h4>
-                        <p class="mb-0 text-success">Droit de veto symbolique sur l'écosystème</p>
-                    </div>
-                </div>
-                <p class="text-center">
-                    Ces Alvéoles ont un <strong>droit de veto symbolique</strong> sur les décisions qui touchent directement notre écosystème.
-                    C'est la reconnaissance du savoir de terrain sur le pouvoir des bureaux.
-                </p>
-            </div>
-        </div>
+      <!-- Slogan principal plus grand -->
+     <div class="slogan-container mb-4" role="img" aria-label="Slogan principal du Plan B avec grenouilles visionnaires">
+  <img src="/img/frog_wings.png" alt="Grenouille visionnaire gauche" width="60" height="60">
+   <img src="/img/slogan_main.png" alt="Slogan Principal Plan B" class="slogan-image">
+   <img src="/img/frog_wings.png" alt="Grenouille visionnaire droite" width="60" height="60" style="transform: scaleX(-1);">
     </div>
-</div>
-
-<div class="container">
-    <div class="row">
-        <div class="col-lg-8">
-            <div class="section-card" id="details">
-                <img src="/img/alveole.png" alt="Honeycomb" class="section-icon">
-                <h2 class="h3 mb-3">🏛️ Fin de l'attente, début de l'action</h2>
-                <p>
-                    Pendant des mois, nous avons fait entendre nos voix. Nos pétitions ont réclamé une démocratie locale plus juste, 
-                    plus vivante, plus en phase avec la réalité de nos territories.
-                </p>
-                <p>
-                    <strong>Les institutions n'ont pas répondu.</strong> L'inertie a eu raison de nos appels.
-                </p>
-                <div class="highlight-box">
-                    <strong>Aujourd'hui, l'attente est terminée.</strong> Le Plan B est notre réponse. 
-                    Un appel à la responsabilité, non à la révolte. Un appel à la construction, non à la destruction.
-                    <img src="/img/alveole.png" alt="Bee Guardian" class="float-end bee-float" style="width: 40px; height: 30px; margin-left: 10px;">
-                </div>
-            </div>
-
-            <div class="section-card">
-                <img src="/img/alveole.png" alt="Beehive" class="section-icon">
-                <h2 class="h3 mb-3">🎯 Les Alvéoles : notre Conseil d'universalité municipale</h2>
-                <p>
-                    Le 10 septembre, nous mettons en place les Alvéoles : nos <strong>Conseils d'universalité municipale</strong>.
-                </p>
-                <p>
-                    Chaque Conseil est une cellule vivante et représentative, composée de :
-                </p>
-                <ul class="key-points">
-                    <li><strong>Professionnels du vivant :</strong> agriculteurs, apiculteurs, viticulteurs. Ceux qui nourrissent notre terre.</li>
-                    <li><strong>Citoyens tirés au sort :</strong> pour garantir l'équité.</li>
-                    <li><strong>Représentants de toutes les générations :</strong> jeunes, seniors, pour un dialogue intergénérationnel.</li>
-                    <li><strong>Artisans, professionnels de santé, enseignants :</strong> pour un ancrage fort dans le quotidien.</li>
-                </ul>
-                
-                <!-- Slogan changement intégré discrètement -->
-                <div class="text-center mt-3 mb-3">
-                    <img src="/img/slogan_change.png" alt="Slogan du Changement" class="slogan-inline-small">
-                </div>
-                
-                <div class="text-end mt-3">
-                    <img src="/img/rubrixcube.png" alt="Rubrix Cube Structure" style="width: 60px; height: 60px; opacity: 0.7;">
-                </div>
-            </div>
-
-            <div class="section-card">
-                <h2 class="h3 mb-3">⚖️ Pourquoi ça marche ? C'est déjà dans la Constitution</h2>
-                <p>
-                    <strong>Ce n'est pas une prise de pouvoir illégale.</strong> C'est la mise en œuvre audacieuse des principes qui fondent notre République.
-                </p>
-                <p>
-                    Nous nous appuyons sur les articles qui régissent la participation citoyenne et les conseils consultatifs 
-                    pour faire éclore une nouvelle forme de démocratie.
-                </p>
-                <div class="highlight-box">
-                    <strong>✅ Le Plan B est un acte de souveraineté populaire, légitime et constitutionnel.</strong>
-                </div>
+ 
+   <a href="#details" class="btn btn-bee btn-lg" aria-label="Découvrir les détails du Plan B">Découvrir le Plan B</a>
             </div>
         </div>
+    </section>
 
-        <div class="col-lg-4">
-            <div class="section-card">
-                <div class="d-flex align-items-center mb-3">
-                    <h3 class="h4 mb-0 me-2">🏗️ Structure de la Ruche</h3>
-                    <img src="/img/alveole.png" alt="Beehive Structure" style="width: 35px; height: 35px;">
-                </div>
-                <p class="small mb-3">La ruche (mairie réimaginée) : un lieu de vie, de travail et de production pour toute la communauté :</p>
-                
-                <div class="timeline">
-                    <div class="timeline-item">
-                        <div class="d-flex align-items-center">
-                            <img src="/img/alveole.png" alt="Cell" style="width: 20px; height: 15px; margin-right: 8px;">
-                            <div>
-                                <strong>Professionnels du Vivant</strong><br>
-                                <small>Agriculteurs, apiculteurs, viticulteurs</small>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="timeline-item">
-                        <div class="d-flex align-items-center">
-                            <img src="/img/alveole.png" alt="Cell" style="width: 20px; height: 15px; margin-right: 8px;">
-                            <div>
-                                <strong>Citoyens Tirés au Sort</strong><br>
-                                <small>Équité garantie</small>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="timeline-item">
-                        <div class="d-flex align-items-center">
-                            <img src="/img/alveole.png" alt="Cell" style="width: 20px; height: 15px; margin-right: 8px;">
-                            <div>
-                                <strong>Toutes les Générations</strong><br>
-                                <small>Dialogue intergénérationnel</small>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="timeline-item">
-                        <div class="d-flex align-items-center">
-                            <img src="/img/alveole.png" alt="Cell" style="width: 20px; height: 15px; margin-right: 8px;">
-                            <div>
-                                <strong>Artisans & Professionnels</strong><br>
-                                <small>Santé, enseignants</small>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="timeline-item living-cell">
-                        <div class="d-flex align-items-center">
-                            <img src="/img/alveole.png" alt="Living Cell" style="width: 20px; height: 20px; margin-right: 8px;">
-                            <div>
-                                <strong>Alvéole du Vivant</strong><br>
-                                <small>Veto symbolique écologique</small>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Add rubrixcube.png in sidebar -->
-                <div class="text-center mt-3">
-                    <img src="/img/rubrixcube.png" alt="Rubrix Cube" style="width: 45px; height: 45px; opacity: 0.6;">
-                </div>
-            </div>
-
-            <div class="section-card">
-                <div class="d-flex align-items-center mb-3">
-                    <h3 class="h4 mb-0 me-2">🚀 Notre appel : Agissons ensemble</h3>
-                    <img src="/img/alveole.png" alt="Bee Action" style="width: 35px; height: 25px;">
-                </div>
-                <p class="small mb-3">Le 10 septembre, nous ne célébrons pas une victoire, nous commençons le travail.</p>
-                <div class="timeline">
-                    <div class="timeline-item">
-                        <strong>Chaque citoyen est une abeille</strong><br>
-                        <small>Devenez acteur de votre territoire</small>
-                    </div>
-                    <div class="timeline-item">
-                        <strong>Chaque territoire, une ruche</strong><br>
-                        <small>Activez votre Alvéole</small>
-                    </div>
-                    <div class="timeline-item">
-                        <strong>Partagez vos savoirs</strong><br>
-                        <small>Votre expertise compte</small>
-                    </div>
-                    <div class="timeline-item">
-                        <strong>Rejoignez le mouvement</strong><br>
-                        <small>Bâtissons la démocratie de demain. <strong>Maintenant.</strong></small>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Slogan général dans le sidebar - plus petit -->
-            <div class="section-card">
-                <div class="text-center">
-                    <img src="/img/slogan.png" alt="Slogan Plan B" class="slogan-sidebar-image">
-                    <p class="small text-muted mt-2">
-                        Notre engagement démocratique
-                    </p>
-                </div>
-            </div>
-
-            <!-- Biodiversity indicators with frogs (secondary role) -->
-            <div class="section-card">
-                <h4 class="h6 mb-3">🌱 Sentinelles Écologiques</h4>
-                <p class="small text-muted mb-3">Les grenouilles, sentinelles de l'écosystème, surveillent la santé démocratique :</p>
-                <div class="row">
-                    <div class="col-6 text-center mb-2">
-                        <img src="/img/frog_big.png" alt="Tradition Guardian" style="width: 20px; height: 20px;">
-                        <small class="d-block" style="font-size: 0.7rem;">Gardienne</small>
-                    </div>
-                    <div class="col-6 text-center mb-2">
-                        <img src="/img/frog_peace.png" alt="Peace Mediator" style="width: 20px; height: 20px;">
-                        <small class="d-block" style="font-size: 0.7rem;">Médiatrice</small>
-                    </div>
-                    <div class="col-6 text-center">
-                        <img src="/img/frog_wings.png" alt="Future Visionary" style="width: 20px; height: 20px;">
-                        <small class="d-block" style="font-size: 0.7rem;">Visionnaire</small>
-                    </div>
-                    <div class="col-6 text-center">
-                        <img src="/img/frog_wings_front.png" alt="Change Leader" style="width: 20px; height: 20px;">
-                        <small class="d-block" style="font-size: 0.7rem;">Guide</small>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="row mt-4">
+    <!-- Beehive Structure Section -->
+    <section class="container my-5" itemscope itemtype="https://schema.org/Organization">
+        <div class="row text-center mb-4">
         <div class="col-12">
-            <div class="section-card">
-                <div class="d-flex align-items-center justify-content-between mb-3">
-                    <h2 class="h3 mb-0">🎯 Votre rôle est d'activer votre Alvéole</h2>
-                    <div class="bee-conclusion-group">
-                        <img src="/img/alveole.png" alt="Bee Hero" style="width: 30px; height: 23px; margin: 0 3px;">
-                        <img src="/img/alveole.png" alt="Honeycomb" style="width: 30px; height: 23px; margin: 0 3px;">
-                        <img src="/img/alveole.png" alt="Beehive" style="width: 30px; height: 30px; margin: 0 3px;">
-                        <img src="/img/rubrixcube.png" alt="Rubrix Cube" style="width: 30px; height: 30px; margin: 0 3px;">
-                    </div>
-                </div>
-                <p>
-                    Comme les abeilles qui pollinisent et structurent leur territoire,
-                    nous organisons la démocratie en alvéoles spécialisées pour une gouvernance plus efficace et naturelle.
-                </p>
-                <p>
-                    <strong>Rejoignez le mouvement. Bâtissons la démocratie de demain. Maintenant.</strong>
-                </p>
-                <div class="text-center mt-4">
-                    <a href="/MapBee" class="btn btn-bee me-3">Voir la Carte des Ruches</a>
-                    <a href="/PersonManagement" class="btn btn-outline-warning">Gérer les Abeilles Citoyennes</a>
-                </div>
-            </div>
+     <h2 class="h3 mb-3" itemprop="name">🐝 De la Mairie à la Ruche : une transformation concrète</h2>
+       <p class="text-muted" itemprop="description">Nous ne prenons pas le pouvoir, nous le partageons. Le Plan B n'est pas un coup d'État, c'est une mue.</p>
+        
+                <!-- Slogan français petit en sous-titre -->
+           <div class="slogan-small-container mt-2">
+    <img src="/img/slogan_fra.png" alt="Slogan France - Plan B démocratique" class="slogan-small-image">
+       </div>
+        
+  <!-- Add rubrixcube.png here -->
+     <div class="mt-3">
+        <img src="/img/rubrixcube.png" alt="Cube démocratique innovation" width="60" height="60">
+ </div>
+   </div>
         </div>
-    </div>
+        
+        <!-- Structure Cards with microdata -->
+  <div class="row justify-content-center">
+    <div class="col-md-3 col-sm-6 mb-3">
+     <div class="honeycomb-card" itemscope itemtype="https://schema.org/Service">
+ <img src="/img/alveole.png" alt="Alvéole professionnels du vivant" width="60" height="45">
+  <h5 itemprop="name">Professionnels du Vivant</h5>
+       <p class="small" itemprop="description">Agriculteurs, apiculteurs, viticulteurs. Ceux qui nourrissent notre terre.</p>
+   </div>
+        </div>
+    <div class="col-md-3 col-sm-6 mb-3">
+<div class="honeycomb-card" itemscope itemtype="https://schema.org/Service">
+      <img src="/img/alveole.png" alt="Alvéole citoyens tirés au sort" width="60" height="45">
+  <h5 itemprop="name">Citoyens Tirés au Sort</h5>
+    <p class="small" itemprop="description">Pour garantir l'équité dans la représentation</p>
+        </div>
+  </div>
+  <div class="col-md-3 col-sm-6 mb-3">
+     <div class="honeycomb-card" itemscope itemtype="https://schema.org/Service">
+  <img src="/img/alveole.png" alt="Alvéole toutes générations" width="60" height="45">
+      <h5 itemprop="name">Toutes les Générations</h5>
+     <p class="small" itemprop="description">Jeunes, seniors, pour un dialogue intergénérationnel</p>
 </div>
-<!-- Fin du contenu principal Index -->
+ </div>
+      <div class="col-md-3 col-sm-6 mb-3">
+<div class="honeycomb-card" itemscope itemtype="https://schema.org/Service">
+       <img src="/img/alveole.png" alt="Alvéole artisans et professionnels" width="60" height="45">
+    <h5 itemprop="name">Artisans & Professionnels</h5>
+    <p class="small" itemprop="description">Santé, enseignants, pour un ancrage fort dans le quotidien</p>
+     </div>
+   </div>
+   </div>
 
-<!-- Conteneur pour le scroll infini -->
-<div id="infinite-scroll-content"></div>
+     <!-- Special Living Cell -->
+  <div class="row justify-content-center mt-4">
+  <div class="col-md-6">
+  <div class="living-cell-card" itemscope itemtype="https://schema.org/GovernmentService">
+  <div class="d-flex align-items-center justify-content-center mb-3">
+ <img src="/img/alveole.png" alt="Alvéole du vivant écologique" width="40" height="30" class="me-3">
+              <div>
+     <h4 class="mb-1" itemprop="name">🌱 Alvéole du Vivant</h4>
+      <p class="mb-0 text-success" itemprop="description">Droit de veto symbolique sur l'écosystème</p>
+      </div>
+    </div>
+       <p class="text-center">
+      Ces Alvéoles ont un <strong>droit de veto symbolique</strong> sur les décisions qui touchent directement notre écosystème.
+     C'est la reconnaissance du savoir de terrain sur le pouvoir des bureaux.
+          </p>
+      </div>
+        </div>
+      </div>
+    </section>
+
+ <!-- Main Content -->
+<div class="container">
+        <div class="row">
+ <div class="col-lg-8">
+           <!-- Action Section -->
+      <section class="section-card" id="details" itemscope itemtype="https://schema.org/Article">
+     <img src="/img/alveole.png" alt="Symbole ruche démocratique" width="40" height="30" style="float: left; margin-right: 15px; margin-top: 5px;">
+     <h2 class="h3 mb-3" itemprop="headline">🏛️ Fin de l'attente, début de l'action</h2>
+     <div itemprop="articleBody">
+   <p>
+   Pendant des mois, nous avons fait entendre nos voix. Nos pétitions ont réclamé une démocratie locale plus juste, 
+            plus vivante, plus en phase avec la réalité de nos territoires.
+    </p>
+       <p>
+        <strong>Les institutions n'ont pas répondu.</strong> L'inertie a eu raison de nos appels.
+   </p>
+             <div class="highlight-box">
+    <strong>Aujourd'hui, l'attente est terminée.</strong> Le Plan B est notre réponse. 
+    Un appel à la responsabilité, non à la révolte. Un appel à la construction, non à la destruction.
+      <img src="/img/alveole.png" alt="Abeille gardienne" width="40" height="30" style="float: right; margin-left: 10px;" class="bee-float">
+     </div>
+    </section>
+
+   <!-- Alvéoles Section -->
+       <section class="section-card" itemscope itemtype="https://schema.org/GovernmentService">
+<img src="/img/alveole.png" alt="Structure alvéoles" width="40" height="30" style="float: left; margin-right: 15px; margin-top: 5px;">
+    <h2 class="h3 mb-3" itemprop="name">🎯 Les Alvéoles : notre Conseil d'universalité municipale</h2>
+    <div itemprop="description">
+  <p>
+    Le 10 septembre, nous mettons en place les Alvéoles : nos <strong>Conseils d'universalité municipale</strong>.
+                  </p>
+               <p>
+          Chaque Conseil est une cellule vivante et représentative, composée de :
+       </p>
+ <ul class="key-points">
+        <li><strong>Professionnels du vivant :</strong> agriculteurs, apiculteurs, viticulteurs. Ceux qui nourrissent notre terre.</li>
+       <li><strong>Citoyens tirés au sort :</strong> pour garantir l'équité.</li>
+   <li><strong>Représentants de toutes les générations :</strong> jeunes, seniors, pour un dialogue intergénérationnel.</li>
+    <li><strong>Artisans, professionnels de santé, enseignants :</strong> pour un ancrage fort dans le quotidien.</li>
+            </ul>
+           </div>
+      
+    <!-- Slogan changement intégré discrètement -->
+       <div class="text-center mt-3 mb-3">
+    <img src="/img/slogan_change.png" alt="Slogan du changement démocratique" class="slogan-inline-small">
+   </div>
+            
+        <div class="text-end mt-3">
+      <img src="/img/rubrixcube.png" alt="Innovation structurelle" style="width: 60px; height: 60px; opacity: 0.7;">
+              </div>
+       </section>
+
+            <!-- Constitutional Section -->
+         <section class="section-card" itemscope itemtype="https://schema.org/LegalDocument">
+       <h2 class="h3 mb-3" itemprop="name">⚖️ Pourquoi ça marche ? C'est déjà dans la Constitution</h2>
+  <div itemprop="text">
+   <p>
+  <strong>Ce n'est pas une prise de pouvoir illégale.</strong> C'est la mise en œuvre audacieuse des principes qui fondent notre République.
+       </p>
+       <p>
+           Nous nous appuyons sur les articles qui régissent la participation citoyenne et les conseils consultatifs 
+    pour faire éclore une nouvelle forme de démocratie.
+  </p>
+       <div class="highlight-box">
+  <strong>✅ Le Plan B est un acte de souveraineté populaire, légitime et constitutionnel.</strong>
+       </div>
+           </div>
+      </section>
+  </div>
+
+            <!-- Sidebar -->
+  <div class="col-lg-4">
+       <!-- Structure Section -->
+  <aside class="section-card">
+    <div class="d-flex align-items-center mb-3">
+     <h3 class="h4 mb-0 me-2">🏗️ Structure de la Ruche</h3>
+    <img src="/img/alveole.png" alt="Structure ruche" width="35" height="26">
+        </div>
+      <p class="small mb-3">La ruche (mairie réimaginée) : un lieu de vie, de travail et de production pour toute la communauté :</p>
+     
+      <nav class="timeline" aria-label="Structure organisationnelle">
+         <div class="timeline-item">
+      <div class="d-flex align-items-center">
+ <img src="/img/alveole.png" alt="" width="20" height="15" class="me-2" role="presentation">
+ <div>
+    <strong>Professionnels du Vivant</strong><br>
+     <small>Agriculteurs, apiculteurs, viticulteurs</small>
+   </div>
+ </div>
+  </div>
+        <div class="timeline-item">
+ <div class="d-flex align-items-center">
+    <img src="/img/alveole.png" alt="" width="20" height="15" class="me-2" role="presentation">
+     <div>
+  <strong>Citoyens Tirés au Sort</strong><br>
+    <small>Équité garantie</small>
+   </div>
+    </div>
+       </div>
+ <div class="timeline-item">
+      <div class="d-flex align-items-center">
+ <img src="/img/alveole.png" alt="" width="20" height="15" class="me-2" role="presentation">
+     <div>
+<strong>Toutes les Générations</strong><br>
+      <small>Dialogue intergénérationnel</small>
+  </div>
+     </div>
+     </div>
+           <div class="timeline-item">
+        <div class="d-flex align-items-center">
+   <img src="/img/alveole.png" alt="" width="20" height="15" class="me-2" role="presentation">
+  <div>
+   <strong>Artisans & Professionnels</strong><br>
+ <small>Santé, enseignants</small>
+       </div>
+  </div>
+</div>
+   <div class="timeline-item living-cell">
+     <div class="d-flex align-items-center">
+ <img src="/img/alveole.png" alt="" width="20" height="20" class="me-2" role="presentation">
+      <div>
+    <strong>Alvéole du Vivant</strong><br>
+      <small>Veto symbolique écologique</small>
+  </div>
+      </div>
+     </div>
+  </nav>
+ 
+   <!-- Add rubrixcube.png in sidebar -->
+     <div class="text-center mt-3">
+   <img src="/img/rubrixcube.png" alt="Cube innovation" width="45" height="45">
+      </div>
+     </aside>
+
+  <!-- Call to Action Section -->
+   <aside class="section-card">
+<div class="d-flex align-items-center mb-3">
+    <h3 class="h4 mb-0 me-2">🚀 Notre appel : Agissons ensemble</h3>
+    <img src="/img/alveole.png" alt="Bee Action" width="35" height="26">
+        </div>
+  <p class="small mb-3">Le 10 septembre, nous ne célébrons pas une victoire, nous commençons le travail.</p>
+         <div class="timeline">
+         <div class="timeline-item">
+      <strong>Chaque citoyen est une abeille</strong><br>
+          <small>Devenez acteur de votre territoire</small>
+     </div>
+         <div class="timeline-item">
+             <strong>Chaque territoire, une ruche</strong><br>
+      <small>Activez votre Alvéole</small>
+              </div>
+                <div class="timeline-item">
+<strong>Partagez vos savoirs</strong><br>
+        <small>Votre expertise compte</small>
+   </div>
+              <div class="timeline-item">
+       <strong>Rejoignez le mouvement</strong><br>
+          <small>Bâtissons la démocratie de demain. <strong>Maintenant.</strong></small>
+           </div>
+        </div>
+          </aside>
+
+  <!-- Slogan général dans le sidebar -->
+<aside class="section-card">
+  <div class="text-center">
+       <img src="/img/slogan.png" alt="Slogan Plan B" class="slogan-sidebar-image">
+  <p class="small text-muted mt-2">
+               Notre engagement démocratique
+           </p>
+   </div>
+</aside>
+
+                <!-- Biodiversity indicators -->
+         <aside class="section-card">
+  <h4 class="h6 mb-3">🌱 Sentinelles Écologiques</h4>
+           <p class="small text-muted mb-3">Les grenouilles, sentinelles de l'écosystème, surveillent la santé démocratique :</p>
+           <div class="row">
+<div class="col-6 text-center mb-2">
+   <img src="/img/frog_big.png" alt="Grenouille gardienne" width="20" height="20">
+     <small class="d-block" style="font-size: 0.7rem;">Gardienne</small>
+  </div>
+<div class="col-6 text-center mb-2">
+   <img src="/img/frog_peace.png" alt="Grenouille médiatrice" width="20" height="20">
+ <small class="d-block" style="font-size: 0.7rem;">Médiatrice</small>
+      </div>
+       <div class="col-6 text-center">
+   <img src="/img/frog_wings.png" alt="Grenouille visionnaire" width="20" height="20">
+ <small class="d-block" style="font-size: 0.7rem;">Visionnaire</small>
+    </div>
+   <div class="col-6 text-center">
+ <img src="/img/frog_wings_front.png" alt="Grenouille guide" width="20" height="20">
+ <small class="d-block" style="font-size: 0.7rem;">Guide</small>
+    </div>
+      </div>
+                </aside>
+ </div>
+        </div>
+
+  <!-- Final Call to Action -->
+        <section class="row mt-4">
+   <div class="col-12">
+                <div class="section-card" itemscope itemtype="https://schema.org/CallToAction">
+       <div class="d-flex align-items-center justify-content-between mb-3">
+       <h2 class="h3 mb-0" itemprop="name">🎯 Votre rôle est d'activer votre Alvéole</h2>
+    <div class="bee-conclusion-group">
+   <img src="/img/alveole.png" alt="Abeille héroïque" width="30" height="23">
+      <img src="/img/alveole.png" alt="Alvéole hexagonale" width="30" height="23">
+   <img src="/img/alveole.png" alt="Ruche démocratique" width="30" height="30">
+    <img src="/img/rubrixcube.png" alt="Cube innovation" width="30" height="30">
+      </div>
+     </div>
+       <p itemprop="description">
+   Comme les abeilles qui pollinisent et structurent leur territoire,
+   nous organisons la démocratie en alvéoles spécialisées pour une gouvernance plus efficace et naturelle.
+        </p>
+         <p>
+            <strong>Rejoignez le mouvement. Bâtissons la démocratie de demain. Maintenant.</strong>
+       </p>
+   <div class="text-center mt-4">
+     <a href="/MapBee" class="btn btn-bee me-3" aria-label="Consulter la carte interactive des ruches">Voir la Carte des Ruches</a>
+               <a href="/PersonManagement" class="btn btn-outline-warning" aria-label="Accéder à la gestion des citoyens participants">Gérer les Abeilles Citoyennes</a>
+      </div>
+      </div>
+          </div>
+        </section>
+    </div>
+
+    <!-- Conteneur pour le scroll infini -->
+<div id="infinite-scroll-content" role="complementary" aria-label="Contenu chargé dynamiquement"></div>
 
 <script>
-        // Pre-calculated data using source generator for better performance and trimming compatibility
-        var villesData = @Html.Raw(villesDataJson);
-let nextPages = [
-    '/MapBee',
-    '/CreerAlveole'
-];
-let currentPageIndex = 0;
-let loading = false;
+    // Pre-calculated data using source generator for better performance and trimming compatibility
+    var villesData = @Html.Raw(villesDataJson);
+    let nextPages = ['/MapBee', '/CreerAlveole'];
+    let currentPageIndex = 0;
+    let loading = false;
 
-function ensureLeafletAssetsAndInit() {
+    function ensureLeafletAssetsAndInit() {
+        if (typeof initializeMap === 'function') {
     initializeMap();
-}
-
-function loadNextPage() {
-    if (loading || currentPageIndex >= nextPages.length - 200) return;
-    loading = true;
-    const url = nextPages[currentPageIndex];
-    fetch(url, { headers: { 'X-Requested-With': 'XMLHttpRequest' } })
-        .then(response => response.text())
-        .then(html => {
-            let tempDiv = document.createElement('div');
-            tempDiv.innerHTML = html;
-            let bodyContent = tempDiv.querySelector('body') || tempDiv;
-            let scrollContainer = document.getElementById('infinite-scroll-content');
-            Array.from(bodyContent.children).forEach(child => {
-                // N'insère pas les <script> du contenu AJAX
-                if (child.tagName !== 'SCRIPT') {
-                    scrollContainer.appendChild(child.cloneNode(true));
-                }
-            });
-            // Si on vient de charger MapBee, on s'assure que Leaflet et la carte sont initialisés
-            if (url.toLowerCase().includes('mapbee')) {
-                ensureLeafletAssetsAndInit();
-            }
-            currentPageIndex++;
-            loading = false;
-        })
-        .catch(() => { loading = false; });
-}
-
-window.addEventListener('scroll', function() {
-    if ((window.innerHeight + window.scrollY) >= (document.body.offsetHeight - 800)) {
-        loadNextPage();
+        }
     }
-});
+
+    function loadNextPage() {
+        if (loading || currentPageIndex >= nextPages.length) return;
+  loading = true;
+        const url = nextPages[currentPageIndex];
+fetch(url, { headers: { 'X-Requested-With': 'XMLHttpRequest' } })
+  .then(response => response.text())
+            .then(html => {
+       let tempDiv = document.createElement('div');
+     tempDiv.innerHTML = html;
+          let bodyContent = tempDiv.querySelector('body') || tempDiv;
+    let scrollContainer = document.getElementById('infinite-scroll-content');
+ Array.from(bodyContent.children).forEach(child => {
+  if (child.tagName !== 'SCRIPT') {
+    scrollContainer.appendChild(child.cloneNode(true));
+ }
+       });
+       if (url.toLowerCase().includes('mapbee')) {
+       ensureLeafletAssetsAndInit();
+    }
+      currentPageIndex++;
+   loading = false;
+          })
+            .catch(() => { loading = false; });
+    }
+
+  // SEO-friendly infinite scroll with better UX
+    window.addEventListener('scroll', function() {
+        if ((window.innerHeight + window.scrollY) >= (document.body.offsetHeight - 800)) {
+            loadNextPage();
+     }
+    });
 </script>
+</article>

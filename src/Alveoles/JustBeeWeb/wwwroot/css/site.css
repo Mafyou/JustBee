@@ -618,6 +618,35 @@ body {
     margin-bottom: 0;
 }
 
+/* Heart icons - small and discrete */
+.heart-icon {
+    width: 12px;
+    height: 12px;
+    opacity: 0.3;
+    margin: 0 2px;
+    transition: opacity 0.3s ease;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.heart-icon:hover {
+    opacity: 0.6;
+}
+
+/* Heart icons in navigation should be even smaller */
+.nav-link-custom .heart-icon {
+    width: 8px;
+    height: 8px;
+    opacity: 0.2;
+}
+
+/* Heart icons in footer should be tiny */
+.footer-enhanced .heart-icon {
+    width: 10px;
+    height: 10px;
+    opacity: 0.2;
+}
+
 /* Responsive adjustments */
 @media (max-width: 768px) {
     .hero-section {

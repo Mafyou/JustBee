@@ -3,232 +3,476 @@
 @using System.Text.Json
 @model MapBeeModel
 @{
-    ViewData["Title"] = "Carte des Alvéoles";
+    ViewData["Title"] = "Carte des Alvéoles Citoyennes - Réseau National Plan B";
+  ViewData["Description"] = "Découvrez la cartographie interactive des alvéoles citoyennes en France. Visualisez l'essaimage démocratique du Plan B et rejoignez le mouvement participatif dans votre région.";
+  ViewData["Keywords"] = "carte alvéoles, réseau citoyen, Plan B carte, alvéoles France, démocratie participative carte, citoyens actifs, ruches démocratiques, engagement local";
+  ViewData["Type"] = "website";
+
+    // Get base URL
+    var baseUrl = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}";
+    var description = ViewData["Description"]?.ToString() ?? "";
+
+    // Structured data for map page - simplified
+    ViewData["StructuredData"] = "<script type=\"application/ld+json\">{\"@context\":\"https://schema.org\",\"@type\":\"Map\",\"name\":\"Carte des Alvéoles Citoyennes Plan B\",\"description\":\"" + description + "\",\"url\":\"" + baseUrl + "/MapBee\",\"mapType\":\"VenueMap\",\"hasMap\":{\"@type\":\"Map\",\"mapType\":\"InteractiveMap\"},\"about\":{\"@type\":\"Thing\",\"name\":\"Alvéoles Citoyennes\",\"description\":\"Espaces de démocratie participative locale\"}}</script>";
 
     // Détection AJAX pour éviter l'inclusion du layout lors d'un chargement AJAX
     var isAjax = HttpContext.Request.Headers["X-Requested-With"] == "XMLHttpRequest";
-    Layout = isAjax ? null : "_Layout";
+  Layout = isAjax ? null : "_Layout";
 	var villesDataJson = "[]";
     if (!isAjax)
     {
         // Pre-calculate data for better performance - using source generator
         var villesDataForSerialization = Model.Villes.Where(v =>
-            Model.AllPersons.Any(p => p.VilleCode == v.Code) ||
-            Model.AllAlveoles.Any(a => a.VilleCode == v.Code)
+    Model.AllPersons.Any(p => p.VilleCode == v.Code) ||
+      Model.AllAlveoles.Any(a => a.VilleCode == v.Code)
         ).Select(v => new VilleMapData
-        {
-            Code = v.Code,
-            Nom = v.Nom,
-            Region = v.Region,
-            Departement = v.Departement,
-            Latitude = v.Latitude,
-            Longitude = v.Longitude,
-            PersonCount = Model.AllPersons.Count(p => p.VilleCode == v.Code),
-            AlveoleCount = Model.AllAlveoles.Count(a => a.VilleCode == v.Code),
-            TotalCount = Model.AllPersons.Count(p => p.VilleCode == v.Code) + Model.AllAlveoles.Count(a => a.VilleCode == v.Code),
-            Persons = Model.AllPersons.Where(p => p.VilleCode == v.Code).Select(p => new PersonMapData { Id = p.Id, Pseudo = p.Pseudo }).ToArray(),
-            Alveoles = Model.AllAlveoles.Where(a => a.VilleCode == v.Code).Select(a => new AlveoleMapData { Id = a.Id, Nom = a.Nom }).ToArray()
-        }).ToArray();
+ {
+  Code = v.Code,
+      Nom = v.Nom,
+    Region = v.Region,
+      Departement = v.Departement,
+        Latitude = v.Latitude,
+    Longitude = v.Longitude,
+          PersonCount = Model.AllPersons.Count(p => p.VilleCode == v.Code),
+      AlveoleCount = Model.AllAlveoles.Count(a => a.VilleCode == v.Code),
+ TotalCount = Model.AllPersons.Count(p => p.VilleCode == v.Code) + Model.AllAlveoles.Count(a => a.VilleCode == v.Code),
+       Persons = Model.AllPersons.Where(p => p.VilleCode == v.Code).Select(p => new PersonMapData { Id = p.Id, Pseudo = p.Pseudo }).ToArray(),
+         Alveoles = Model.AllAlveoles.Where(a => a.VilleCode == v.Code).Select(a => new AlveoleMapData { Id = a.Id, Nom = a.Nom }).ToArray()
+      }).ToArray();
 
         villesDataJson = JsonSerializer.Serialize(villesDataForSerialization, MapBeeSerializationContext.Default.VilleMapDataArray);
     }
 }
 
-<!-- Hero Section for MapBee -->
-<div class="hero-section">
+<!-- Hero Section for MapBee with SEO enhancement -->
+<section class="hero-section" itemscope itemtype="https://schema.org/WebPageElement">
     <div class="container hero-content">
-        <div class="text-center">
-            <div class="d-flex align-items-center justify-content-center mb-3" style="gap: 12px;">
-                <img src="/img/bee_left.gif" alt="Bee Left" style="height:48px;">
-                <h1 class="display-4 fw-bold mb-3 mb-0">🗺️ Réseau des Alvéoles</h1>
-                <img src="/img/bee_right.gif" alt="Bee Right" style="height:48px;">
-            </div>
-            <p class="lead mb-4">
-                Cartographie interactive des alvéoles françaises et visualisation de l'essaimage démocratique.
-            </p>
-            
-            <!-- Add Rubrix Cube in hero -->
-            <div class="mb-3">
-                <img src="/img/rubrixcube.png" alt="Rubrix Cube" style="width: 50px; height: 50px; opacity: 0.8;">
-            </div>
-            
-            <div class="d-flex justify-content-center gap-3">
-                <a href="/CreerAlveole" class="btn btn-bee">
-                    <i class="fas fa-plus"></i> Créer une Alvéole
-                </a>
-                <a href="#map-section" class="btn btn-outline-light">
-                    <i class="fas fa-map-marked-alt"></i> Explorer les Alvéoles
-                </a>
-            </div>
+  <div class="text-center">
+    <div class="d-flex align-items-center justify-content-center mb-3" style="gap: 12px;">
+ <img src="/img/bee_left.gif" alt="Abeille animée gauche" style="height:48px;" loading="lazy">
+         <h1 class="display-4 fw-bold mb-3 mb-0" itemprop="headline">🗺️ Réseau des Alvéoles</h1>
+         <img src="/img/bee_right.gif" alt="Abeille animée droite" style="height:48px;" loading="lazy">
+     </div>
+       <p class="lead mb-4" itemprop="description">
+  Cartographie interactive des alvéoles françaises et visualisation de l'essaimage démocratique.
+  </p>
+       
+     <div class="d-flex justify-content-center gap-3 flex-wrap">
+  <a href="/" class="btn btn-outline-light" aria-label="Retour à l'accueil Plan B">
+      <i class="fas fa-home" aria-hidden="true"></i> Accueil Plan B
+  </a>
+         <a href="/CreerAlveole" class="btn btn-bee btn-lg" aria-label="Créer une nouvelle alvéole citoyenne">
+          <i class="fas fa-plus" aria-hidden="true"></i> Créer une Alvéole
+      </a>
+      </div>
         </div>
-    </div>
-</div>
+   </div>
+</section>
 
-<div class="container-fluid" id="map-section">
-    <div class="row">
-        <!-- Carte Leaflet -->
-        <div class="col-lg-8">
-            <div class="section-card">
-                <div class="d-flex align-items-center justify-content-between mb-3">
-                    <h3 class="h4 mb-0">🗺️ Carte des Alvéoles Françaises</h3>
-                    <img src="/img/alveole.png" alt="Map Bee" style="width: 35px; height: 25px;">
-                </div>
-                <div id="map" style="height: 600px; width: 100%; border-radius: 10px;"></div>
-            </div>
-        </div>
-        
-        <!-- Panneau d'informations -->
-        <div class="col-lg-4">
-            <div class="section-card">
-                <div class="d-flex align-items-center mb-3">
-                    <img src="/img/alveole.png" alt="Info Honeycomb" style="width: 35px; height: 35px; margin-right: 10px;">
-                    <h5 class="mb-0">📊 Tableau de Bord</h5>
-                </div>
-                <div class="highlight-box">
-                    <div class="row text-center">
-                        <div class="col-4">
-                            <strong class="text-success">@Model.AllAlveoles.Count</strong>
-                            <br><small>🏠 Alvéoles</small>
-                        </div>
-                        <div class="col-4">
-                            <strong class="text-info">@Model.Villes.Count(v => Model.AllPersons.Any(p => p.VilleCode == v.Code) || Model.AllAlveoles.Any(a => a.VilleCode == v.Code))</strong>
-                            <br><small>🏙️ Villes</small>
-                        </div>
-                        <div class="col-4 text-center">
-                            <img src="/img/rubrixcube.png" alt="Cube" style="width: 25px; height: 25px; opacity: 0.7;">
-                            <br><small>🎯 Innovation</small>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="section-card">
-                <div class="d-flex align-items-center mb-3">
-                    <img src="/img/alveole.png" alt="Cities" style="width: 35px; height: 35px; margin-right: 10px;">
-                    <h5 class="mb-0">🏙️ Alvéoles Actives</h5>
-                </div>
-                <div style="max-height: 400px; overflow-y: auto;">
-                    @{
-                        var villesActives = Model.Villes.Where(v => 
-                            Model.AllPersons.Any(p => p.VilleCode == v.Code) || 
-                            Model.AllAlveoles.Any(a => a.VilleCode == v.Code)
-                        ).OrderByDescending(v => 
-                            Model.AllPersons.Count(p => p.VilleCode == v.Code) + 
-                            Model.AllAlveoles.Count(a => a.VilleCode == v.Code)
-                        );
-                    }
-                    @if (villesActives.Any())
-                    {
-                        @foreach (var ville in villesActives)
-                        {
-                            var personnesVerifiees = Model.AllPersons.Where(p => p.VilleCode == ville.Code).ToList();
-                            var alveolesVerifiees = Model.AllAlveoles.Where(a => a.VilleCode == ville.Code).ToList();
-                            var totalElements = personnesVerifiees.Count + alveolesVerifiees.Count;
-                            
-                            <div class="timeline-item mb-2">
-                                <div class="d-flex justify-content-between align-items-start">
-                                    <div>
-                                        <strong>🏙️ @ville.Nom</strong> 
-                                        <span class="badge bg-warning text-dark ms-1">@totalElements</span>
-                                        <br />
-                                        <small class="text-muted">📍 @ville.Region (@ville.Departement)</small>
-                                    </div>
-                                </div>
-                                <div class="mt-1">
-                                    @if (personnesVerifiees.Any())
-                                    {
-                                        <small class="text-info">
-                                            🐝 @string.Join(", ", personnesVerifiees.Select(p => p.Pseudo))
-                                        </small>
-                                        @if (alveolesVerifiees.Any())
-                                        {
-                                            <br />
-                                        }
-                                    }
-                                    @if (alveolesVerifiees.Any())
-                                    {
-                                        <small class="text-success">
-                                            🏠 @string.Join(", ", alveolesVerifiees.Select(a => a.Nom))
-                                        </small>
-                                    }
-                                </div>
-                            </div>
-                        }
-                    }
-                    else
-                    {
-                        <div class="text-center py-3">
-                            <img src="/img/alveole.png" alt="Empty" style="width: 40px; height: 40px; opacity: 0.5;">
-                            <p class="text-muted mt-2">Aucune ville active pour le moment</p>
-                            <a href="/CreerAlveole" class="btn btn-bee btn-sm">Créer la première alvéole</a>
-                        </div>
-                    }
-                </div>
-            </div>
-        </div>
-    </div>
+<!-- Map Statistics Section -->
+<section class="container my-4" itemscope itemtype="https://schema.org/Dataset">
+  <div class="row text-center">
+       <div class="col-md-4 mb-3">
+     <div class="stat-card" itemprop="distribution">
+       <div class="stat-number" itemprop="measurementTechnique">@Model.AllPersons.Count</div>
+ <div class="stat-label">Abeilles Citoyennes</div>
+          </div>
+     </div>
+  <div class="col-md-4 mb-3">
+     <div class="stat-card" itemprop="distribution">
+  <div class="stat-number">@Model.AllAlveoles.Count</div>
+  <div class="stat-label">Alvéoles Actives</div>
+      </div>
+ </div>
+<div class="col-md-4 mb-3">
+      <div class="stat-card" itemprop="distribution">
+  <div class="stat-number">@Model.Departements.Count</div>
+  <div class="stat-label">Départements Couverts</div>
+   </div>
+      </div>
 </div>
+</section>
 
-<!-- Navigation Section -->
-<div class="container my-5">
-    <div class="section-card">
-        <div class="row align-items-center">
-            <div class="col-md-8">
-                <h3 class="h4 mb-3">🚀 Étendre l'Essaimage Démocratique</h3>
-                <p class="mb-0">
-                    Participez à l'expansion du réseau des ruches démocratiques en créant des alvéoles dans votre ville.
-                    Seules les alvéoles avec email vérifié apparaissent sur la carte.
-                </p>
-            </div>
-            <div class="col-md-4 text-center">
-                <div class="bee-conclusion-group mb-3">
-                    <img src="/img/alveole.png" alt="Bee Hero" style="width: 30px; height: 23px; margin: 0 3px;">
-                    <img src="/img/alveole.png" alt="Honeycomb" style="width: 30px; height: 23px; margin: 0 3px;">
-                    <img src="/img/alveole.png" alt="Beehive" style="width: 30px; height: 30px; margin: 0 3px;">
-                    <img src="/img/rubrixcube.png" alt="Rubrix Cube" style="width: 30px; height: 30px; margin: 0 3px;">
-                </div>
-                <div class="d-flex gap-2 justify-content-center">
-                    <a href="/" class="btn btn-outline-warning btn-sm">Retour Ruche</a>
-                    <a href="/CreerAlveole" class="btn btn-bee btn-sm">Créer Alvéole</a>
-                </div>
-            </div>
-        </div>
-    </div>
+<!-- Interactive Map Container with Sidebar -->
+<section class="container-fluid px-0" itemscope itemtype="https://schema.org/Place">
+ <div class="row g-0">
+        <!-- Map Section -->
+        <div class="col-lg-9">
+        <div class="map-container" itemprop="hasMap" itemscope itemtype="https://schema.org/Map">
+       <div id="map" class="interactive-map" 
+ role="application" 
+ aria-label="Carte interactive des alvéoles citoyennes en France"
+     data-map-type="interactive"
+     itemprop="map"></div>
+  
+      <!-- Map Controls -->
+ <div class="map-controls" role="toolbar" aria-label="Contrôles de la carte">
+      <button type="button" class="btn btn-secondary btn-sm" id="reset-view" 
+ aria-label="Recentrer la carte sur la France">
+           <i class="fas fa-home" aria-hidden="true"></i> France
+      </button>
+<button type="button" class="btn btn-info btn-sm" id="toggle-clusters" 
+    aria-label="Activer/désactiver le regroupement">
+  <i class="fas fa-layer-group" aria-hidden="true"></i> Grouper
+   </button>
+       <button type="button" class="btn btn-success btn-sm" id="my-location" 
+    aria-label="Localiser ma position">
+            <i class="fas fa-crosshairs" aria-hidden="true"></i> Ma Position
+      </button>
+   </div>
+ 
+    <!-- Legend -->
+      <div class="map-legend" role="complementary" aria-label="Légende de la carte">
+<h6>Légende</h6>
+   <div class="legend-item">
+    <span class="legend-color legend-person" aria-hidden="true"></span>
+      <span>Abeilles Citoyennes</span>
 </div>
-
-<script>
-    // If layout is not null, load leaflet map
-    if ("@(isAjax.ToString().ToLower())" === "false") {
-        var villesData = @Html.Raw(villesDataJson);
-        initializeMap();
+     <div class="legend-item">
+    <span class="legend-color legend-alveole" aria-hidden="true"></span>
+   <span>Alvéoles Actives</span>
+   </div>
+ <div class="legend-item">
+       <span class="legend-color legend-both" aria-hidden="true"></span>
+         <span>Ruches Complètes</span>
+     </div>
+        </div>
+ </div>
+        </div>
+  
+        <!-- Sidebar Menu -->
+      <div class="col-lg-3">
+            <div class="map-sidebar">
+        <div class="sidebar-header">
+         <h4>🐝 Alvéoles Existantes</h4>
+ <p class="small text-muted">Découvrez les alvéoles déjà créées</p>
+      </div>
+      
+        <!-- Liste des Alvéoles -->
+   <div class="alveoles-list">
+         <h6 class="sidebar-section-title">🏠 Alvéoles Actives (@Model.AllAlveoles.Count)</h6>
+       @if (Model.AllAlveoles.Any())
+ {
+    @foreach (var alveole in Model.AllAlveoles.Take(10))
+ {
+              var ville = Model.Villes.FirstOrDefault(v => v.Code == alveole.VilleCode);
+             <div class="alveole-item">
+       <div class="alveole-header">
+                 <strong>@alveole.Nom</strong>
+       <span class="badge bg-warning text-dark">Alvéole</span>
+             </div>
+     <div class="alveole-location">
+                   <i class="fas fa-map-marker-alt text-muted"></i>
+     @ville?.Nom, @ville?.Departement
+           </div>
+     </div>
+         }
+       
+               @if (Model.AllAlveoles.Count > 10)
+                {
+       <div class="text-center mt-3">
+   <button class="btn btn-outline-warning btn-sm" id="show-all-alveoles">
+      Voir toutes (@Model.AllAlveoles.Count)
+  </button>
+     </div>
     }
+           }
+                    else
+        {
+       <div class="empty-state">
+          <i class="fas fa-seedling fa-2x text-muted mb-2"></i>
+     <p class="text-muted">Aucune alvéole créée pour le moment</p>
+     </div>
+    }
+           </div>
+       
+ <!-- Liste des Citoyens -->
+  <div class="citoyens-list mt-4">
+        <h6 class="sidebar-section-title">👥 Abeilles Citoyennes (@Model.AllPersons.Count)</h6>
+         @if (Model.AllPersons.Any())
+   {
+   @foreach (var person in Model.AllPersons.Take(8))
+              {
+         var ville = Model.Villes.FirstOrDefault(v => v.Code == person.VilleCode);
+          <div class="citoyen-item">
+        <div class="citoyen-header">
+     <strong>@person.Pseudo</strong>
+           <span class="badge bg-success">Citoyen</span>
+      </div>
+<div class="citoyen-location">
+        <i class="fas fa-map-marker-alt text-muted"></i>
+           @ville?.Nom, @ville?.Departement
+             </div>
+         </div>
+         }
+        
+       @if (Model.AllPersons.Count > 8)
+       {
+        <div class="text-center mt-3">
+                <button class="btn btn-outline-success btn-sm" id="show-all-citoyens">
+   Voir tous (@Model.AllPersons.Count)
+ </button>
+       </div>
+             }
+     }
+         else
+         {
+  <div class="empty-state">
+ <i class="fas fa-users fa-2x text-muted mb-2"></i>
+             <p class="text-muted">Aucun citoyen inscrit pour le moment</p>
+             </div>
+               }
+              </div>
+        
+        <!-- Actions -->
+   <div class="sidebar-actions mt-4">
+                 <a href="/CreerAlveole" class="btn btn-bee w-100 mb-2">
+   <i class="fas fa-plus"></i> Créer une Alvéole
+    </a>
+     <a href="/PersonManagement" class="btn btn-outline-success w-100">
+         <i class="fas fa-user-plus"></i> Rejoindre le Mouvement
+        </a>
+          </div>
+        </div>
+        </div>
+    </div>
+</section>
+
+<!-- Call to Action -->
+<section class="container my-5">
+    <div class="row">
+   <div class="col-12">
+   <div class="cta-card text-center" itemscope itemtype="https://schema.org/CallToAction">
+   <h3 itemprop="name">Votre territoire n'est pas encore sur la carte ?</h3>
+   <p class="lead" itemprop="description">
+ Devenez pionnier de la démocratie participative dans votre ville !
+   </p>
+         <div class="mt-4">
+       <a href="/CreerAlveole" class="btn btn-bee btn-lg me-3" 
+         aria-label="Créer la première alvéole de votre territoire">
+     <i class="fas fa-seedling" aria-hidden="true"></i> Créer la Première Alvéole
+          </a>
+      <a href="/" class="btn btn-outline-warning" 
+ aria-label="Découvrir le concept Plan B">
+  <i class="fas fa-info-circle" aria-hidden="true"></i> Découvrir Plan B
+   </a>
+    </div>
+    </div>
+      </div>
+   </div>
+</section>
+
+<!-- SEO-optimized script loading -->
+<script>
+    // Map data for SEO and performance
+    var villesMapData = @Html.Raw(villesDataJson);
+    var mapConfig = {
+      centerLat: 46.603354,
+        centerLng: 1.888334,
+     initialZoom: 6,
+     maxZoom: 18,
+        minZoom: 5
+    };
+    
+   // Initialize map when DOM is ready
+    document.addEventListener('DOMContentLoaded', function() {
+ if (typeof initializeMapBee === 'function') {
+   initializeMapBee();
+ } else if (typeof L !== 'undefined') {
+       // Fallback map initialization
+            initializeBasicMap();
+    }
+    });
+    
+  function initializeBasicMap() {
+        try {
+       var map = L.map('map').setView([mapConfig.centerLat, mapConfig.centerLng], mapConfig.initialZoom);
+
+     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  attribution: '© OpenStreetMap contributors',
+     maxZoom: mapConfig.maxZoom
+  }).addTo(map);
+       
+ // Add markers for cities with data
+     villesMapData.forEach(function(ville) {
+        var popupContent = `<strong>${ville.nom}</strong><br>`;
+ if (ville.personCount > 0) popupContent += `👥 ${ville.personCount} citoyens<br>`;
+     if (ville.alveoleCount > 0) popupContent += `🏠 ${ville.alveoleCount} alvéoles`;
+     
+         L.marker([ville.latitude, ville.longitude])
+   .addTo(map)
+  .bindPopup(popupContent);
+ });
+        } catch (error) {
+   console.error('Error initializing map:', error);
+   }
+  }
 </script>
 
+<!-- Enhanced CSS for map page -->
 <style>
-    .popup-content {
-        min-width: 250px;
+ .interactive-map {
+   height: 80vh;
+     min-height: 600px;
+   width: 100%;
+    border-radius: 8px;
+   box-shadow: 0 4px 12px rgba(0,0,0,0.15);
     }
     
-    .popup-content h6 {
-        color: #8B4513;
+    .map-container {
+   position: relative;
+    }
+  
+    .map-sidebar {
+    background: #f8f9fa;
+      height: 80vh;
+    overflow-y: auto;
+        padding: 20px;
+ border-left: 3px solid #FFD700;
+   }
+    
+    .sidebar-header {
+   text-align: center;
+      margin-bottom: 20px;
+     padding-bottom: 15px;
+   border-bottom: 2px solid #FFD700;
     }
     
-    .popup-content .btn-bee {
-        font-size: 0.8rem;
-        padding: 0.4rem 0.8rem;
+    .sidebar-section-title {
+  color: #2E7D32;
+        font-weight: bold;
+ margin-bottom: 15px;
+        padding-left: 10px;
+ border-left: 3px solid #4CAF50;
+    }
+    
+    .alveole-item, .citoyen-item {
+     background: white;
+  padding: 12px;
+     margin-bottom: 10px;
+      border-radius: 8px;
+   border-left: 4px solid #FFD700;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        transition: transform 0.2s ease;
+    }
+  
+   .alveole-item:hover, .citoyen-item:hover {
+   transform: translateX(5px);
+    }
+    
+    .citoyen-item {
+   border-left-color: #28a745;
+  }
+  
+    .alveole-header, .citoyen-header {
+  display: flex;
+        justify-content: space-between;
+       align-items: center;
+ margin-bottom: 5px;
+    }
+    
+   .alveole-location, .citoyen-location {
+   font-size: 0.85rem;
+       color: #6c757d;
+    }
+    
+    .empty-state {
+    text-align: center;
+        padding: 20px;
+  color: #6c757d;
+    }
+    
+ .sidebar-actions {
+        padding-top: 20px;
+       border-top: 2px solid #e9ecef;
+   }
+    
+.map-controls {
+      position: absolute;
+ top: 10px;
+     right: 10px;
+        z-index: 1000;
+        display: flex;
+     flex-direction: column;
+      gap: 8px;
+ }
+  
+    .map-legend {
+        position: absolute;
+      bottom: 10px;
+ left: 10px;
+        background: rgba(255,255,255,0.9);
+  padding: 12px;
+        border-radius: 6px;
+   box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        z-index: 1000;
+    }
+    
+ .legend-item {
+     display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 4px;
+    }
+    
+ .legend-color {
+ width: 12px;
+ height: 12px;
+border-radius: 50%;
     }
 
-    .legend {
-        background: white;
-        padding: 10px;
-        border-radius: 5px;
-        box-shadow: 0 0 15px rgba(0,0,0,0.2);
-        line-height: 18px;
-        color: #555;
+  .legend-person { background-color: #28a745; }
+    .legend-alveole { background-color: #ffc107; }
+ .legend-both { background-color: #fd7e14; }
+    
+    .stat-card {
+ background: linear-gradient(135deg, #FFD700, #FFA500);
+    color: white;
+   padding: 20px;
+ border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(255,215,0,0.3);
+ text-align: center;
+  }
+ 
+  .stat-number {
+   font-size: 2.5rem;
+     font-weight: bold;
+   margin-bottom: 8px;
+ }
+    
+   .stat-label {
+        font-size: 1rem;
+   opacity: 0.9;
     }
-
-    .legend h6 {
-        margin: 0 0 5px 0;
-        color: #8B4513;
+    
+    .cta-card {
+  background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+        padding: 40px;
+       border-radius: 16px;
+        border: 3px dashed #FFD700;
     }
+ 
+    @@media (max-width: 991.98px) {
+ .interactive-map {
+height: 50vh;
+  min-height: 400px;
+   }
+    
+        .map-sidebar {
+   height: auto;
+         max-height: 400px;
+ }
+    
+  .map-controls {
+     position: static;
+     margin: 10px;
+  flex-direction: row;
+justify-content: center;
+}
+    
+   .map-legend {
+  position: static;
+  margin: 10px;
+  }
+  }
 </style>

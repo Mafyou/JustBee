@@ -1,7 +1,7 @@
 ﻿@{
     // Determine email based on current domain
-    var host = Context.Request.Host.Value.ToLower();
-    var contactEmail = host.Contains("frogbee") ? "contact@frogbee.fr" : "contact@beefrog.fr";
+var host = Context.Request.Host.Value.ToLower();
+  var contactEmail = host.Contains("frogbee") ? "contact@frogbee.fr" : "contact@beefrog.fr";
 }
 
 <!DOCTYPE html>
@@ -15,7 +15,7 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/JustBeeWeb.styles.css" asp-append-version="true" />
-    <!-- Font Awesome for icons -->
+ <!-- Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
     <!-- Custom favicon -->
     <link rel="icon" type="image/png" href="~/img/alveole.png">
@@ -32,23 +32,23 @@
     <style>
         /* Tetris canvas background styles */
         #tetrisCanvas {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            z-index: -1;
-            pointer-events: none;
-            display: block;
+        position: fixed;
+       top: 0;
+  left: 0;
+   width: 100vw;
+      height: 100vh;
+        z-index: -1;
+   pointer-events: none;
+      display: block;
         }
 
         .heart-icon {
-            width: 20px;
-            height: 20px;
-            margin-left: 4px;
-            margin-right: 4px;
+   width: 20px;
+    height: 20px;
+    margin-left: 4px;
+       margin-right: 4px;
             vertical-align: middle;
-            opacity: 0.8;
+          opacity: 0.8;
         }
     </style>
 </head>
@@ -57,165 +57,165 @@
     <!-- Header -->
     <header>
         <nav class="navbar navbar-expand-lg navbar-light bg-gradient border-bottom-0 shadow-sm">
-            <div class="container">
-                <!-- Brand with bee theme -->
-                <a class="navbar-brand d-flex align-items-center fw-bold" asp-area="" asp-page="/Index">
-                    <img src="~/img/alveole.png" alt="Plan B Logo" width="40" height="30" class="me-2">
-                    <img src="~/img/heart.png" alt="Cœur" class="heart-icon">
-                    <span class="brand-text">Plan B Ruche Démocratique</span>
-                </a>
+     <div class="container">
+           <!-- Brand with bee theme -->
+      <a class="navbar-brand d-flex align-items-center fw-bold" asp-area="" asp-page="/Index">
+            <img src="~/img/alveole.png" alt="Plan B Logo" width="40" height="30" class="me-2">
+           <img src="~/img/heart.png" alt="Cœur" class="heart-icon">
+              <span class="brand-text">Plan B Ruche Démocratique</span>
+      </a>
 
-                <!-- Mobile toggle button -->
-                <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
+        <!-- Mobile toggle button -->
+        <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+   aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+       </button>
 
-                <!-- Navigation menu -->
-                <div class="collapse navbar-collapse" id="navbarNav">
-                    <ul class="navbar-nav mx-auto">
-                        <li class="nav-item">
-                            <a class="nav-link nav-link-custom d-flex align-items-center" asp-area="" asp-page="/Index">
-                                <img src="~/img/alveole.png" alt="Home Hive" width="20" height="20" class="me-2 nav-frog">
-                                <img src="~/img/heart.png" alt="Cœur" class="heart-icon">
-                                <span>🏠 Mairie / Ruche</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link nav-link-custom d-flex align-items-center" asp-area="" asp-page="/MapBee">
-                                <img src="~/img/alveole.png" alt="Map Cells" width="20" height="20" class="me-2 nav-frog">
-                                <img src="~/img/heart.png" alt="Cœur" class="heart-icon">
-                                <span>🗺️ Carte Alvéoles</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link nav-link-custom d-flex align-items-center" asp-area="" asp-page="/CreerAlveole">
-                                <img src="~/img/alveole.png" alt="Create Alveole" width="20" height="20" class="me-2 nav-frog">
-                                <img src="~/img/heart.png" alt="Cœur" class="heart-icon">
-                                <span>🏠 Créer Alvéole</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link nav-link-custom d-flex align-items-center" asp-area="" asp-page="/Privacy">
-                                <img src="~/img/frog_peace.png" alt="Privacy" width="20" height="20" class="me-2 nav-frog">
-                                <img src="~/img/heart.png" alt="Cœur" class="heart-icon">
-                                <span>🔒 Confidentialité</span>
-                            </a>
-                        </li>
-                    </ul>
+        <!-- Navigation menu -->
+     <div class="collapse navbar-collapse" id="navbarNav">
+           <ul class="navbar-nav mx-auto">
+        <li class="nav-item">
+        <a class="nav-link nav-link-custom d-flex align-items-center" asp-area="" asp-page="/Index">
+  <img src="~/img/alveole.png" alt="Home Hive" width="20" height="20" class="me-2 nav-frog">
+              <img src="~/img/heart.png" alt="Cœur" class="heart-icon">
+              <span>🏠 Mairie / Ruche</span>
+           </a>
+   </li>
+        <li class="nav-item">
+                  <a class="nav-link nav-link-custom d-flex align-items-center" asp-area="" asp-page="/MapBee">
+   <img src="~/img/alveole.png" alt="Map Cells" width="20" height="20" class="me-2 nav-frog">
+     <img src="~/img/heart.png" alt="Cœur" class="heart-icon">
+       <span>🗺️ Carte Alvéoles</span>
+   </a>
+         </li>
+                <li class="nav-item">
+    <a class="nav-link nav-link-custom d-flex align-items-center" asp-area="" asp-page="/CreerAlveole">
+    <img src="~/img/alveole.png" alt="Create Alveole" width="20" height="20" class="me-2 nav-frog">
+         <img src="~/img/heart.png" alt="Cœur" class="heart-icon">
+             <span>🏠 Créer Alvéole</span>
+             </a>
+       </li>
+<li class="nav-item">
+          <a class="nav-link nav-link-custom d-flex align-items-center" asp-area="" asp-page="/Privacy">
+           <img src="~/img/frog_peace.png" alt="Privacy" width="20" height="20" class="me-2 nav-frog">
+      <img src="~/img/heart.png" alt="Cœur" class="heart-icon">
+    <span>🔒 Confidentialité</span>
+       </a>
+                  </li>
+     </ul>
 
-                    <!-- Add Rubrix Cube in navigation -->
-                    <div class="navbar-nav ms-auto">
-                        <img src="~/img/rubrixcube.png" alt="Rubrix Cube" width="30" height="30" class="nav-cube"
-                            style="opacity: 0.7;">
-                        <img src="~/img/heart.png" alt="Cœur" class="heart-icon">
-                    </div>
-                </div>
-            </div>
-        </nav>
+     <!-- Add Rubrix Cube in navigation -->
+         <div class="navbar-nav ms-auto">
+<img src="~/img/rubrixcube.png" alt="Rubrix Cube" width="30" height="30" class="nav-cube"
+                style="opacity: 0.7;">
+  <img src="~/img/heart.png" alt="Cœur" class="heart-icon">
+       </div>
+ </div>
+     </div>
+    </nav>
     </header>
 
     <!-- Main content area -->
     <main role="main">
-        @RenderBody()
+     @RenderBody()
     </main>
 
     <!-- Enhanced footer -->
     <footer class="footer-enhanced">
-        <div class="container">
-            <div class="row py-4">
-                <div class="col-md-6">
-                    <div class="d-flex align-items-center mb-3">
-                        <img src="~/img/alveole.png" alt="Plan B Hive" width="30" height="30" class="me-2">
-                        <img src="~/img/heart.png" alt="Cœur" class="heart-icon">
-                        <h5 class="mb-0 text-warning">Plan B Ruche Démocratique</h5>
-                        <img src="~/img/rubrixcube.png" alt="Rubrix Cube" width="25" height="25" class="ms-2"
-                            style="opacity: 0.6;">
-                        <img src="~/img/heart.png" alt="Cœur" class="heart-icon">
-                    </div>
-                    <p class="text-light mb-0">
-                        Une innovation démocratique expérimentale organisée en ruche collaborative
-                        avec des alvéoles citoyennes pour une réappropriation bottom-up du pouvoir.
-                        <img src="~/img/heart.png" alt="Cœur" class="heart-icon">
-                    </p>
+  <div class="container">
+       <div class="row py-4">
+          <div class="col-md-6">
+            <div class="d-flex align-items-center mb-3">
+ <img src="~/img/alveole.png" alt="Plan B Hive" width="30" height="30" class="me-2">
+           <img src="~/img/heart.png" alt="Cœur" class="heart-icon">
+     <h5 class="mb-0 text-warning">Plan B Ruche Démocratique</h5>
+          <img src="~/img/rubrixcube.png" alt="Rubrix Cube" width="25" height="25" class="ms-2"
+            style="opacity: 0.6;">
+   <img src="~/img/heart.png" alt="Cœur" class="heart-icon">
+          </div>
+        <p class="text-light mb-0">
+    Une innovation démocratique expérimentale organisée en ruche collaborative
+      avec des alvéoles citoyennes pour une réappropriation bottom-up du pouvoir.
+  <img src="~/img/heart.png" alt="Cœur" class="heart-icon">
+     </p>
                 </div>
-                <div class="col-md-3">
+    <div class="col-md-3">
                     <h6 class="text-warning mb-3">🍯 Navigation Ruche <img src="~/img/heart.png" alt="Cœur"
-                        class="heart-icon"></h6>
-                    <ul class="list-unstyled">
-                        <li><a href="/" class="footer-link">🏠 Mairie <img src="~/img/heart.png" alt="Cœur"
-                                class="heart-icon"></a></li>
-                        <li><a href="/MapBee" class="footer-link">🗺️ Carte des Alvéoles <img src="~/img/heart.png"
-                                alt="Cœur" class="heart-icon"></a></li>
-                        <li><a href="/CreerAlveole" class="footer-link">🏠 Créer Alvéole <img src="~/img/heart.png"
-                                alt="Cœur" class="heart-icon"></a></li>
-                        <li><a href="/Privacy" class="footer-link">🔒 Protection Données <img src="~/img/heart.png"
-                                alt="Cœur" class="heart-icon"></a></li>
-                    </ul>
-                </div>
+                class="heart-icon"></h6>
+     <ul class="list-unstyled">
+    <li><a href="/" class="footer-link">🏠 Mairie <img src="~/img/heart.png" alt="Cœur"
+   class="heart-icon"></a></li>
+         <li><a href="/MapBee" class="footer-link">🗺️ Carte des Alvéoles <img src="~/img/heart.png"
+        alt="Cœur" class="heart-icon"></a></li>
+              <li><a href="/CreerAlveole" class="footer-link">🏠 Créer Alvéole <img src="~/img/heart.png"
+           alt="Cœur" class="heart-icon"></a></li>
+            <li><a href="/Privacy" class="footer-link">🔒 Protection Données <img src="~/img/heart.png"
+      alt="Cœur" class="heart-icon"></a></li>
+                </ul>
+     </div>
                 <div class="col-md-3">
-                    <h6 class="text-warning mb-3">🐝 Contact Ruche <img src="~/img/heart.png" alt="Cœur"
-                        class="heart-icon"></h6>
-                    <ul class="list-unstyled">
-                        <li class="footer-contact">
-                            <i class="fas fa-map-marker-alt"></i> Carcès, Var (83) <img src="~/img/heart.png" alt="Cœur"
-                                class="heart-icon">
-                        </li>
-                        <li class="footer-contact">
-                            <i class="fas fa-envelope"></i> @contactEmail <img src="~/img/heart.png" alt="Cœur"
-                                class="heart-icon">
-                        </li>
-                        <li class="footer-contact">
-                            <i class="fas fa-calendar"></i> Essaimage lancé le 6 juillet 2025 <img src="~/img/heart.png"
-                                alt="Cœur" class="heart-icon">
-                        </li>
-                    </ul>
-                </div>
-            </div>
+    <h6 class="text-warning mb-3">🐝 Contact Ruche <img src="~/img/heart.png" alt="Cœur"
+           class="heart-icon"></h6>
+  <ul class="list-unstyled">
+    <li class="footer-contact">
+             <i class="fas fa-map-marker-alt"></i> Carcès, Var (83) <img src="~/img/heart.png" alt="Cœur"
+           class="heart-icon">
+           </li>
+   <li class="footer-contact">
+ <i class="fas fa-envelope"></i> @contactEmail <img src="~/img/heart.png" alt="Cœur"
+          class="heart-icon">
+           </li>
+             <li class="footer-contact">
+          <i class="fas fa-calendar"></i> Essaimage lancé le 6 juillet 2025 <img src="~/img/heart.png"
+           alt="Cœur" class="heart-icon">
+               </li>
+   </ul>
+         </div>
+        </div>
 
             <!-- Footer bottom -->
-            <div class="border-top border-secondary pt-3">
-                <div class="row align-items-center">
-                    <div class="col-md-6">
-                        <p class="mb-0 text-light">
-                            &copy; 2025 Plan B Ruche Démocratique -
-                            <a asp-area="" asp-page="/Privacy" class="footer-link">Politique de Confidentialité <img
-                                src="~/img/heart.png" alt="Cœur" class="heart-icon"></a>
-                        </p>
-                    </div>
-                    <div class="col-md-6 text-md-end">
-                        <div class="footer-bee-group">
-                            <img src="~/img/alveole.png" alt="Bee Hero" width="25" height="19" class="footer-bee-icon"
-                                title="Abeille Héroïque">
-                            <img src="~/img/heart.png" alt="Cœur" class="heart-icon">
-                            <img src="~/img/alveole.png" alt="Honeycomb" width="25" height="25" class="footer-bee-icon"
-                                title="Alvéoles Hexagonales">
-                            <img src="~/img/heart.png" alt="Cœur" class="heart-icon">
-                            <img src="~/img/alveole.png" alt="Beehive" width="25" height="25" class="footer-bee-icon"
-                                title="Ruche Démocratique">
-                            <img src="~/img/heart.png" alt="Cœur" class="heart-icon">
-                            <img src="~/img/rubrixcube.png" alt="Rubrix Cube" width="25" height="25" class="footer-bee-icon"
-                                title="Cube Démocratique">
-                            <img src="~/img/heart.png" alt="Cœur" class="heart-icon">
-                            <!-- Grenouilles en petite taille pour biodiversité -->
-                            <span class="ms-2 opacity-50">
-                                <img src="~/img/frog_big.png" alt="Guardian" width="15" height="15" class="footer-frog-icon"
-                                    title="Sentinelle Écologique">
-                                <img src="~/img/heart.png" alt="Cœur" class="heart-icon">
-                                <img src="~/img/frog_peace.png" alt="Peace" width="15" height="15" class="footer-frog-icon"
-                                    title="Médiatrice">
-                                <img src="~/img/heart.png" alt="Cœur" class="heart-icon">
-                                <img src="~/img/frog_wings.png" alt="Vision" width="15" height="15" class="footer-frog-icon"
-                                    title="Visionnaire">
-                                <img src="~/img/heart.png" alt="Cœur" class="heart-icon">
-                                <img src="~/img/frog_wings_front.png" alt="Leadership" width="15" height="15" class="footer-frog-icon"
-                                    title="Guide">
-                                <img src="~/img/heart.png" alt="Cœur" class="heart-icon">
-                            </span>
-                        </div>
-                    </div>
-                </div>
-            </div>
+ <div class="border-top border-secondary pt-3">
+     <div class="row align-items-center">
+     <div class="col-md-6">
+  <p class="mb-0 text-light">
+   &copy; 2025 Plan B Ruche Démocratique -
+            <a asp-area="" asp-page="/Privacy" class="footer-link">Politique de Confidentialité <img
+       src="~/img/heart.png" alt="Cœur" class="heart-icon"></a>
+         </p>
+           </div>
+     <div class="col-md-6 text-md-end">
+    <div class="footer-bee-group">
+           <img src="~/img/alveole.png" alt="Bee Hero" width="25" height="19" class="footer-bee-icon"
+          title="Abeille Héroïque">
+      <img src="~/img/heart.png" alt="Cœur" class="heart-icon">
+     <img src="~/img/alveole.png" alt="Honeycomb" width="25" height="25" class="footer-bee-icon"
+        title="Alvéoles Hexagonales">
+         <img src="~/img/heart.png" alt="Cœur" class="heart-icon">
+     <img src="~/img/alveole.png" alt="Beehive" width="25" height="25" class="footer-bee-icon"
+   title="Ruche Démocratique">
+       <img src="~/img/heart.png" alt="Cœur" class="heart-icon">
+            <img src="~/img/rubrixcube.png" alt="Rubrix Cube" width="25" height="25" class="footer-bee-icon"
+               title="Cube Démocratique">
+       <img src="~/img/heart.png" alt="Cœur" class="heart-icon">
+          <!-- Grenouilles en petite taille pour biodiversité -->
+     <span class="ms-2 opacity-50">
+    <img src="~/img/frog_big.png" alt="Guardian" width="15" height="15" class="footer-frog-icon"
+    title="Sentinelle Écologique">
+      <img src="~/img/heart.png" alt="Cœur" class="heart-icon">
+   <img src="~/img/frog_peace.png" alt="Peace" width="15" height="15" class="footer-frog-icon"
+         title="Médiatrice">
+     <img src="~/img/heart.png" alt="Cœur" class="heart-icon">
+               <img src="~/img/frog_wings.png" alt="Vision" width="15" height="15" class="footer-frog-icon"
+         title="Visionnaire">
+  <img src="~/img/heart.png" alt="Cœur" class="heart-icon">
+          <img src="~/img/frog_wings_front.png" alt="Leadership" width="15" height="15" class="footer-frog-icon"
+   title="Guide">
+        <img src="~/img/heart.png" alt="Cœur" class="heart-icon">
+         </span>
+        </div>
+  </div>
+ </div>
+  </div>
         </div>
     </footer>
 
@@ -225,7 +225,6 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
-    <script src="~/js/tetrisBackground.js"></script>
 
     @await RenderSectionAsync("Scripts", required: false)
 
@@ -233,30 +232,30 @@
     <script>
         // Add active class to current navigation item
         document.addEventListener('DOMContentLoaded', function () {
-            const currentPath = window.location.pathname.toLowerCase();
+    const currentPath = window.location.pathname.toLowerCase();
             const navLinks = document.querySelectorAll('.nav-link-custom');
 
-            navLinks.forEach(link => {
-                const href = link.getAttribute('href')?.toLowerCase();
-                if (href === currentPath || (currentPath === '/' && href === '/index')) {
-                    link.classList.add('active');
-                    link.querySelector('.nav-frog')?.classList.add('active');
-                }
-            });
-        });
+  navLinks.forEach(link => {
+      const href = link.getAttribute('href')?.toLowerCase();
+       if (href === currentPath || (currentPath === '/' && href === '/index')) {
+           link.classList.add('active');
+   link.querySelector('.nav-frog')?.classList.add('active');
+      }
+     });
+   });
 
         // Smooth scroll for anchor links
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+   e.preventDefault();
                 const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    window.scrollTo({
-                        top: target.offsetTop,
-                        behavior: 'smooth'
-                    });
-                }
-            });
+       if (target) {
+            window.scrollTo({
+        top: target.offsetTop,
+      behavior: 'smooth'
+           });
+    }
+  });
         });
 
         // Tetris background animation
@@ -265,57 +264,59 @@
         let bouncyBalls = [];
 
         function initBalls() {
-            const colors = ['#ff4136', '#ff851b', '#ffe135', '#2ecc40', '#0074d9'];
+       const colors = ['#ff4136', '#ff851b', '#ffe135', '#2ecc40', '#0074d9'];
             for (let i = 0; i < 50; i++) {
-                bouncyBalls.push({
-                    x: Math.random() * canvas.width,
-                    y: Math.random() * canvas.height,
-                    r: Math.random() * 20 + 5,
-                    color: colors[Math.floor(Math.random() * colors.length)],
-                    dY: Math.random() * 3 + 1,
-                    dX: (Math.random() > 0.5 ? 1 : -1) * (Math.random() * 3 + 1)
-                });
-            }
+         bouncyBalls.push({
+       x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+ r: Math.random() * 20 + 5,
+            color: colors[Math.floor(Math.random() * colors.length)],
+   dY: Math.random() * 3 + 1,
+         dX: (Math.random() > 0.5 ? 1 : -1) * (Math.random() * 3 + 1)
+     });
+     }
         }
 
         function drawBalls() {
             bouncyBalls.forEach(ball => {
-                ctx.beginPath();
-                ctx.arc(ball.x, ball.y, ball.r, 0, Math.PI * 2, false);
-                ctx.fillStyle = ball.color;
-                ctx.fill();
-                ctx.closePath();
+         ctx.beginPath();
+        ctx.arc(ball.x, ball.y, ball.r, 0, Math.PI * 2, false);
+     ctx.fillStyle = ball.color;
+    ctx.fill();
+ctx.closePath();
             });
         }
 
         function updateBalls() {
-            bouncyBalls.forEach(ball => {
-                ball.x += ball.dX;
-                ball.y += ball.dY;
+      bouncyBalls.forEach(ball => {
+ ball.x += ball.dX;
+ ball.y += ball.dY;
 
-                // Bounce off walls
+     // Bounce off walls
                 if (ball.x + ball.r > canvas.width || ball.x - ball.r < 0) {
-                    ball.dX *= -1;
-                }
-                if (ball.y + ball.r > canvas.height || ball.y - ball.r < 0) {
-                    ball.dY *= -1;
-                }
-            });
+         ball.dX *= -1;
+           }
+          if (ball.y + ball.r > canvas.height || ball.y - ball.r < 0) {
+   ball.dY *= -1;
+        }
+  });
         }
 
         function animate() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            drawBalls();
-            updateBalls();
-            requestAnimationFrame(animate);
+   ctx.clearRect(0, 0, canvas.width, canvas.height);
+       drawBalls();
+     updateBalls();
+          requestAnimationFrame(animate);
         }
 
-        window.addEventListener('resize', () => {
-            canvas.width = window.innerWidth;
+    window.addEventListener('resize', () => {
+          canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
-        });
+    });
 
         // Initialize and start animation
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
         initBalls();
         animate();
     </script>

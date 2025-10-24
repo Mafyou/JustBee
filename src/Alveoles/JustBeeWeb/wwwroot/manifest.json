@@ -1,0 +1,41 @@
+﻿{
+  "name": "Plan B Ruche Démocratique",
+  "short_name": "Plan B Ruche",
+  "description": "Innovation démocratique citoyenne avec alvéoles participatives pour une France plus démocratique",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#FFD700",
+  "theme_color": "#FFD700",
+  "orientation": "portrait-primary",
+  "categories": ["government", "social", "political"],
+  "icons": [
+    {
+      "src": "img/alveole.png",
+      "sizes": "192x192",
+ "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "img/alveole.png",
+      "sizes": "512x512",
+      "type": "image/png",
+    "purpose": "any maskable"
+    }
+  ],
+  "scope": "/",
+  "lang": "fr",
+  "screenshots": [
+    {
+      "src": "img/screenshot-desktop.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "form_factor": "wide"
+    },
+    {
+      "src": "img/screenshot-mobile.png", 
+   "sizes": "375x812",
+      "type": "image/png",
+      "form_factor": "narrow"
+  }
+  ]
+}

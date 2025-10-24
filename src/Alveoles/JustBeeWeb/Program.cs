@@ -1,4 +1,4 @@
-using JustBeeInfrastructure.Context;
+﻿using JustBeeInfrastructure.Context;
 using JustBeeInfrastructure.Data;
 using JustBeeInfrastructure.Repositories;
 using JustBeeWeb.Options;
@@ -72,8 +72,12 @@ builder.Services.AddSingleton<JsonSerializerOptions>(provider => jsonOptions);
 // Keep memory cache for backward compatibility if needed
 builder.Services.AddMemoryCache();
 
-// Add response caching
+// Add response caching and compression for SEO performance
 builder.Services.AddResponseCaching();
+builder.Services.AddResponseCompression(options =>
+{
+    options.EnableForHttps = true;
+});
 
 // Configure Entity Framework with performance optimizations and proper DbContext scoping
 builder.Services.AddDbContext<JustBeeContext>(options =>
@@ -123,16 +127,44 @@ if (!app.Environment.IsDevelopment())
 // Remove HTTPS redirection for Azure Web App
 // app.UseHttpsRedirection(); 
 
+// Add response compression before caching for better SEO performance
+app.UseResponseCompression();
+
 // Add response caching middleware
 app.UseResponseCaching();
+
+// Configure security headers for SEO and security
+app.Use(async (context, next) =>
+{
+    // Add security headers for better SEO ranking
+    context.Response.Headers.Add("X-Content-Type-Options", "nosniff");
+    context.Response.Headers.Add("X-Frame-Options", "DENY");
+    context.Response.Headers.Add("X-XSS-Protection", "1; mode=block");
+    context.Response.Headers.Add("Referrer-Policy", "strict-origin-when-cross-origin");
+    
+    // Cache control for better performance
+    if (context.Request.Path.StartsWithSegments("/css") || 
+   context.Request.Path.StartsWithSegments("/js") || 
+        context.Request.Path.StartsWithSegments("/img"))
+  {
+        context.Response.Headers.Add("Cache-Control", "public, max-age=31536000");
+    }
+    
+    await next();
+});
 
 app.UseRouting();
 
 app.UseAuthorization();
 
+// Map static assets with versioning for cache busting
 app.MapStaticAssets();
+
+// Map Razor Pages with static assets
 app.MapRazorPages()
    .WithStaticAssets();
+
+// Map controllers (including SitemapController for SEO)
 app.MapControllers();
 
 app.Run();
