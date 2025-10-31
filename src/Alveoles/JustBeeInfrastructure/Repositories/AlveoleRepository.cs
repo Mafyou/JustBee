@@ -1,6 +1,5 @@
-using JustBeeInfrastructure.Context;
+﻿using JustBeeInfrastructure.Context;
 using JustBeeInfrastructure.Models;
-using Microsoft.EntityFrameworkCore;
 
 namespace JustBeeInfrastructure.Repositories;
 
@@ -81,6 +80,29 @@ public class AlveoleRepository(JustBeeContext context) : IAlveoleRepository
         alveole.DateVerification = DateTime.UtcNow;
         alveole.TokenVerification = null;
 
+        // Vérifier si une Person "Responsable" existe déjà pour cette alvéole
+        var existingResponsable = await _context.Persons
+            .FirstOrDefaultAsync(p => p.Email == alveole.Email && p.VilleCode == alveole.VilleCode);
+
+        if (existingResponsable is null)
+        {
+            // Créer automatiquement une Person "Responsable" pour cette alvéole
+            var responsablePerson = new Person
+            {
+                Pseudo = "Responsable",
+                Email = alveole.Email,
+                VilleCode = alveole.VilleCode,
+                EmailVerifie = true, // Déjà vérifié via l'alvéole
+                DateVerification = DateTime.UtcNow,
+                DateCreation = DateTime.UtcNow,
+                Latitude = alveole.Latitude,
+                Longitude = alveole.Longitude,
+                TokenVerification = null // Pas de token car déjà vérifié
+            };
+
+            _context.Persons.Add(responsablePerson);
+        }
+
         await _context.SaveChangesAsync();
         return true;
     }
@@ -89,7 +111,7 @@ public class AlveoleRepository(JustBeeContext context) : IAlveoleRepository
     {
         var verified = await GetVerifiedAsync();
         var alveolesVerifiees = verified.ToList();
-        
+
         return new Dictionary<string, int>
         {
             ["Total"] = alveolesVerifiees.Count,

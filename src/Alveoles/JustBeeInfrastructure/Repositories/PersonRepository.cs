@@ -1,4 +1,4 @@
-using JustBeeInfrastructure.Context;
+﻿using JustBeeInfrastructure.Context;
 using JustBeeInfrastructure.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -34,6 +34,18 @@ public class PersonRepository(JustBeeContext context) : IPersonRepository
 
     public async Task<Person> AddAsync(Person person)
     {
+        // Générer un token de vérification si la Person n'est pas déjà vérifiée
+        if (!person.EmailVerifie && string.IsNullOrEmpty(person.TokenVerification))
+        {
+            person.TokenVerification = Guid.NewGuid().ToString();
+        }
+
+        // S'assurer que la date de création est définie
+        if (person.DateCreation == default)
+        {
+            person.DateCreation = DateTime.UtcNow;
+        }
+
         _context.Persons.Add(person);
         await _context.SaveChangesAsync();
         return person;

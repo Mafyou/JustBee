@@ -1,17 +1,12 @@
-using JustBeeWeb.Services;
+ï»¿using JustBeeWeb.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace JustBeeWeb.Pages;
 
-public class VerifierEmailModel : PageModel
+public class VerifierEmailModel(VilleService villeService) : PageModel
 {
-    private readonly VilleService _villeService;
-
-    public VerifierEmailModel(VilleService villeService)
-    {
-        _villeService = villeService;
-    }
+    private readonly VilleService _villeService = villeService;
 
     public string Message { get; set; } = string.Empty;
     public bool Success { get; set; } = false;
@@ -22,23 +17,23 @@ public class VerifierEmailModel : PageModel
     {
         if (string.IsNullOrEmpty(token))
         {
-            Message = "?? Token de vérification manquant ou invalide.";
+            Message = "?? Token de vÃ©rification manquant ou invalide.";
             Success = false;
             return Page();
         }
 
-        // Récupérer la personne par son token
+        // RÃ©cupÃ©rer la personne par son token
         var person = await _villeService.GetPersonByTokenAsync(token);
         if (person == null)
         {
-            Message = "? Token de vérification invalide ou expiré.";
+            Message = "? Token de vÃ©rification invalide ou expirÃ©.";
             Success = false;
             return Page();
         }
 
         if (person.EmailVerifie)
         {
-            Message = "? Votre email est déjà vérifié et vous êtes visible sur la carte.";
+            Message = "? Votre email est dÃ©jÃ  vÃ©rifiÃ© et vous Ãªtes visible sur la carte.";
             Success = true;
             PersonPseudo = person.Pseudo;
             var ville = await _villeService.GetVilleByCodeAsync(person.VilleCode!);
@@ -46,12 +41,12 @@ public class VerifierEmailModel : PageModel
             return Page();
         }
 
-        // Vérifier l'email de la personne
+        // VÃ©rifier l'email de la personne
         var verificationReussie = await _villeService.VerifierEmailPersonAsync(token);
-        
+
         if (verificationReussie)
         {
-            Message = "?? Félicitations ! Votre email a été vérifié avec succès et vous êtes maintenant visible sur la carte des ruches démocratiques.";
+            Message = "?? FÃ©licitations ! Votre email a Ã©tÃ© vÃ©rifiÃ© avec succÃ¨s et vous Ãªtes maintenant visible sur la carte des ruches dÃ©mocratiques.";
             Success = true;
             PersonPseudo = person.Pseudo;
             var ville = await _villeService.GetVilleByCodeAsync(person.VilleCode!);
@@ -59,7 +54,7 @@ public class VerifierEmailModel : PageModel
         }
         else
         {
-            Message = "?? Erreur lors de la vérification. Veuillez réessayer ou contacter l'administrateur.";
+            Message = "?? Erreur lors de la vÃ©rification. Veuillez rÃ©essayer ou contacter l'administrateur.";
             Success = false;
         }
 
