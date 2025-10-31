@@ -1,4 +1,4 @@
-@page
+ï»¿@page
 @model MapVilleModel
 @{
     ViewData["Title"] = "Carte des Villes";
@@ -9,14 +9,14 @@
     <div class="container hero-content">
         <div class="text-center">
             <img src="/img/beehive.svg" alt="Beehive Map" class="bee-icon">
-            <h1 class="display-4 fw-bold mb-3">??? Réseau des Villes</h1>
+            <h1 class="display-4 fw-bold mb-3">??? RÃ©seau des Villes</h1>
             <p class="lead mb-4">
-                Cartographie interactive des villes françaises et visualisation de l'essaimage démocratique.
+                Cartographie interactive des villes franÃ§aises et visualisation de l'essaimage dÃ©mocratique.
             </p>
             <div class="d-flex justify-content-center gap-3">
-                <a href="/PersonManagement" class="btn btn-bee">
-                    <i class="fas fa-user-plus"></i> Gérer les Abeilles
-                </a>
+                @* <a href="/PersonManagement" class="btn btn-bee">
+                    <i class="fas fa-user-plus"></i> GÃ©rer les Abeilles
+                </a> *@
                 <a href="#map-section" class="btn btn-outline-light">
                     <i class="fas fa-map-marked-alt"></i> Explorer les Villes
                 </a>
@@ -31,7 +31,7 @@
         <div class="col-lg-8">
             <div class="section-card">
                 <div class="d-flex align-items-center justify-content-between mb-3">
-                    <h3 class="h4 mb-0">??? Carte des Villes Françaises</h3>
+                    <h3 class="h4 mb-0">??? Carte des Villes FranÃ§aises</h3>
                     <img src="/img/bee-hero.svg" alt="Map Bee" style="width: 35px; height: 25px;">
                 </div>
                 <div id="map" style="height: 600px; width: 100%; border-radius: 10px;"></div>
@@ -97,10 +97,10 @@
     <div class="section-card">
         <div class="row align-items-center">
             <div class="col-md-8">
-                <h3 class="h4 mb-3">?? Étendre l'Essaimage Démocratique</h3>
+                <h3 class="h4 mb-3">?? Ã‰tendre l'Essaimage DÃ©mocratique</h3>
                 <p class="mb-0">
-                    Participez à l'expansion du réseau des ruches démocratiques en ajoutant de nouvelles abeilles citoyennes 
-                    et en créant des alvéoles dans votre ville.
+                    Participez Ã  l'expansion du rÃ©seau des ruches dÃ©mocratiques en ajoutant de nouvelles abeilles citoyennes 
+                    et en crÃ©ant des alvÃ©oles dans votre ville.
                 </p>
             </div>
             <div class="col-md-4 text-center">
@@ -111,7 +111,7 @@
                 </div>
                 <div class="d-flex gap-2 justify-content-center">
                     <a href="/" class="btn btn-outline-warning btn-sm">Retour Ruche</a>
-                    <a href="/PersonManagement" class="btn btn-bee btn-sm">Gérer Abeilles</a>
+                    @* <a href="/PersonManagement" class="btn btn-bee btn-sm">GÃ©rer Abeilles</a> *@
                 </div>
             </div>
         </div>
@@ -119,7 +119,7 @@
 </div>
 
 <script>
-    // Initialisation de la carte centrée sur la France
+    // Initialisation de la carte centrÃ©e sur la France
     var map = L.map('map').setView([46.603354, 1.888334], 6);
 
     // Ajout de la couche de tuiles OpenStreetMap
@@ -128,7 +128,7 @@
         attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
     }).addTo(map);
 
-    // Données des villes avec personnes
+    // DonnÃ©es des villes avec personnes
     var villesData = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(
         Model.Villes.Where(v => v.Persons.Any()).Select(v => new {
             code = v.Code,
@@ -142,14 +142,14 @@
         })
     ));
 
-    // Vérifier s'il y a des données à afficher
+    // VÃ©rifier s'il y a des donnÃ©es Ã  afficher
     if (villesData && villesData.length > 0) {
-        // Création des marqueurs pour chaque ville avec des personnes
+        // CrÃ©ation des marqueurs pour chaque ville avec des personnes
         villesData.forEach(function(ville) {
-            // Couleur du marqueur basée sur le nombre de personnes
+            // Couleur du marqueur basÃ©e sur le nombre de personnes
             var markerColor = ville.personCount > 2 ? 'red' : ville.personCount > 1 ? 'orange' : 'green';
             
-            // Création du contenu du popup
+            // CrÃ©ation du contenu du popup
             var popupContent = `
                 <div class="popup-content">
                     <div class="d-flex align-items-center mb-2">
@@ -163,15 +163,10 @@
                             ${ville.persons.map(person => `<li>?? ${person.pseudo} <small class="text-muted">(ID: ${person.id})</small></li>`).join('')}
                         </ul>
                     </div>
-                    <div class="text-center">
-                        <a href="/PersonManagement" class="btn btn-bee btn-sm">
-                            <i class="fas fa-plus"></i> Ajouter une abeille
-                        </a>
-                    </div>
                 </div>
             `;
 
-            // Création du marqueur avec une icône personnalisée
+            // CrÃ©ation du marqueur avec une icÃ´ne personnalisÃ©e
             var marker = L.marker([ville.latitude, ville.longitude], {
                 title: `${ville.nom} (${ville.personCount} abeille(s) citoyenne(s))`
             }).addTo(map);
@@ -188,27 +183,24 @@
             }
         }
     } else {
-        // Afficher un message si aucune donnée
+        // Afficher un message si aucune donnÃ©e
         var noDataPopup = L.popup()
             .setLatLng([46.603354, 1.888334])
             .setContent(`
                 <div class="text-center popup-content">
                     <img src="/img/beehive.svg" style="width: 40px; height: 40px; margin-bottom: 10px;">
                     <h6>??? Aucune abeille dans les villes</h6>
-                    <p>Commencez l'essaimage démocratique!</p>
-                    <a href="/PersonManagement" class="btn btn-bee btn-sm">
-                        <i class="fas fa-plus"></i> Démarrer l'essaimage
-                    </a>
+                    <p>Commencez l'essaimage dÃ©mocratique!</p>
                 </div>
             `)
             .openOn(map);
     }
 
-    // Ajout d'une légende
+    // Ajout d'une lÃ©gende
     var legend = L.control({position: 'bottomright'});
     legend.onAdd = function (map) {
         var div = L.DomUtil.create('div', 'info legend');
-        div.innerHTML += '<h6>?? Légende des Villes</h6>';
+        div.innerHTML += '<h6>?? LÃ©gende des Villes</h6>';
         div.innerHTML += '<i style="background: green; width: 18px; height: 18px; display: inline-block; margin-right: 8px; border-radius: 50%;"></i> 1 abeille<br>';
         div.innerHTML += '<i style="background: orange; width: 18px; height: 18px; display: inline-block; margin-right: 8px; border-radius: 50%;"></i> 2 abeilles<br>';
         div.innerHTML += '<i style="background: red; width: 18px; height: 18px; display: inline-block; margin-right: 8px; border-radius: 50%;"></i> 3+ abeilles<br>';

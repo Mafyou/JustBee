@@ -1,19 +1,13 @@
-using JustBeeWeb.Services;
+Ôªøusing JustBeeWeb.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace JustBeeWeb.Pages;
 
-public class VerifierAlveoleModel : PageModel
+public class VerifierAlveoleModel(AlveoleService alveoleService, VilleService villeService) : PageModel
 {
-    private readonly AlveoleService _alveoleService;
-    private readonly VilleService _villeService;
-
-    public VerifierAlveoleModel(AlveoleService alveoleService, VilleService villeService)
-    {
-        _alveoleService = alveoleService;
-        _villeService = villeService;
-    }
+    private readonly AlveoleService _alveoleService = alveoleService;
+    private readonly VilleService _villeService = villeService;
 
     public string Message { get; set; } = string.Empty;
     public bool Success { get; set; } = false;
@@ -24,42 +18,42 @@ public class VerifierAlveoleModel : PageModel
     {
         if (string.IsNullOrEmpty(token))
         {
-            Message = "?? Token de vÈrification manquant ou invalide.";
+            Message = "?? Token de v√©rification manquant ou invalide.";
             Success = false;
             return Page();
         }
 
-        // RÈcupÈrer l'alvÈole par son token
+        // R√©cup√©rer l'alv√©ole par son token
         var alveole = await _alveoleService.GetAlveoleByTokenAsync(token);
-        if (alveole == null)
+        if (alveole is null)
         {
-            Message = "? Token de vÈrification invalide ou expirÈ.";
+            Message = "? Token de v√©rification invalide ou expir√©.";
             Success = false;
             return Page();
         }
 
         if (alveole.EmailVerifie)
         {
-            Message = "? Cette alvÈole est dÈj‡ vÈrifiÈe et active sur la carte.";
+            Message = "? Cette alv√©ole est d√©j√† v√©rifi√©e et active sur la carte.";
             Success = true;
             AlveoleNom = alveole.Nom;
             VilleNom = alveole.Ville?.Nom;
             return Page();
         }
 
-        // VÈrifier l'alvÈole
+        // V√©rifier l'alv√©ole
         var verificationReussie = await _alveoleService.VerifierAlveoleAsync(token);
-        
+
         if (verificationReussie)
         {
-            Message = "?? FÈlicitations ! Votre alvÈole a ÈtÈ vÈrifiÈe avec succËs et est maintenant visible sur la carte des ruches dÈmocratiques.";
+            Message = "?? F√©licitations ! Votre alv√©ole a √©t√© v√©rifi√©e avec succ√®s et est maintenant visible sur la carte des ruches d√©mocratiques.";
             Success = true;
             AlveoleNom = alveole.Nom;
             VilleNom = alveole.Ville?.Nom;
         }
         else
         {
-            Message = "?? Erreur lors de la vÈrification. Veuillez rÈessayer ou contacter l'administrateur.";
+            Message = "?? Erreur lors de la v√©rification. Veuillez r√©essayer ou contacter l'administrateur.";
             Success = false;
         }
 

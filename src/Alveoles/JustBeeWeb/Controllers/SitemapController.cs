@@ -19,15 +19,15 @@ public class SitemapController : ControllerBase
     public IActionResult GetSitemap()
     {
         try
-    {
+        {
             var baseUrl = $"{Request.Scheme}://{Request.Host}";
-     var sitemap = GenerateSitemap(baseUrl);
-     
+            var sitemap = GenerateSitemap(baseUrl);
+
             return Content(sitemap, "application/xml", Encoding.UTF8);
-    }
+        }
         catch (Exception ex)
         {
-   _logger.LogError(ex, "Error generating sitemap");
+            _logger.LogError(ex, "Error generating sitemap");
             return StatusCode(500);
         }
     }
@@ -36,7 +36,7 @@ public class SitemapController : ControllerBase
     [ResponseCache(Duration = 86400)] // Cache for 24 hours
     public IActionResult GetRobotsTxt()
     {
-   var baseUrl = $"{Request.Scheme}://{Request.Host}";
+        var baseUrl = $"{Request.Scheme}://{Request.Host}";
         var robotsTxt = $@"User-agent: *
 Allow: /
 
@@ -73,15 +73,14 @@ Allow: /lib/";
         sitemap.AppendLine("<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">");
 
         // Main pages with their priorities and change frequencies
-     var pages = new[]
-    {
+        var pages = new[]
+       {
             new { Url = "/", Priority = "1.0", ChangeFreq = "daily", LastMod = DateTime.UtcNow },
  new { Url = "/MapBee", Priority = "0.9", ChangeFreq = "daily", LastMod = DateTime.UtcNow },
       new { Url = "/CreerAlveole", Priority = "0.8", ChangeFreq = "weekly", LastMod = DateTime.UtcNow },
   new { Url = "/Privacy", Priority = "0.6", ChangeFreq = "monthly", LastMod = DateTime.UtcNow },
     new { Url = "/VerifierEmail", Priority = "0.5", ChangeFreq = "monthly", LastMod = DateTime.UtcNow },
          new { Url = "/VerifierAlveole", Priority = "0.5", ChangeFreq = "monthly", LastMod = DateTime.UtcNow },
-            new { Url = "/PersonManagement", Priority = "0.7", ChangeFreq = "weekly", LastMod = DateTime.UtcNow },
       new { Url = "/MapVille", Priority = "0.7", ChangeFreq = "weekly", LastMod = DateTime.UtcNow },
      new { Url = "/ApiDemo", Priority = "0.4", ChangeFreq = "monthly", LastMod = DateTime.UtcNow }
     };
@@ -89,18 +88,18 @@ Allow: /lib/";
         foreach (var page in pages)
         {
             sitemap.AppendLine("  <url>");
-sitemap.AppendLine($"    <loc>{baseUrl}{page.Url}</loc>");
-       sitemap.AppendLine($" <lastmod>{page.LastMod:yyyy-MM-dd}</lastmod>");
-         sitemap.AppendLine($"    <changefreq>{page.ChangeFreq}</changefreq>");
+            sitemap.AppendLine($"    <loc>{baseUrl}{page.Url}</loc>");
+            sitemap.AppendLine($" <lastmod>{page.LastMod:yyyy-MM-dd}</lastmod>");
+            sitemap.AppendLine($"    <changefreq>{page.ChangeFreq}</changefreq>");
             sitemap.AppendLine($"    <priority>{page.Priority}</priority>");
-          sitemap.AppendLine("  </url>");
+            sitemap.AppendLine("  </url>");
         }
 
- // Add important images for image SEO
+        // Add important images for image SEO
         var images = new[]
         {
             "/img/alveole.png",
-   "/img/slogan_main.png", 
+   "/img/slogan_main.png",
     "/img/slogan_fra.png",
       "/img/slogan.png",
     "/img/rubrixcube.png",
@@ -110,15 +109,15 @@ sitemap.AppendLine($"    <loc>{baseUrl}{page.Url}</loc>");
         foreach (var image in images)
         {
             sitemap.AppendLine("  <url>");
- sitemap.AppendLine($"    <loc>{baseUrl}{image}</loc>");
-      sitemap.AppendLine($"    <lastmod>{DateTime.UtcNow:yyyy-MM-dd}</lastmod>");
+            sitemap.AppendLine($"    <loc>{baseUrl}{image}</loc>");
+            sitemap.AppendLine($"    <lastmod>{DateTime.UtcNow:yyyy-MM-dd}</lastmod>");
             sitemap.AppendLine("    <changefreq>yearly</changefreq>");
-    sitemap.AppendLine("    <priority>0.3</priority>");
-   sitemap.AppendLine("  </url>");
+            sitemap.AppendLine("    <priority>0.3</priority>");
+            sitemap.AppendLine("  </url>");
         }
 
-    sitemap.AppendLine("</urlset>");
+        sitemap.AppendLine("</urlset>");
 
-     return sitemap.ToString();
+        return sitemap.ToString();
     }
 }

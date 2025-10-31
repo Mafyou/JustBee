@@ -1,17 +1,12 @@
-using JustBeeWeb.Services;
+ï»¿using JustBeeWeb.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace JustBeeWeb.Pages;
 
-public class PersonManagementModel : PageModel
+public class PersonManagementModel(DepartementService departementService) : PageModel
 {
-    private readonly DepartementService _departementService;
-
-    public PersonManagementModel(DepartementService departementService)
-    {
-        _departementService = departementService;
-    }
+    private readonly DepartementService _departementService = departementService;
 
     public List<Departement> Departements { get; set; } = [];
     public List<Person> AllPersons { get; set; } = [];
@@ -50,7 +45,7 @@ public class PersonManagementModel : PageModel
         var departement = await _departementService.GetDepartementByCodeAsync(NewPersonDepartement);
         if (departement == null)
         {
-            TempData["Error"] = $"Département {NewPersonDepartement} non trouvé.";
+            TempData["Error"] = $"DÃ©partement {NewPersonDepartement} non trouvÃ©.";
             return RedirectToPage();
         }
 
@@ -64,7 +59,7 @@ public class PersonManagementModel : PageModel
 
         if (success)
         {
-            TempData["Success"] = $"Personne '{person.Pseudo}' ajoutée avec succès au département {departement.Nom}!";
+            TempData["Success"] = $"Personne '{person.Pseudo}' ajoutÃ©e avec succÃ¨s au dÃ©partement {departement.Nom}!";
         }
         else
         {
@@ -80,7 +75,7 @@ public class PersonManagementModel : PageModel
 
         if (removed)
         {
-            TempData["Success"] = "Personne supprimée avec succès!";
+            TempData["Success"] = "Personne supprimÃ©e avec succÃ¨s!";
         }
         else
         {
